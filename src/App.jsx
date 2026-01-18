@@ -150,6 +150,47 @@ function App() {
       title: "Project 4",
     },
   ];
+
+  const videos = [
+    {
+      src: "/public/videos/14StandbyLoopFinale.mp4",
+      title: "Big Buck Bunny",
+      poster: "/public/images/Screenshot 2026-01-19 014152.png",
+    },
+    {
+      src: "/public/videos/2024-10-15 12-23-37.mkv",
+      title: "Video 3",
+      poster: "/public/images/Screenshot 2026-01-19 014321.png",
+    },
+    {
+      src: "/public/videos/IntramsTeaser.mp4",
+      title: "Video 4",
+      poster: "/public/images/Screenshot 2026-01-19 014251.png",
+    },
+    {
+      src: "/public/videos/SyntaxError_VideoPitch-PSC9.mp4",
+      title: "Video 4",
+    },
+    {
+      src: "/public/videos/Teaser.mp4",
+      title: "Video 4",
+    },
+    {
+      src: "/public/videos/TheAccessIntro.mp4",
+      title: "Video 4",
+      poster: "/public/images/Screenshot 2026-01-19 014226.png",
+    },
+    {
+      src: "/public/videos/0611(1).mp4",
+      title: "Big Buck Bunny",
+    },
+    {
+      src: "/public/videos/0611.mp4",
+      title: "Sample Video",
+    },
+  ];
+  const [showAll, setShowAll] = useState(false);
+  const initialCount = 2;
   return (
     <>
       <Cursor isDarkMode={isDarkMode} />
@@ -650,6 +691,37 @@ function App() {
               <p className="hover:px-2 mt-6 text-center  py-2 transition-all duration-300 ease-in-out">
                 Video Edit
               </p>
+              <div className="p-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+                  {(showAll ? videos : videos.slice(0, initialCount)).map(
+                    (video, index) => (
+                      <div
+                        key={index}
+                        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow duration-300"
+                      >
+                        <video
+                          src={video.src}
+                          controls
+                          className="w-full h-full object-cover"
+                          poster={video.poster}
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+
+                {/* Toggle Button */}
+                {videos.length > initialCount && (
+                  <div className="flex justify-center mt-4">
+                    <button
+                      onClick={() => setShowAll(!showAll)}
+                      className="px-4 py-2  rounded hover:scale-110 cursor-target transition"
+                    >
+                      {showAll ? "Show Less" : "Show More"}
+                    </button>
+                  </div>
+                )}
+              </div>
             </section>
 
             <section className="mt-10">
