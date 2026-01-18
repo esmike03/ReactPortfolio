@@ -12,6 +12,7 @@ import {
   FaSun,
   FaLinkedin,
   FaFileDownload,
+  FaArrowUp,
 } from "react-icons/fa";
 // Font Awesome
 import {
@@ -62,6 +63,27 @@ function getAge(birthDate) {
 }
 
 function App() {
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Smooth scrolling
+    });
+  };
   const today = new Date();
   const age = getAge(new Date(2003, 4, 15));
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -193,6 +215,14 @@ function App() {
   const initialCount = 2;
   return (
     <>
+      {isVisible && (
+        <button
+          onClick={scrollToTop}
+          className="fixed cursor-target bottom-6 right-6 z-50 p-3 rounded-full  hover:scale-110 transition-all duration-300"
+        >
+          <FaArrowUp size={20} />
+        </button>
+      )}
       <Cursor isDarkMode={isDarkMode} />
       <div className="w-screen cursor-none">
         <div className=" max-w-2xl mx-auto mt-4 p-6">
@@ -213,17 +243,38 @@ function App() {
 
             <div className="flex sm:gap-2 lg:gap-6 text-sm">
               <TargetBorder isDarkMode={isDarkMode}>
-                <p className=" px-2 py-2   hover:scale-110 transition-all duration-300 ease-in-out">
+                <p
+                  className=" px-2 py-2   hover:scale-110 transition-all duration-300 ease-in-out"
+                  onClick={() =>
+                    document
+                      .getElementById("timeline")
+                      .scrollIntoView({ behavior: "smooth" })
+                  }
+                >
                   timeline
                 </p>
               </TargetBorder>
               <TargetBorder isDarkMode={isDarkMode}>
-                <p className=" px-2 py-2   hover:scale-110 transition-all duration-300 ease-in-out">
+                <p
+                  className=" px-2 py-2   hover:scale-110 transition-all duration-300 ease-in-out"
+                  onClick={() =>
+                    document
+                      .getElementById("projects")
+                      .scrollIntoView({ behavior: "smooth" })
+                  }
+                >
                   projects
                 </p>
               </TargetBorder>
               <TargetBorder isDarkMode={isDarkMode}>
-                <p className=" px-2 py-2   hover:scale-110 transition-all duration-300 ease-in-out">
+                <p
+                  className=" px-2 py-2   hover:scale-110 transition-all duration-300 ease-in-out"
+                  onClick={() =>
+                    document
+                      .getElementById("portfolio")
+                      .scrollIntoView({ behavior: "smooth" })
+                  }
+                >
                   portfolio
                 </p>
               </TargetBorder>
@@ -272,7 +323,7 @@ function App() {
 
               <div className="flex mb-20 mt-6 justify-center gap-6 w-fit">
                 <a
-                  href="mailto:youremail@gmail.com"
+                  href="mailto:sarabiaearlmike14@gmail.com"
                   className="hover:scale-110 transition-all duration-300 ease-in-out cursor-target"
                   style={{ color: isDarkMode ? "white" : "black" }}
                 >
@@ -280,7 +331,7 @@ function App() {
                 </a>
 
                 <a
-                  href="https://github.com/yourusername"
+                  href="https://github.com/esmike03"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:scale-110 transition-all duration-300 ease-in-out cursor-target"
@@ -290,7 +341,7 @@ function App() {
                 </a>
 
                 <a
-                  href="https://indeed.com"
+                  href="https://www.linkedin.com/in/earl-mike-sarabia-4a6532346/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:scale-110 transition-all duration-300 ease-in-out cursor-target"
@@ -299,7 +350,7 @@ function App() {
                   <FaLinkedin size={22} />
                 </a>
                 <a
-                  href="https://indeed.com"
+                  href="/public/Sarabia_EarlMike-Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative inline-block cursor-target"
@@ -328,7 +379,7 @@ function App() {
               </div>
             </section>
 
-            <section>
+            <section id="timeline">
               <TargetBorder isDarkMode={isDarkMode}>
                 <p className="hover:px-2  py-2 transition-all duration-300 ease-in-out">
                   $ about me_
@@ -482,7 +533,7 @@ function App() {
                 </li>
               </ol>
             </section>
-            <section className="mt-10">
+            <section id="projects" className="mt-10">
               <TargetBorder isDarkMode={isDarkMode}>
                 <p className="hover:px-4   py-2 transition-all duration-300 ease-in-out">
                   $ projects_
@@ -500,7 +551,7 @@ function App() {
                   </div>
 
                   <a
-                    href="https://github.com/your-repo"
+                    href="https://github.com/esmike03/bisuappregistrar"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-400 hover:underline text-sm mb-2 inline-block"
@@ -557,7 +608,7 @@ function App() {
                   </div>
 
                   <a
-                    href="https://github.com/your-repo"
+                    href="https://github.com/esmike03/TravelCompanion"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-400 hover:underline text-sm mb-2 inline-block"
@@ -621,9 +672,7 @@ function App() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-400 hover:underline text-sm mb-2 inline-block"
-                  >
-                    View on GitHub
-                  </a>
+                  ></a>
 
                   <p className="mb-3 text-sm">
                     Developed a visually engaging helmet shop website using
@@ -661,7 +710,7 @@ function App() {
                 </div>
               </TargetBorder>
             </section>
-            <section className="mt-10">
+            <section id="portfolio" className="mt-10">
               <TargetBorder isDarkMode={isDarkMode}>
                 <p className="hover:px-2  py-2 transition-all duration-300 ease-in-out">
                   $ portfolio_
@@ -766,7 +815,7 @@ function App() {
               </p>
               <div className="flex mb-5 mt-6 justify-center gap-8">
                 <a
-                  href="mailto:youremail@gmail.com"
+                  href="mailto:sarabiaearlmike14@gmail.com"
                   className="hover:scale-110 transition-all duration-300 ease-in-out cursor-target"
                   style={{ color: isDarkMode ? "white" : "black" }}
                 >
@@ -774,7 +823,7 @@ function App() {
                 </a>
                 <p className="">•</p>
                 <a
-                  href="https://indeed.com"
+                  href="https://www.linkedin.com/in/earl-mike-sarabia-4a6532346/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:scale-110 transition-all duration-300 ease-in-out cursor-target"
