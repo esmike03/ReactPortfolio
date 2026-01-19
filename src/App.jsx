@@ -334,19 +334,19 @@ function App() {
                   }
                   className="hover:scale-110 py-2 px-3 rounded-md transition-all duration-300 ease-in-out"
                 >
-                  $ _
+                  $_
                 </p>
               </TargetBorder>
               <TargetBorder isDarkMode={isDarkMode}></TargetBorder>
               <div onClick={toggleTheme} className="cursor-target p-2">
                 {isDarkMode ? (
                   <MdWbSunny
-                    size={24}
+                    size={22}
                     className="transform transition-transform duration-500 hover:rotate-90"
                   />
                 ) : (
                   <MdDarkMode
-                    size={24}
+                    size={22}
                     className="transform transition-transform duration-500 hover:rotate-240"
                   />
                 )}
