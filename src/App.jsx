@@ -191,17 +191,17 @@ function App() {
       title: "Project 1",
     },
     {
-      src: "/public/images/legion.png",
+      src: "/images/legion.png",
       alt: "Image 2",
       title: "Project 2",
     },
     {
-      src: "/public/images/mock1.png",
+      src: "/images/mock1.png",
       alt: "Image 3",
       title: "Project 3",
     },
     {
-      src: "/public/images/ticket.png",
+      src: "/images/ticket.png",
       alt: "Image 4",
       title: "Project 4",
     },
@@ -209,35 +209,35 @@ function App() {
 
   const videos = [
     {
-      src: "/public/videos/14StandbyLoopFinale.mp4",
+      src: "/videos/14StandbyLoopFinale.mp4",
       title: "Big Buck Bunny",
-      poster: "/public/images/Screenshot 2026-01-19 014152.png",
+      poster: "/images/Screenshot 2026-01-19 014152.png",
     },
     {
-      src: "/public/videos/2024-10-15 12-23-37.mkv",
+      src: "/videos/2024-10-15 12-23-37.mkv",
       title: "Video 3",
-      poster: "/public/images/Screenshot 2026-01-19 014321.png",
+      poster: "/images/Screenshot 2026-01-19 014321.png",
     },
     {
-      src: "/public/videos/IntramsTeaser.mp4",
+      src: "/videos/IntramsTeaser.mp4",
       title: "Video 4",
-      poster: "/public/images/Screenshot 2026-01-19 014251.png",
+      poster: "/images/Screenshot 2026-01-19 014251.png",
     },
     {
-      src: "/public/videos/SyntaxError_VideoPitch-PSC9.mp4",
-      title: "Video 4",
-    },
-    {
-      src: "/public/videos/Teaser.mp4",
+      src: "/videos/SyntaxError_VideoPitch-PSC9.mp4",
       title: "Video 4",
     },
     {
-      src: "/public/videos/TheAccessIntro.mp4",
+      src: "/videos/Teaser.mp4",
       title: "Video 4",
-      poster: "/public/images/Screenshot 2026-01-19 014226.png",
     },
     {
-      src: "/public/videos/0611.mp4",
+      src: "/videos/TheAccessIntro.mp4",
+      title: "Video 4",
+      poster: "/images/Screenshot 2026-01-19 014226.png",
+    },
+    {
+      src: "/videos/0611.mp4",
       title: "Sample Video",
     },
   ];
@@ -997,7 +997,7 @@ function App() {
                 </div>
                 <div className="bg-white mt-4 dark:bg-gray-800 rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow duration-300">
                   <img
-                    src="/public/images/lace.png"
+                    src="/images/lace.png"
                     className="w-full h-full object-cover"
                   />
                 </div>
