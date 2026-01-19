@@ -365,9 +365,9 @@ function App() {
                   </h1>
                 </TargetBorder>
 
-                <p className="sm:text-sm mt-1 h-5 overflow-hidden">
+                <p className="sm:text-sm mt-1 h-8 overflow-hidden">
                   {age},{" "}
-                  <span className="inline-block transition-all duration-500 ease-in-out">
+                  <span className="inline-block px-2 border  rounded-md transition-all duration-500 ease-in-out">
                     {roles[index]}
                   </span>
                 </p>

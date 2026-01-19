@@ -9,30 +9,6 @@
   --text-color: rgba(255, 255, 255, 0.87);
   --bg-color: #080808;
 
-  /* Grid & diagonal fade for dark mode */
-  --bg-gradient:
-    linear-gradient(
-      150deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 20%,
-      rgba(0, 0, 0, 0.95) 45%,
-      rgba(0, 0, 0, 1) 90%
-    ),
-    repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.16) 0px,
-      rgba(255, 255, 255, 0.16) 1px,
-      transparent 1px,
-      transparent 30px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.16) 0px,
-      rgba(255, 255, 255, 0.16) 1px,
-      transparent 1px,
-      transparent 30px
-    );
-
   color-scheme: light dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -60,62 +36,13 @@ body {
 /* --- Dark Mode (default) --- */
 body.dark {
   --text-color: rgba(255, 255, 255, 0.87);
-  --bg-color: #080808;
-  --bg-gradient:
-    linear-gradient(
-      150deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 5%,
-      rgba(0, 0, 0, 0.95) 10%,
-      rgba(0, 0, 0, 1) 30%
-    ),
-    repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.16) 0px,
-      rgba(255, 255, 255, 0.16) 1px,
-      transparent 1px,
-      transparent 30px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.16) 0px,
-      rgba(255, 255, 255, 0.16) 1px,
-      transparent 1px,
-      transparent 30px
-    );
+  --bg-color: #1c1c1c;
 }
 
 /* --- Light Mode --- */
 body.light {
   color: #213547;
-  background-color: #ffffff;
-
-  /* Diagonal fade + subtle grid */
-  background-image:
-    /* Diagonal fade in light mode */
-    linear-gradient(
-      150deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0) 5%,
-      rgba(255, 255, 255, 0.95) 10%,
-      rgb(255, 255, 255) 30%
-    ),
-    /* Vertical grid */
-    repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.1) 0px,
-        rgba(0, 0, 0, 0.1) 1px,
-        transparent 1px,
-        transparent 30px
-      ),
-    /* Horizontal grid */
-    repeating-linear-gradient(
-        90deg,
-        rgba(0, 0, 0, 0.1) 0px,
-        rgba(0, 0, 0, 0.1) 1px,
-        transparent 1px,
-        transparent 30px
-      );
+  background-color: #fefaea;
 }
 
 .glitch {
