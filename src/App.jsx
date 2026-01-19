@@ -407,7 +407,7 @@ function App() {
                   <FaLinkedin size={22} />
                 </a>
                 <a
-                  href="/public/Sarabia_EarlMike-Resume.pdf"
+                  href="/Sarabia_EarlMike-Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative inline-block cursor-target"
