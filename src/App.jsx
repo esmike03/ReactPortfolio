@@ -147,8 +147,8 @@ function App() {
         { icon: <FaPhp size={40} />, name: "PHP" },
         { icon: <FaJava size={40} />, name: "Java" },
         { icon: <SiMysql size={40} />, name: "MySQL" },
-        { icon: <SiCss3 size={40} />, name: "HTML 5" },
-        { icon: <SiHtml5 size={40} />, name: "CSS 3" },
+        // { icon: <SiCss3 size={40} />, name: "HTML 5" },
+        // { icon: <SiHtml5 size={40} />, name: "CSS 3" },
       ],
     },
     {
@@ -157,9 +157,9 @@ function App() {
         { icon: <SiLaravel size={40} />, name: "Laravel" },
         { icon: <SiInertia size={40} />, name: "Inertia" },
         { icon: <FaReact size={40} />, name: "React" },
-        { icon: <FaReact size={40} />, name: "React Native" },
+        // { icon: <FaReact size={40} />, name: "React Native" },
         { icon: <SiTailwindcss size={40} />, name: "TailwindCSS" },
-        { icon: <FaBootstrap size={40} />, name: "Bootstrap" },
+        // { icon: <FaBootstrap size={40} />, name: "Bootstrap" },
         { icon: <SiFirebase size={40} />, name: "Firebase" },
       ],
     },
@@ -167,10 +167,10 @@ function App() {
       name: "Design & Creativity",
       icons: [
         { icon: <SiAdobephotoshop size={40} />, name: "Photoshop" },
-        { icon: <SiAdobeillustrator size={40} />, name: "Illustrator" },
+        // { icon: <SiAdobeillustrator size={40} />, name: "Illustrator" },
         { icon: <SiAdobepremierepro size={40} />, name: "Premiere Pro" },
         { icon: <FaFigma size={40} />, name: "Figma" },
-        { icon: <SiCanva size={40} />, name: "Canva" },
+        // { icon: <SiCanva size={40} />, name: "Canva" },
       ],
     },
     {
@@ -330,8 +330,15 @@ function App() {
                 </p>
               </TargetBorder>
               <TargetBorder isDarkMode={isDarkMode}>
-                <p className="hover:scale-110 py-2 px-3 rounded-md transition-all duration-300 ease-in-out">
-                  cli
+                <p
+                  onClick={() =>
+                    document
+                      .getElementById("techstack")
+                      .scrollIntoView({ behavior: "smooth" })
+                  }
+                  className="hover:scale-110 py-2 px-3 rounded-md transition-all duration-300 ease-in-out"
+                >
+                  $ _
                 </p>
               </TargetBorder>
               <TargetBorder isDarkMode={isDarkMode}></TargetBorder>
@@ -1050,7 +1057,7 @@ function App() {
               </div>
             </section>
 
-            <section className="mt-10">
+            <section id="techstack" className="mt-10">
               <TargetBorder isDarkMode={isDarkMode}>
                 <p className="hover:px-2   py-2 transition-all duration-300 ease-in-out">
                   $ techstack_
