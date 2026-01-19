@@ -196,7 +196,7 @@ function App() {
       title: "Project 2",
     },
     {
-      src: "/public/images/mock.png",
+      src: "/public/images/mock1.png",
       alt: "Image 3",
       title: "Project 3",
     },
@@ -247,6 +247,23 @@ function App() {
   ];
   const [showAll, setShowAll] = useState(false);
   const initialCount = 2;
+
+  const roles = [
+    "Web Developer",
+    "UI/UX Designer",
+    "Graphics Designer",
+    "Video Editor",
+  ];
+
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % roles.length);
+    }, 2000); // change every 2s
+
+    return () => clearInterval(interval);
+  }, []);
   return (
     <>
       {isVisible && (
@@ -345,13 +362,16 @@ function App() {
                   </h1>
                 </TargetBorder>
 
-                <p className="sm:text-sm  mt-1">
-                  {age}, Web Developer • UI/UX Designer
+                <p className="sm:text-sm mt-1 h-5 overflow-hidden">
+                  {age},{" "}
+                  <span className="inline-block transition-all duration-500 ease-in-out">
+                    {roles[index]}
+                  </span>
                 </p>
 
                 <p className="lg:text-sm text-sm mt-2 max-w-xl">
-                  Placeholder Lorem ipsum dolor sit amet consectetur adipisicing
-                  elit.
+                  I build responsive web experiences and clean layouts with a
+                  focus on usability, performance, and modern design.
                 </p>
               </div>
 
@@ -421,11 +441,19 @@ function App() {
               </TargetBorder>
 
               <p className="mt-4 mb-10 text-left lg:text-justify">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni,
-                quia. Suscipit, error sint hic distinctio voluptate
-                reprehenderit delectus deleniti obcaecati velit esse accusamus
-                neque atque, corporis aliquid iusto ad sit?
+                Hi, I’m Earl Mike Sarabia. I discovered coding back in Grade 9
+                when a friend introduced me to DroidScript. Around the same
+                time, I also started creating layouts using PixelLab on my
+                phone. From that moment, I became curious about how applications
+                are built and was amazed by the complexity behind them. That
+                curiosity gradually turned into a passion.
+                <br />
+                <br />
+                Today, I am focused on web development and design, where I enjoy
+                building functional, user-friendly websites and creating visual
+                designs using Photoshop and Canva.
               </p>
+
               <TargetBorder isDarkMode={isDarkMode}>
                 <p className="hover:px-2  py-2 transition-all duration-300 ease-in-out">
                   $ timeline_
@@ -511,10 +539,15 @@ function App() {
                         During this internship, I developed fully functional
                         website systems and implemented them across all four of
                         the company’s divisions: Westpoint, Xentra Medica,
-                        Popstar Drug Store, and Xentro Estates, where I also
-                        redesigned parts of the website and added new
-                        functionalities. I used Laravel and MySQL to ensure
-                        faster and efficient development for all the websites.
+                        Popstar Drug Store, and Xentro Estates. I also
+                        redesigned parts of the websites and added new
+                        functionalities to improve usability and performance. In
+                        addition to web development, I was involved in designing
+                        company uniforms and creating visual designs for their
+                        pharmacy stores, contributing to both branding and
+                        in-store presentation. I used Laravel and MySQL to
+                        ensure fast, efficient, and scalable development across
+                        all platforms.
                       </p>
                     </div>
                   </TargetBorder>
@@ -894,7 +927,7 @@ function App() {
                   </div>
 
                   <a
-                    href="https://github.com/your-repo"
+                    href="https://github.com/esmike03/Helmet-Shop-Wordpress"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-400 hover:underline text-sm mb-2 inline-block"
