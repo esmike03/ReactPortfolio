@@ -186,7 +186,7 @@ function App() {
 
   const images = [
     {
-      src: "/public/images/des.png",
+      src: "/images/des.png",
       alt: "Image 1",
       title: "Project 1",
     },
