@@ -40,12 +40,45 @@ import {
   SiCss3,
 } from "react-icons/si";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import Cursor from "./Components/Cursor";
 import TargetBorder from "./Components/TargetBorder";
 import RandomParticles from "./Components/RandomParticle";
+function AutoPlayVideo({ src, poster }) {
+  const videoRef = useRef(null);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.6 }, // play when 60% visible
+    );
+
+    observer.observe(video);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      poster={poster}
+      playsInline
+      controls
+      className="w-full h-full object-cover"
+    />
+  );
+}
 function getAge(birthDate) {
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
@@ -485,6 +518,80 @@ function App() {
                     </div>
                   </TargetBorder>
                 </li>
+                <li class="mb-10 ms-6">
+                  <span class="absolute cursor-target flex items-center justify-center w-6 h-6 bg-brand-softer rounded-full -start-3 ring-8 ring-buffer">
+                    <svg
+                      class="w-3 h-3 text-fg-brand-strong"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
+                      />
+                    </svg>
+                  </span>
+
+                  <TargetBorder isDarkMode={isDarkMode}>
+                    <div className="px-2 py-2 transition-all duration-300 ease-in-out">
+                      <time class="bg-neutral-secondary-medium border border-default-medium text-heading text-xs font-medium px-1.5 py-0.5 rounded">
+                        2023 - 2025
+                      </time>
+                      <h3 className="my-2 text-lg font-semibold text-heading">
+                        Layout Designer – Legion Organization
+                      </h3>
+                      <p className="text-body">
+                        Served as a layout designer for the Legion Organization,
+                        creating visual layouts and design assets for various
+                        projects and initiatives.
+                      </p>
+                    </div>
+                  </TargetBorder>
+                </li>
+                <li class="mb-10 ms-6">
+                  <span class="absolute cursor-target flex items-center justify-center w-6 h-6 bg-brand-softer rounded-full -start-3 ring-8 ring-buffer">
+                    <svg
+                      class="w-3 h-3 text-fg-brand-strong"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
+                      />
+                    </svg>
+                  </span>
+
+                  <TargetBorder isDarkMode={isDarkMode}>
+                    <div className="px-2 py-2 transition-all duration-300 ease-in-out">
+                      <time class="bg-neutral-secondary-medium border border-default-medium text-heading text-xs font-medium px-1.5 py-0.5 rounded">
+                        2022 - 2025
+                      </time>
+                      <h3 className="my-2 text-lg font-semibold text-heading">
+                        Graphic Design Head – Campus Access Organization
+                      </h3>
+                      <p className="text-body">
+                        Led graphic and layout design efforts for the Campus
+                        Access Organization, while also contributing as a video
+                        editor for promotional and creative projects.
+                      </p>
+                    </div>
+                  </TargetBorder>
+                </li>
                 <li class="ms-6">
                   <span class="absolute cursor-target flex items-center justify-center w-6 h-6 bg-brand-softer rounded-full -start-3 ring-8 ring-buffer">
                     <svg
@@ -748,12 +855,7 @@ function App() {
                         key={index}
                         className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow duration-300"
                       >
-                        <video
-                          src={video.src}
-                          controls
-                          className="w-full h-full object-cover"
-                          poster={video.poster}
-                        />
+                        <AutoPlayVideo src={video.src} poster={video.poster} />
                       </div>
                     ),
                   )}
