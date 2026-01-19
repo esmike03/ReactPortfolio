@@ -157,6 +157,7 @@ function App() {
         { icon: <SiLaravel size={40} />, name: "Laravel" },
         { icon: <SiInertia size={40} />, name: "Inertia" },
         { icon: <FaReact size={40} />, name: "React" },
+        { icon: <FaReact size={40} />, name: "React Native" },
         { icon: <SiTailwindcss size={40} />, name: "TailwindCSS" },
         { icon: <FaBootstrap size={40} />, name: "Bootstrap" },
         { icon: <SiFirebase size={40} />, name: "Firebase" },
@@ -771,6 +772,124 @@ function App() {
                   <div className="flex items-center mb-2">
                     {/* Left vertical line */}
                     <div className="w-1 h-6 bg-blue-500 mr-3 rounded"></div>
+                    <h3 className="font-bold text-lg">
+                      Xentro Estates — Website Redesign & Feature Enhancement
+                    </h3>
+                  </div>
+
+                  <a
+                    href="https://xentroestates.xentroholdings.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:underline text-sm mb-2 inline-block"
+                  >
+                    View Website
+                  </a>
+
+                  <p className="mb-3 text-sm">
+                    Led the redesign of the Xentro Estates website and
+                    implemented additional features using Laravel and Photoshop,
+                    improving both user experience and overall functionality.
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <span
+                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
+                   bg-gray-200 text-gray-800
+                   dark:bg-gray-800 dark:text-gray-100"
+                    >
+                      <SiLaravel /> Laravel
+                    </span>
+
+                    <span
+                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
+                   bg-gray-200 text-gray-800
+                   dark:bg-gray-800 dark:text-gray-100"
+                    >
+                      <SiAdobephotoshop /> Photoshop
+                    </span>
+                    <span
+                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
+                   bg-gray-200 text-gray-800
+                   dark:bg-gray-800 dark:text-gray-100"
+                    >
+                      <SiTailwindcss /> Tailwindcss
+                    </span>
+                    <span
+                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
+                   bg-gray-200 text-gray-800
+                   dark:bg-gray-800 dark:text-gray-100"
+                    >
+                      <SiMysql /> Mysql
+                    </span>
+                  </div>
+                </div>
+              </TargetBorder>
+              <TargetBorder isDarkMode={isDarkMode}>
+                <div className="hover:px-4 py-4 transition-all duration-300 ease-in-out rounded-md">
+                  <div className="flex items-center mb-2">
+                    {/* Left vertical line */}
+                    <div className="w-1 h-6 bg-blue-500 mr-3 rounded"></div>
+                    <h3 className="font-bold text-lg">
+                      {" "}
+                      Westpoint Pharma — Website Development
+                    </h3>
+                  </div>
+
+                  <a
+                    href="https://westpointpharma.xentroholdings.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:underline text-sm mb-2 inline-block"
+                  >
+                    View Website
+                  </a>
+
+                  <p className="mb-3 text-sm">
+                    Designed and developed a fully functional website for
+                    Westpoint Pharma, leveraging Laravel and TailwindCSS to
+                    create a modern, responsive, and user-friendly experience.
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <span
+                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
+                   bg-gray-200 text-gray-800
+                   dark:bg-gray-800 dark:text-gray-100"
+                    >
+                      <SiLaravel /> Laravel
+                    </span>
+
+                    <span
+                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
+                   bg-gray-200 text-gray-800
+                   dark:bg-gray-800 dark:text-gray-100"
+                    >
+                      <SiAdobephotoshop /> Photoshop
+                    </span>
+                    <span
+                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
+                   bg-gray-200 text-gray-800
+                   dark:bg-gray-800 dark:text-gray-100"
+                    >
+                      <SiTailwindcss /> Tailwindcss
+                    </span>
+
+                    <span
+                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
+                   bg-gray-200 text-gray-800
+                   dark:bg-gray-800 dark:text-gray-100"
+                    >
+                      <SiMysql /> Mysql
+                    </span>
+                  </div>
+                </div>
+              </TargetBorder>
+              <TargetBorder isDarkMode={isDarkMode}>
+                <div className="hover:px-4 py-4 transition-all duration-300 ease-in-out rounded-md">
+                  <div className="flex items-center mb-2">
+                    {/* Left vertical line */}
+                    <div className="w-1 h-6 bg-blue-500 mr-3 rounded"></div>
                     <h3 className="font-bold text-lg">Helmet Shop</h3>
                   </div>
 
@@ -779,7 +898,9 @@ function App() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-400 hover:underline text-sm mb-2 inline-block"
-                  ></a>
+                  >
+                    View
+                  </a>
 
                   <p className="mb-3 text-sm">
                     Developed a visually engaging helmet shop website using
@@ -843,10 +964,31 @@ function App() {
                     </TargetBorder>
                   ))}
                 </div>
+                <div className="bg-white mt-4 dark:bg-gray-800 rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow duration-300">
+                  <img
+                    src="/public/images/lace.png"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
               <p className="hover:px-2 mt-6 text-center  py-2 transition-all duration-300 ease-in-out">
                 Video Edit
               </p>
+              <div className="w-full  justify-center flex rounded- lg">
+                {" "}
+                <iframe
+                  width="560"
+                  className="rounded-xl my-4"
+                  height="315"
+                  src="https://www.youtube.com/embed/uDFHxjESkBM?si=AyITJ-u8OO8CLlta"
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen
+                ></iframe>
+              </div>
+
               <div className="p-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
                   {(showAll ? videos : videos.slice(0, initialCount)).map(
