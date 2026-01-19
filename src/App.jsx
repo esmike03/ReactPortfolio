@@ -1005,10 +1005,10 @@ function App() {
               <p className="hover:px-2 mt-6 text-center  py-2 transition-all duration-300 ease-in-out">
                 Video Edit
               </p>
-              <div className="w-full  justify-center flex rounded- lg">
+              <div className="w-full px-4 justify-center flex rounded-lg">
                 {" "}
                 <iframe
-                  width="560"
+                  width="590"
                   className="rounded-xl my-4"
                   height="315"
                   src="https://www.youtube.com/embed/uDFHxjESkBM?si=AyITJ-u8OO8CLlta"
