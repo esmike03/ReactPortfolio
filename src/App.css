@@ -31,6 +31,10 @@ body {
   background-image: var(--bg-gradient);
   background-size: cover;
   background-repeat: no-repeat;
+
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
 }
 
 /* --- Dark Mode (default) --- */
