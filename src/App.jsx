@@ -237,10 +237,6 @@ function App() {
       poster: "/public/images/Screenshot 2026-01-19 014226.png",
     },
     {
-      src: "/public/videos/0611(1).mp4",
-      title: "Big Buck Bunny",
-    },
-    {
       src: "/public/videos/0611.mp4",
       title: "Sample Video",
     },
@@ -664,13 +660,8 @@ function App() {
                       <p class="text-body">
                         Getting accepted into this school has been one of my
                         dreams, and pursuing a degree in Information Technology
-                        is something I’ve always aspired to. I first learned
-                        about coding in grade 9, when I was introduced to
-                        programming through DroidScript. Using only my Android
-                        phone, I created my very first app, and ever since then,
-                        I’ve been fascinated by how apps are built and amazed by
-                        the endless possibilities of technology. During my
-                        studies, I also developed my thesis project, the{" "}
+                        is something I’ve always aspired to. During my studies,
+                        I also developed my thesis project, the{" "}
                         <strong>BISU Registrar Appointment System</strong>,
                         which allowed students to efficiently schedule
                         appointments with the registrar, giving me hands-on
