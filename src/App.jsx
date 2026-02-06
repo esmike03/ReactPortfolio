@@ -690,12 +690,12 @@ function App() {
                   </div>
 
                   <a
-                    href="https://github.com/esmike03/bisuappregistrar"
+                    href="https://registrar-bisu.nxprimordial.space/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-400 hover:underline text-sm mb-2 inline-block"
                   >
-                    View on GitHub
+                    Visit Website
                   </a>
 
                   <p className=" mb-3 text-sm">

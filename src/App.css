@@ -7,7 +7,7 @@
   --font-weight: 400;
 
   --text-color: rgba(255, 255, 255, 0.87);
-  --bg-color: #080808;
+  --bg-color: #0b0a0a;
 
   color-scheme: light dark;
   font-synthesis: none;
@@ -40,7 +40,7 @@ body {
 /* --- Dark Mode (default) --- */
 body.dark {
   --text-color: rgba(255, 255, 255, 0.87);
-  --bg-color: #1c1c1c;
+  --bg-color: #111010;
 }
 
 /* --- Light Mode --- */
