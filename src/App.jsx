@@ -38,6 +38,7 @@ import {
   SiCanva,
   SiHtml5,
   SiCss3,
+  SiReact,
 } from "react-icons/si";
 
 import { useState, useEffect, useRef } from "react";
@@ -1021,6 +1022,59 @@ function App() {
                 </div>
               </TargetBorder>
 
+              <TargetBorder isDarkMode={isDarkMode}>
+                <div className="py-4 px-3 transition-all duration-300 ease-in-out rounded-md">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="w-0.5 h-5 rounded-full"
+                      style={{ background: "var(--accent)" }}
+                    />
+                    <h3
+                      className="font-bold text-base"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Konstrukalakal
+                    </h3>
+                  </div>
+
+                  <a
+                    href="https://konstrukalakal.nxprimordial.space/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-link text-xs mb-3 inline-flex items-center gap-1"
+                    style={{ color: "var(--accent)" }}
+                  >
+                    ↗ Visit Website
+                  </a>
+
+                  <p
+                    className="text-sm leading-relaxed mb-3"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Konstrukalakal is a digital marketplace for buying, selling,
+                    trading, and donating construction materials. The platform
+                    connects suppliers, contractors, and individuals to
+                    efficiently exchange building resources while promoting
+                    accessibility and reducing material waste.
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    <span className="tech-tag">
+                      <SiLaravel /> Laravel
+                    </span>
+                    <span className="tech-tag">
+                      <SiTailwindcss /> TailwindCSS
+                    </span>
+                    <span className="tech-tag">
+                      <SiReact /> React
+                    </span>
+                    <span className="tech-tag">
+                      <SiMysql /> MySQL
+                    </span>
+                    <span className="tech-tag">JavaScript</span>
+                  </div>
+                </div>
+              </TargetBorder>
               {/* ── Project 2 ── */}
               <TargetBorder isDarkMode={isDarkMode}>
                 <div className="py-4 px-3 transition-all duration-300 ease-in-out rounded-md">
