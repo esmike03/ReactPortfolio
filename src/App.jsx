@@ -251,7 +251,7 @@ function App() {
     "Graphics Designer",
     "Video Editor",
   ];
-
+  const [menuOpen, setMenuOpen] = useState(false);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -275,7 +275,7 @@ function App() {
       <div className="w-screen cursor-none">
         <div className=" max-w-2xl mx-auto mt-4 p-6">
           <nav
-            className="flex flex-wrap items-center rounded-2xl justify-between gap-2 sm:gap-4 lg:gap-6 sticky top-2 z-40 px-6 py-3 backdrop-blur-md"
+            className="sticky top-2 z-40 px-4 sm:px-6 py-3 backdrop-blur-md rounded-2xl"
             style={{
               borderBottom: "1px solid var(--bg-border)",
               backgroundColor: isDarkMode
@@ -284,30 +284,32 @@ function App() {
               fontFamily: "var(--font-mono)",
             }}
           >
-            {/* ── Logo ── */}
-            <div className="relative inline-block cursor-target group">
-              <p
-                className="font-bold text-base tracking-widest transition-transform duration-300 group-hover:scale-110 "
-                data-text="< EM />"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                <span style={{ color: "var(--accent)", opacity: 0.7 }}>
-                  &lt;
-                </span>
-                <span className="mx-1" style={{ color: "var(--text-primary)" }}>
-                  em
-                </span>
-                <span style={{ color: "var(--accent)", opacity: 0.7 }}>
-                  /&gt;
-                </span>
-              </p>
-            </div>
-
-            {/* ── Links + Toggle ── */}
-            <div className="flex items-center sm:gap-1 lg:gap-2 text-sm">
-              <TargetBorder isDarkMode={isDarkMode}>
+            <div className="flex items-center justify-between">
+              {/* Logo */}
+              <div className="relative inline-block cursor-target group">
                 <p
-                  className="px-3 py-2 transition-all duration-200 nav-link"
+                  className="font-bold text-base tracking-widest transition-transform duration-300 group-hover:scale-110"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  <span style={{ color: "var(--accent)", opacity: 0.7 }}>
+                    &lt;
+                  </span>
+                  <span
+                    className="mx-1"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    em
+                  </span>
+                  <span style={{ color: "var(--accent)", opacity: 0.7 }}>
+                    /&gt;
+                  </span>
+                </p>
+              </div>
+
+              {/* Desktop Links */}
+              <div className="hidden md:flex items-center gap-2 text-sm">
+                <p
+                  className="px-3 py-2 nav-link"
                   onClick={() =>
                     document
                       .getElementById("timeline")
@@ -316,11 +318,9 @@ function App() {
                 >
                   timeline
                 </p>
-              </TargetBorder>
 
-              <TargetBorder isDarkMode={isDarkMode}>
                 <p
-                  className="px-3 py-2 transition-all duration-200 nav-link"
+                  className="px-3 py-2 nav-link"
                   onClick={() =>
                     document
                       .getElementById("projects")
@@ -329,11 +329,9 @@ function App() {
                 >
                   projects
                 </p>
-              </TargetBorder>
 
-              <TargetBorder isDarkMode={isDarkMode}>
                 <p
-                  className="px-3 py-2 transition-all duration-200 nav-link"
+                  className="px-3 py-2 nav-link"
                   onClick={() =>
                     document
                       .getElementById("portfolio")
@@ -342,47 +340,101 @@ function App() {
                 >
                   portfolio
                 </p>
-              </TargetBorder>
 
-              <TargetBorder isDarkMode={isDarkMode}>
                 <p
-                  className="px-3 py-2 transition-all duration-200 nav-link"
+                  className="px-3 py-2 nav-link"
                   onClick={() =>
                     document
                       .getElementById("techstack")
                       .scrollIntoView({ behavior: "smooth" })
                   }
-                  style={{ letterSpacing: "0.05em" }}
                 >
                   $_
                 </p>
-              </TargetBorder>
 
-              {/* Divider */}
-              <span
-                className="w-px h-4 mx-2"
-                style={{ background: "var(--accent)", opacity: 0.2 }}
-              />
+                <span
+                  className="w-px h-4 mx-2"
+                  style={{ background: "var(--accent)", opacity: 0.2 }}
+                />
 
-              {/* Theme toggle */}
+                {/* Theme toggle */}
+                <div
+                  onClick={toggleTheme}
+                  className="cursor-pointer p-2 rounded-md theme-toggle"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  {isDarkMode ? (
+                    <MdWbSunny size={20} />
+                  ) : (
+                    <MdDarkMode size={20} />
+                  )}
+                </div>
+              </div>
+
+              {/* Mobile Menu Button */}
               <div
-                onClick={toggleTheme}
-                className="cursor-target p-2 rounded-md transition-all duration-200 theme-toggle"
-                style={{ color: "var(--text-muted)" }}
+                className="md:hidden cursor-pointer p-2"
+                onClick={() => setMenuOpen(!menuOpen)}
               >
-                {isDarkMode ? (
-                  <MdWbSunny
-                    size={20}
-                    className="transition-transform duration-500 hover:rotate-90"
-                  />
-                ) : (
-                  <MdDarkMode
-                    size={20}
-                    className="transition-transform duration-500"
-                  />
-                )}
+                ☰
               </div>
             </div>
+
+            {/* Mobile Menu */}
+            {menuOpen && (
+              <div className="flex flex-col mt-4 gap-2 md:hidden text-sm">
+                <p
+                  className="px-3 py-2 nav-link"
+                  onClick={() =>
+                    document
+                      .getElementById("timeline")
+                      .scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  timeline
+                </p>
+
+                <p
+                  className="px-3 py-2 nav-link"
+                  onClick={() =>
+                    document
+                      .getElementById("projects")
+                      .scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  projects
+                </p>
+
+                <p
+                  className="px-3 py-2 nav-link"
+                  onClick={() =>
+                    document
+                      .getElementById("portfolio")
+                      .scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  portfolio
+                </p>
+
+                <p
+                  className="px-3 py-2 nav-link"
+                  onClick={() =>
+                    document
+                      .getElementById("techstack")
+                      .scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  $_
+                </p>
+
+                <div
+                  onClick={toggleTheme}
+                  className="cursor-pointer px-3 py-2 theme-toggle"
+                >
+                  Toggle Theme
+                </div>
+              </div>
+            )}
 
             <style>{`
     .nav-link {
@@ -390,28 +442,17 @@ function App() {
       cursor: pointer;
       position: relative;
     }
+
     .nav-link:hover {
       color: var(--accent);
     }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: 4px;
-      left: 12px;
-      right: 12px;
-      height: 1px;
-     
-    }
-    .nav-link:hover::after {
-      transform: scaleX(1);
-    }
+
     .theme-toggle:hover {
       color: var(--accent) !important;
       background: var(--accent-glow) !important;
     }
   `}</style>
           </nav>
-
           <div className="mt-10">
             <section
               className="relative flex flex-col gap-5 py-20 sm:py-28"
