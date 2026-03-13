@@ -273,25 +273,40 @@ function App() {
       <Cursor isDarkMode={isDarkMode} />
       <div className="w-screen cursor-none">
         <div className=" max-w-2xl mx-auto mt-4 p-6">
-          <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-4 lg:gap-6 ">
+          <nav
+            className="flex flex-wrap items-center rounded-2xl justify-between gap-2 sm:gap-4 lg:gap-6 sticky top-2 z-40 px-6 py-3 backdrop-blur-md"
+            style={{
+              borderBottom: "1px solid var(--bg-border)",
+              backgroundColor: isDarkMode
+                ? "rgba(8,12,20,0.75)"
+                : "rgba(240,244,248,0.8)",
+              fontFamily: "var(--font-mono)",
+            }}
+          >
+            {/* ── Logo ── */}
             <div className="relative inline-block cursor-target group">
               <p
-                className="
-                font-bold font-['Outfit'] text-lg
-                transition-transform duration-300
-                group-hover:scale-110
-                glitch
-              "
+                className="font-bold text-base tracking-widest transition-transform duration-300 group-hover:scale-110 "
                 data-text="< EM />"
+                style={{ fontFamily: "var(--font-display)" }}
               >
-                {"<"} <span className="text-lg">EM</span> {"/>"}
+                <span style={{ color: "var(--accent)", opacity: 0.7 }}>
+                  &lt;
+                </span>
+                <span className="mx-1" style={{ color: "var(--text-primary)" }}>
+                  em
+                </span>
+                <span style={{ color: "var(--accent)", opacity: 0.7 }}>
+                  /&gt;
+                </span>
               </p>
             </div>
 
-            <div className="flex sm:gap-2 lg:gap-6 text-sm">
+            {/* ── Links + Toggle ── */}
+            <div className="flex items-center sm:gap-1 lg:gap-2 text-sm">
               <TargetBorder isDarkMode={isDarkMode}>
                 <p
-                  className=" px-2 py-2   hover:scale-110 transition-all duration-300 ease-in-out"
+                  className="px-3 py-2 transition-all duration-200 nav-link"
                   onClick={() =>
                     document
                       .getElementById("timeline")
@@ -301,9 +316,10 @@ function App() {
                   timeline
                 </p>
               </TargetBorder>
+
               <TargetBorder isDarkMode={isDarkMode}>
                 <p
-                  className=" px-2 py-2   hover:scale-110 transition-all duration-300 ease-in-out"
+                  className="px-3 py-2 transition-all duration-200 nav-link"
                   onClick={() =>
                     document
                       .getElementById("projects")
@@ -313,9 +329,10 @@ function App() {
                   projects
                 </p>
               </TargetBorder>
+
               <TargetBorder isDarkMode={isDarkMode}>
                 <p
-                  className=" px-2 py-2   hover:scale-110 transition-all duration-300 ease-in-out"
+                  className="px-3 py-2 transition-all duration-200 nav-link"
                   onClick={() =>
                     document
                       .getElementById("portfolio")
@@ -325,126 +342,265 @@ function App() {
                   portfolio
                 </p>
               </TargetBorder>
+
               <TargetBorder isDarkMode={isDarkMode}>
                 <p
+                  className="px-3 py-2 transition-all duration-200 nav-link"
                   onClick={() =>
                     document
                       .getElementById("techstack")
                       .scrollIntoView({ behavior: "smooth" })
                   }
-                  className="hover:scale-110 py-2 px-3 rounded-md transition-all duration-300 ease-in-out"
+                  style={{ letterSpacing: "0.05em" }}
                 >
                   $_
                 </p>
               </TargetBorder>
-              <TargetBorder isDarkMode={isDarkMode}></TargetBorder>
-              <div onClick={toggleTheme} className="cursor-target p-2">
+
+              {/* Divider */}
+              <span
+                className="w-px h-4 mx-2"
+                style={{ background: "var(--accent)", opacity: 0.2 }}
+              />
+
+              {/* Theme toggle */}
+              <div
+                onClick={toggleTheme}
+                className="cursor-target p-2 rounded-md transition-all duration-200 theme-toggle"
+                style={{ color: "var(--text-muted)" }}
+              >
                 {isDarkMode ? (
                   <MdWbSunny
-                    size={22}
-                    className="transform transition-transform duration-500 hover:rotate-90"
+                    size={20}
+                    className="transition-transform duration-500 hover:rotate-90"
                   />
                 ) : (
                   <MdDarkMode
-                    size={22}
-                    className="transform transition-transform duration-500 hover:rotate-240"
+                    size={20}
+                    className="transition-transform duration-500"
                   />
                 )}
               </div>
             </div>
-          </div>
 
-          <div className="mt-20">
-            <section>
-              <div className=" sm:text-left">
-                <p className="sm:text-sm mb-1">Hi, I'm</p>
+            <style>{`
+    .nav-link {
+      color: var(--text-secondary);
+      cursor: pointer;
+      position: relative;
+    }
+    .nav-link:hover {
+      color: var(--accent);
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 12px;
+      right: 12px;
+      height: 1px;
+     
+    }
+    .nav-link:hover::after {
+      transform: scaleX(1);
+    }
+    .theme-toggle:hover {
+      color: var(--accent) !important;
+      background: var(--accent-glow) !important;
+    }
+  `}</style>
+          </nav>
 
-                <TargetBorder isDarkMode={isDarkMode}>
-                  <h1 className="font-extrabold  transition-all duration-300 ease-in-out hover:px-2 py-1 lg:text-4xl text-2xl mt-2">
-                    Earl Mike H. Sarabia
-                  </h1>
-                </TargetBorder>
+          <div className="mt-10">
+            <section
+              className="relative flex flex-col gap-5 py-20 sm:py-28"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              <div className="sm:text-left flex flex-col gap-4">
+                {/* Greeting */}
+                <p
+                  className="text-xs tracking-[0.2em] uppercase"
+                  style={{ color: "var(--accent)", opacity: 0.75 }}
+                >
+                  // hello world
+                </p>
 
-                <p className="sm:text-sm mt-1 h-8 overflow-hidden">
-                  {age},{" "}
-                  <span className="inline-block px-2 border  rounded-md transition-all duration-500 ease-in-out">
+                {/* Name */}
+                <div className="group w-fit">
+                  <TargetBorder isDarkMode={isDarkMode}>
+                    <h1
+                      className="font-extrabold leading-tight text-3xl lg:text-5xl py-1"
+                      data-text="Earl Mike H. Sarabia"
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        color: "var(--text-primary)",
+                      }}
+                    >
+                      Earl Mike H. Sarabia
+                    </h1>
+                  </TargetBorder>
+                </div>
+
+                {/* Age + Role */}
+                <p className="flex items-center gap-3 text-sm mt-1">
+                  <span style={{ color: "var(--text-secondary)" }}>{age}</span>
+
+                  <span style={{ color: "var(--accent)", opacity: 0.3 }}>
+                    |
+                  </span>
+
+                  <span
+                    className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-md"
+                    style={{
+                      border: "1px solid rgba(0,229,255,0.2)",
+                      background: "rgba(0,229,255,0.05)",
+                      color: "var(--accent)",
+                      fontSize: "0.875rem",
+                    }}
+                  >
                     {roles[index]}
+
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: "2px",
+                        height: "0.85em",
+                        background: "var(--accent)",
+                        verticalAlign: "middle",
+                        animation: "blink 1s step-end infinite",
+                      }}
+                    />
                   </span>
                 </p>
 
-                <p className="lg:text-sm text-sm mt-2 max-w-xl">
+                {/* Bio */}
+                <p
+                  className="text-sm max-w-lg leading-relaxed"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   I build responsive web experiences and clean layouts with a
                   focus on usability, performance, and modern design.
                 </p>
               </div>
 
-              <div className="flex mb-20 mt-6 justify-center gap-6 w-fit">
+              {/* Social links + Resume */}
+              <div className="flex items-center gap-2 mt-2 mb-20">
+                {/* Email */}
                 <a
                   href="mailto:sarabiaearlmike14@gmail.com"
-                  className="hover:scale-110 transition-all duration-300 ease-in-out cursor-target"
-                  style={{ color: isDarkMode ? "white" : "black" }}
+                  aria-label="Email"
+                  className="cursor-target social-icon flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200"
+                  style={{
+                    border: "1px solid var(--bg-border)",
+                    background: "var(--bg-surface)",
+                    color: "var(--text-muted)",
+                  }}
                 >
-                  <MdEmail size={22} />
+                  <MdEmail size={16} />
                 </a>
 
+                {/* GitHub */}
                 <a
                   href="https://github.com/esmike03"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:scale-110 transition-all duration-300 ease-in-out cursor-target"
-                  style={{ color: isDarkMode ? "white" : "black" }}
+                  aria-label="GitHub"
+                  className="cursor-target social-icon flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200"
+                  style={{
+                    border: "1px solid var(--bg-border)",
+                    background: "var(--bg-surface)",
+                    color: "var(--text-muted)",
+                  }}
                 >
-                  <FaGithub size={22} />
+                  <FaGithub size={16} />
                 </a>
 
+                {/* LinkedIn */}
                 <a
                   href="https://www.linkedin.com/in/earl-mike-sarabia-4a6532346/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:scale-110 transition-all duration-300 ease-in-out cursor-target"
-                  style={{ color: isDarkMode ? "white" : "black" }}
+                  aria-label="LinkedIn"
+                  className="cursor-target social-icon flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200"
+                  style={{
+                    border: "1px solid var(--bg-border)",
+                    background: "var(--bg-surface)",
+                    color: "var(--text-muted)",
+                  }}
                 >
-                  <FaLinkedin size={22} />
+                  <FaLinkedin size={16} />
                 </a>
+
+                {/* Divider */}
+                <span
+                  className="w-px h-5 mx-1"
+                  style={{ background: "var(--bg-border)" }}
+                />
+
+                {/* Resume */}
                 <a
                   href="/Sarabia_EarlMike-Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative inline-block cursor-target"
+                  className="cursor-target resume-btn inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-all duration-200"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    border: "1px solid rgba(0,229,255,0.25)",
+                    background: "rgba(0,229,255,0.05)",
+                    color: "var(--accent)",
+                  }}
                 >
-                  <FaFileDownload
-                    size={22}
-                    className={`transition-transform duration-300 ease-in-out hover:animate-download ${
-                      isDarkMode ? "text-white" : "text-black"
-                    }`}
-                  />
-
-                  <style>
-                    {`
-                    @keyframes download {
-                      0% { transform: translateY(0px); }
-                      50% { transform: translateY(6px); }
-                      100% { transform: translateY(0px); }
-                    }
-
-                    .hover\\:animate-download:hover {
-                      animation: download 0.6s ease-in-out infinite;
-                    }
-                  `}
-                  </style>
+                  <span style={{ opacity: 0.45 }}>$</span>
+                  <span>./resume.pdf</span>
+                  <FaFileDownload size={11} className="resume-dl-icon" />
                 </a>
               </div>
+
+              <style>{`
+    @keyframes blink {
+      0%,100%{opacity:1;}
+      50%{opacity:0;}
+    }
+
+    .social-icon:hover {
+      border-color: var(--accent) !important;
+      color: var(--accent) !important;
+      background: var(--accent-glow) !important;
+    }
+
+    .resume-btn:hover {
+      background: rgba(0,229,255,0.12) !important;
+      border-color: var(--accent) !important;
+    }
+
+    .resume-btn:hover .resume-dl-icon {
+      animation: dl-bounce 0.6s ease-in-out infinite;
+    }
+
+    @keyframes dl-bounce {
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(3px);}
+    }
+  `}</style>
             </section>
 
-            <section id="timeline">
+            <section id="timeline" style={{ fontFamily: "var(--font-mono)" }}>
+              {/* ── About Me heading ── */}
               <TargetBorder isDarkMode={isDarkMode}>
-                <p className="hover:px-2  py-2 transition-all duration-300 ease-in-out">
+                <p
+                  className="py-2 px-2 transition-all duration-300 ease-in-out text-sm"
+                  style={{ color: "var(--accent)" }}
+                >
                   $ about me_
                 </p>
               </TargetBorder>
 
-              <p className="mt-4 mb-10 text-left lg:text-justify">
-                Hi, I’m Earl Mike Sarabia. I discovered coding back in Grade 9
+              {/* ── Bio ── */}
+              <p
+                className="mt-4 mb-10 text-sm leading-relaxed text-left lg:text-justify"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Hi, I'm Earl Mike Sarabia. I discovered coding back in Grade 9
                 when a friend introduced me to DroidScript. Around the same
                 time, I also started creating layouts using PixelLab on my
                 phone. From that moment, I became curious about how applications
@@ -457,17 +613,34 @@ function App() {
                 designs using Photoshop and Canva.
               </p>
 
+              {/* ── Timeline heading ── */}
               <TargetBorder isDarkMode={isDarkMode}>
-                <p className="hover:px-2  py-2 transition-all duration-300 ease-in-out">
+                <p
+                  className="py-2 px-2 transition-all duration-300 ease-in-out text-sm"
+                  style={{ color: "var(--accent)" }}
+                >
                   $ timeline_
                 </p>
               </TargetBorder>
 
-              <ol class="relative text-sm px-2 border-s mt-5 border-default">
-                <li class="mb-10 ms-6">
-                  <span class="absolute cursor-target flex items-center justify-center w-6 h-6 bg-brand-softer rounded-full -start-3 ring-8 ring-buffer">
+              {/* ── Timeline list ── */}
+              <ol
+                className="relative text-sm px-2 mt-5 border-s"
+                style={{ borderColor: "var(--bg-border)" }}
+              >
+                {/* Item 1 */}
+                <li className="mb-10 ms-6">
+                  <span
+                    className="absolute cursor-target flex items-center justify-center w-6 h-6 rounded-full -start-3"
+                    style={{
+                      background: "var(--bg-surface)",
+                      border: "1px solid var(--accent)",
+                      boxShadow: "0 0 8px var(--accent-glow)",
+                    }}
+                  >
                     <svg
-                      class="w-3 h-3 text-fg-brand-strong"
+                      className="w-3 h-3"
+                      style={{ color: "var(--accent)" }}
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -477,25 +650,47 @@ function App() {
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
                       />
                     </svg>
                   </span>
                   <TargetBorder isDarkMode={isDarkMode}>
-                    <div className="px-2 py-2 transition-all duration-300 ease-in-out">
-                      <time class="bg-neutral-secondary-medium border border-default-medium text-heading text-xs font-medium px-1.5 py-0.5 rounded">
-                        July 2025 - February 2026
-                      </time>
-                      <h3 class="flex items-center mb-1 text-lg font-semibold text-heading my-2">
-                        IT System Operator
-                        <span class="ms-2 bg-brand-softer border border-brand-subtle text-fg-brand-strong text-xs font-medium px-1.5 py-0.5 rounded">
+                    <div className="px-3 py-3 transition-all duration-300 ease-in-out">
+                      <div className="flex items-center gap-2 flex-wrap mb-2">
+                        <time
+                          className="text-xs font-medium px-2 py-0.5 rounded-md"
+                          style={{
+                            background: "var(--bg-surface)",
+                            border: "1px solid var(--bg-border)",
+                            color: "var(--text-muted)",
+                          }}
+                        >
+                          July 2025 – February 2026
+                        </time>
+                        <span
+                          className="text-xs font-medium px-2 py-0.5 rounded-md"
+                          style={{
+                            background: "rgba(0,229,255,0.08)",
+                            border: "1px solid rgba(0,229,255,0.2)",
+                            color: "var(--accent)",
+                          }}
+                        >
                           Latest
                         </span>
+                      </div>
+                      <h3
+                        className="text-base font-semibold mb-2"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        IT System Operator
                       </h3>
-                      <p class="mb-4 text-body">
+                      <p
+                        className="text-sm leading-relaxed"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
                         This was my first job after graduation, where I gained
                         hands-on experience in various IT tasks. I learned
                         troubleshooting and repairing PCs, working with POS
@@ -509,10 +704,19 @@ function App() {
                     </div>
                   </TargetBorder>
                 </li>
-                <li class="mb-10 ms-6">
-                  <span class="absolute cursor-target flex items-center justify-center w-6 h-6 bg-brand-softer rounded-full -start-3 ring-8 ring-buffer">
+
+                {/* Item 2 */}
+                <li className="mb-10 ms-6">
+                  <span
+                    className="absolute cursor-target flex items-center justify-center w-6 h-6 rounded-full -start-3"
+                    style={{
+                      background: "var(--bg-surface)",
+                      border: "1px solid var(--bg-border)",
+                    }}
+                  >
                     <svg
-                      class="w-3 h-3 text-fg-brand-strong"
+                      className="w-3 h-3"
+                      style={{ color: "var(--text-muted)" }}
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -522,26 +726,39 @@ function App() {
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
                       />
                     </svg>
                   </span>
                   <TargetBorder isDarkMode={isDarkMode}>
-                    <div className="px-2 py-2 transition-all duration-300 ease-in-out">
-                      <time class="bg-neutral-secondary-medium border border-default-medium text-heading text-xs font-medium px-1.5 py-0.5 rounded">
-                        January 2025 - May 2025
+                    <div className="px-3 py-3 transition-all duration-300 ease-in-out">
+                      <time
+                        className="text-xs font-medium px-2 py-0.5 rounded-md"
+                        style={{
+                          background: "var(--bg-surface)",
+                          border: "1px solid var(--bg-border)",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        January 2025 – May 2025
                       </time>
-                      <h3 class="my-2 text-lg font-semibold text-heading">
+                      <h3
+                        className="text-base font-semibold my-2"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         Web Development Intern
                       </h3>
-                      <p class="text-body">
+                      <p
+                        className="text-sm leading-relaxed"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
                         My first internship was in Cebu at Xentro Holdings Corp.
                         During this internship, I developed fully functional
                         website systems and implemented them across all four of
-                        the company’s divisions: Westpoint, Xentra Medica,
+                        the company's divisions: Westpoint, Xentra Medica,
                         Popstar Drug Store, and Xentro Estates. I also
                         redesigned parts of the websites and added new
                         functionalities to improve usability and performance. In
@@ -555,10 +772,19 @@ function App() {
                     </div>
                   </TargetBorder>
                 </li>
-                <li class="mb-10 ms-6">
-                  <span class="absolute cursor-target flex items-center justify-center w-6 h-6 bg-brand-softer rounded-full -start-3 ring-8 ring-buffer">
+
+                {/* Item 3 */}
+                <li className="mb-10 ms-6">
+                  <span
+                    className="absolute cursor-target flex items-center justify-center w-6 h-6 rounded-full -start-3"
+                    style={{
+                      background: "var(--bg-surface)",
+                      border: "1px solid var(--bg-border)",
+                    }}
+                  >
                     <svg
-                      class="w-3 h-3 text-fg-brand-strong"
+                      className="w-3 h-3"
+                      style={{ color: "var(--text-muted)" }}
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -568,23 +794,35 @@ function App() {
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
                       />
                     </svg>
                   </span>
-
                   <TargetBorder isDarkMode={isDarkMode}>
-                    <div className="px-2 py-2 transition-all duration-300 ease-in-out">
-                      <time class="bg-neutral-secondary-medium border border-default-medium text-heading text-xs font-medium px-1.5 py-0.5 rounded">
-                        2023 - 2025
+                    <div className="px-3 py-3 transition-all duration-300 ease-in-out">
+                      <time
+                        className="text-xs font-medium px-2 py-0.5 rounded-md"
+                        style={{
+                          background: "var(--bg-surface)",
+                          border: "1px solid var(--bg-border)",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        2023 – 2025
                       </time>
-                      <h3 className="my-2 text-lg font-semibold text-heading">
+                      <h3
+                        className="text-base font-semibold my-2"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         Layout Designer – Legion Organization
                       </h3>
-                      <p className="text-body">
+                      <p
+                        className="text-sm leading-relaxed"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
                         Served as a layout designer for the Legion Organization,
                         creating visual layouts and design assets for various
                         projects and initiatives.
@@ -592,10 +830,19 @@ function App() {
                     </div>
                   </TargetBorder>
                 </li>
-                <li class="mb-10 ms-6">
-                  <span class="absolute cursor-target flex items-center justify-center w-6 h-6 bg-brand-softer rounded-full -start-3 ring-8 ring-buffer">
+
+                {/* Item 4 */}
+                <li className="mb-10 ms-6">
+                  <span
+                    className="absolute cursor-target flex items-center justify-center w-6 h-6 rounded-full -start-3"
+                    style={{
+                      background: "var(--bg-surface)",
+                      border: "1px solid var(--bg-border)",
+                    }}
+                  >
                     <svg
-                      class="w-3 h-3 text-fg-brand-strong"
+                      className="w-3 h-3"
+                      style={{ color: "var(--text-muted)" }}
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -605,23 +852,35 @@ function App() {
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
                       />
                     </svg>
                   </span>
-
                   <TargetBorder isDarkMode={isDarkMode}>
-                    <div className="px-2 py-2 transition-all duration-300 ease-in-out">
-                      <time class="bg-neutral-secondary-medium border border-default-medium text-heading text-xs font-medium px-1.5 py-0.5 rounded">
-                        2022 - 2025
+                    <div className="px-3 py-3 transition-all duration-300 ease-in-out">
+                      <time
+                        className="text-xs font-medium px-2 py-0.5 rounded-md"
+                        style={{
+                          background: "var(--bg-surface)",
+                          border: "1px solid var(--bg-border)",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        2022 – 2025
                       </time>
-                      <h3 className="my-2 text-lg font-semibold text-heading">
+                      <h3
+                        className="text-base font-semibold my-2"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         Graphic Design Head – Campus Access Organization
                       </h3>
-                      <p className="text-body">
+                      <p
+                        className="text-sm leading-relaxed"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
                         Led graphic and layout design efforts for the Campus
                         Access Organization, while also contributing as a video
                         editor for promotional and creative projects.
@@ -629,10 +888,19 @@ function App() {
                     </div>
                   </TargetBorder>
                 </li>
-                <li class="ms-6">
-                  <span class="absolute cursor-target flex items-center justify-center w-6 h-6 bg-brand-softer rounded-full -start-3 ring-8 ring-buffer">
+
+                {/* Item 5 */}
+                <li className="ms-6">
+                  <span
+                    className="absolute cursor-target flex items-center justify-center w-6 h-6 rounded-full -start-3"
+                    style={{
+                      background: "var(--bg-surface)",
+                      border: "1px solid var(--bg-border)",
+                    }}
+                  >
                     <svg
-                      class="w-3 h-3 text-fg-brand-strong"
+                      className="w-3 h-3"
+                      style={{ color: "var(--text-muted)" }}
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -642,28 +910,43 @@ function App() {
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
                       />
                     </svg>
                   </span>
                   <TargetBorder isDarkMode={isDarkMode}>
-                    <div className="px-2 py-2 transition-all duration-300 ease-in-out">
-                      <time class="bg-neutral-secondary-medium border border-default-medium text-heading text-xs font-medium px-1.5 py-0.5 rounded">
-                        2021 - 2025
+                    <div className="px-3 py-3 transition-all duration-300 ease-in-out">
+                      <time
+                        className="text-xs font-medium px-2 py-0.5 rounded-md"
+                        style={{
+                          background: "var(--bg-surface)",
+                          border: "1px solid var(--bg-border)",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        2021 – 2025
                       </time>
-                      <h3 class="my-2 text-lg font-semibold text-heading">
+                      <h3
+                        className="text-base font-semibold my-2"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         BS in Information Technology
                       </h3>
-                      <p class="text-body">
+                      <p
+                        className="text-sm leading-relaxed"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
                         Getting accepted into this school has been one of my
                         dreams, and pursuing a degree in Information Technology
-                        is something I’ve always aspired to. During my studies,
+                        is something I've always aspired to. During my studies,
                         I also developed my thesis project, the{" "}
-                        <strong>BISU Registrar Appointment System</strong>,
-                        which allowed students to efficiently schedule
+                        <strong style={{ color: "var(--text-primary)" }}>
+                          BISU Registrar Appointment System
+                        </strong>
+                        , which allowed students to efficiently schedule
                         appointments with the registrar, giving me hands-on
                         experience in building real-world web applications.
                       </p>
@@ -672,19 +955,33 @@ function App() {
                 </li>
               </ol>
             </section>
-            <section id="projects" className="mt-10">
+            <section
+              id="projects"
+              className="mt-10"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              {/* ── Heading ── */}
               <TargetBorder isDarkMode={isDarkMode}>
-                <p className="hover:px-4   py-2 transition-all duration-300 ease-in-out">
+                <p
+                  className="py-2 px-2 transition-all duration-300 ease-in-out text-sm"
+                  style={{ color: "var(--accent)" }}
+                >
                   $ projects_
                 </p>
               </TargetBorder>
 
+              {/* ── Project 1 ── */}
               <TargetBorder isDarkMode={isDarkMode}>
-                <div className="hover:px-4 py-4 transition-all duration-300 ease-in-out rounded-md">
-                  <div className="flex items-center mb-2">
-                    {/* Left vertical line */}
-                    <div className="w-1 h-6 bg-blue-500 mr-3 rounded"></div>
-                    <h3 className="font-bold text-lg">
+                <div className="py-4 px-3 transition-all duration-300 ease-in-out rounded-md">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="w-0.5 h-5 rounded-full"
+                      style={{ background: "var(--accent)" }}
+                    />
+                    <h3
+                      className="font-bold text-base"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       BISU Registrar Appointment System
                     </h3>
                   </div>
@@ -693,69 +990,67 @@ function App() {
                     href="https://registrar-bisu.nxprimordial.space/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:underline text-sm mb-2 inline-block"
+                    className="project-link text-xs mb-3 inline-flex items-center gap-1"
+                    style={{ color: "var(--accent)" }}
                   >
-                    Visit Website
+                    ↗ Visit Website
                   </a>
 
-                  <p className=" mb-3 text-sm">
+                  <p
+                    className="text-sm leading-relaxed mb-3"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     Developed a web-based appointment system for the BISU
                     Registrar to streamline the document request process using
                     Laravel, ensuring efficient scheduling and management of
                     student appointments.
                   </p>
 
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
+                  <div className="flex flex-wrap gap-2">
+                    <span className="tech-tag">
                       <SiLaravel /> Laravel
                     </span>
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
+                    <span className="tech-tag">
                       <SiTailwindcss /> TailwindCSS
                     </span>
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
+                    <span className="tech-tag">
                       <SiMysql /> MySQL
                     </span>
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      JavaScript
-                    </span>
+                    <span className="tech-tag">JavaScript</span>
                   </div>
                 </div>
               </TargetBorder>
 
+              {/* ── Project 2 ── */}
               <TargetBorder isDarkMode={isDarkMode}>
-                <div className="hover:px-4 py-4 transition-all duration-300 ease-in-out rounded-md">
-                  <div className="flex items-center mb-2">
-                    {/* Left vertical line */}
-                    <div className="w-1 h-6 bg-blue-500 mr-3 rounded"></div>
-                    <h3 className="font-bold text-lg">Travel Companion</h3>
+                <div className="py-4 px-3 transition-all duration-300 ease-in-out rounded-md">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="w-0.5 h-5 rounded-full"
+                      style={{ background: "var(--accent)" }}
+                    />
+                    <h3
+                      className="font-bold text-base"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Travel Companion
+                    </h3>
                   </div>
 
                   <a
                     href="https://github.com/esmike03/TravelCompanion"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:underline text-sm mb-2 inline-block"
+                    className="project-link text-xs mb-3 inline-flex items-center gap-1"
+                    style={{ color: "var(--accent)" }}
                   >
-                    View on GitHub
+                    ↗ View on GitHub
                   </a>
 
-                  <p className=" mb-3 text-sm">
+                  <p
+                    className="text-sm leading-relaxed mb-3"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     Designed and developed an Android app that guides users to
                     popular tourist attractions in Bohol. Leveraged Google Maps
                     and OpenStreetView for an immersive and seamless navigation
@@ -763,47 +1058,31 @@ function App() {
                     enable quick and secure user login.
                   </p>
 
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
+                  <div className="flex flex-wrap gap-2">
+                    <span className="tech-tag">
                       <SiAndroidstudio /> Android Studio
                     </span>
-
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
+                    <span className="tech-tag">
                       <SiFirebase /> Firebase
                     </span>
-
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      Google Maps
-                    </span>
-
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      OpenStreetView
-                    </span>
+                    <span className="tech-tag">Google Maps</span>
+                    <span className="tech-tag">OpenStreetView</span>
                   </div>
                 </div>
               </TargetBorder>
+
+              {/* ── Project 3 ── */}
               <TargetBorder isDarkMode={isDarkMode}>
-                <div className="hover:px-4 py-4 transition-all duration-300 ease-in-out rounded-md">
-                  <div className="flex items-center mb-2">
-                    {/* Left vertical line */}
-                    <div className="w-1 h-6 bg-blue-500 mr-3 rounded"></div>
-                    <h3 className="font-bold text-lg">
+                <div className="py-4 px-3 transition-all duration-300 ease-in-out rounded-md">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="w-0.5 h-5 rounded-full"
+                      style={{ background: "var(--accent)" }}
+                    />
+                    <h3
+                      className="font-bold text-base"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       Xentro Estates — Website Redesign & Feature Enhancement
                     </h3>
                   </div>
@@ -812,57 +1091,50 @@ function App() {
                     href="https://xentroestates.xentroholdings.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:underline text-sm mb-2 inline-block"
+                    className="project-link text-xs mb-3 inline-flex items-center gap-1"
+                    style={{ color: "var(--accent)" }}
                   >
-                    View Website
+                    ↗ View Website
                   </a>
 
-                  <p className="mb-3 text-sm">
+                  <p
+                    className="text-sm leading-relaxed mb-3"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     Led the redesign of the Xentro Estates website and
                     implemented additional features using Laravel and Photoshop,
                     improving both user experience and overall functionality.
                   </p>
 
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
+                  <div className="flex flex-wrap gap-2">
+                    <span className="tech-tag">
                       <SiLaravel /> Laravel
                     </span>
-
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
+                    <span className="tech-tag">
                       <SiAdobephotoshop /> Photoshop
                     </span>
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      <SiTailwindcss /> Tailwindcss
+                    <span className="tech-tag">
+                      <SiTailwindcss /> TailwindCSS
                     </span>
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      <SiMysql /> Mysql
+                    <span className="tech-tag">
+                      <SiMysql /> MySQL
                     </span>
                   </div>
                 </div>
               </TargetBorder>
+
+              {/* ── Project 4 ── */}
               <TargetBorder isDarkMode={isDarkMode}>
-                <div className="hover:px-4 py-4 transition-all duration-300 ease-in-out rounded-md">
-                  <div className="flex items-center mb-2">
-                    {/* Left vertical line */}
-                    <div className="w-1 h-6 bg-blue-500 mr-3 rounded"></div>
-                    <h3 className="font-bold text-lg">
-                      {" "}
+                <div className="py-4 px-3 transition-all duration-300 ease-in-out rounded-md">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="w-0.5 h-5 rounded-full"
+                      style={{ background: "var(--accent)" }}
+                    />
+                    <h3
+                      className="font-bold text-base"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       Westpoint Pharma — Website Development
                     </h3>
                   </div>
@@ -871,69 +1143,68 @@ function App() {
                     href="https://westpointpharma.xentroholdings.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:underline text-sm mb-2 inline-block"
+                    className="project-link text-xs mb-3 inline-flex items-center gap-1"
+                    style={{ color: "var(--accent)" }}
                   >
-                    View Website
+                    ↗ View Website
                   </a>
 
-                  <p className="mb-3 text-sm">
+                  <p
+                    className="text-sm leading-relaxed mb-3"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     Designed and developed a fully functional website for
                     Westpoint Pharma, leveraging Laravel and TailwindCSS to
                     create a modern, responsive, and user-friendly experience.
                   </p>
 
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
+                  <div className="flex flex-wrap gap-2">
+                    <span className="tech-tag">
                       <SiLaravel /> Laravel
                     </span>
-
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
+                    <span className="tech-tag">
                       <SiAdobephotoshop /> Photoshop
                     </span>
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      <SiTailwindcss /> Tailwindcss
+                    <span className="tech-tag">
+                      <SiTailwindcss /> TailwindCSS
                     </span>
-
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      <SiMysql /> Mysql
+                    <span className="tech-tag">
+                      <SiMysql /> MySQL
                     </span>
                   </div>
                 </div>
               </TargetBorder>
+
+              {/* ── Project 5 ── */}
               <TargetBorder isDarkMode={isDarkMode}>
-                <div className="hover:px-4 py-4 transition-all duration-300 ease-in-out rounded-md">
-                  <div className="flex items-center mb-2">
-                    {/* Left vertical line */}
-                    <div className="w-1 h-6 bg-blue-500 mr-3 rounded"></div>
-                    <h3 className="font-bold text-lg">Helmet Shop</h3>
+                <div className="py-4 px-3 transition-all duration-300 ease-in-out rounded-md">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="w-0.5 h-5 rounded-full"
+                      style={{ background: "var(--accent)" }}
+                    />
+                    <h3
+                      className="font-bold text-base"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      Helmet Shop
+                    </h3>
                   </div>
 
                   <a
                     href="https://github.com/esmike03/Helmet-Shop-Wordpress"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:underline text-sm mb-2 inline-block"
+                    className="project-link text-xs mb-3 inline-flex items-center gap-1"
+                    style={{ color: "var(--accent)" }}
                   >
-                    View
+                    ↗ View on GitHub
                   </a>
 
-                  <p className="mb-3 text-sm">
+                  <p
+                    className="text-sm leading-relaxed mb-3"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     Developed a visually engaging helmet shop website using
                     WordPress and Photoshop, which earned recognition as Best
                     Website Design. The project combined creative design with
@@ -941,37 +1212,43 @@ function App() {
                     experience.
                   </p>
 
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      <FaWordpress /> Wordpress
+                  <div className="flex flex-wrap gap-2">
+                    <span className="tech-tag">
+                      <FaWordpress /> WordPress
                     </span>
-
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
+                    <span className="tech-tag">
                       <SiAdobephotoshop /> Photoshop
                     </span>
-
-                    <span
-                      className="px-2 py-1 flex items-center gap-2 w-fit rounded-md
-                   bg-gray-200 text-gray-800
-                   dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      Elementor
-                    </span>
+                    <span className="tech-tag">Elementor</span>
                   </div>
                 </div>
               </TargetBorder>
+
+              <style>{`
+    .tech-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--bg-border);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+    }
+
+    .project-link:hover {
+      text-decoration: underline;
+      opacity: 0.85;
+    }
+  `}</style>
             </section>
             <section id="portfolio" className="mt-10">
               <TargetBorder isDarkMode={isDarkMode}>
-                <p className="hover:px-2  py-2 transition-all duration-300 ease-in-out">
+                <p
+                  className="py-2 px-2 transition-all duration-300 ease-in-out text-sm"
+                  style={{ color: "var(--accent)" }}
+                >
                   $ portfolio_
                 </p>
               </TargetBorder>
@@ -1048,73 +1325,195 @@ function App() {
               </div>
             </section>
 
-            <section id="techstack" className="mt-10">
+            <section
+              id="techstack"
+              className="mt-10"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              {/* ── Heading ── */}
               <TargetBorder isDarkMode={isDarkMode}>
-                <p className="hover:px-2   py-2 transition-all duration-300 ease-in-out">
+                <p
+                  className="py-2 px-2 transition-all duration-300 ease-in-out text-sm"
+                  style={{ color: "var(--accent)" }}
+                >
                   $ techstack_
                 </p>
               </TargetBorder>
 
-              <div className="p-6 space-y-10">
+              <div className="py-6 space-y-10">
                 {categories.map((category, index) => (
                   <div key={index}>
-                    <h2 className="text-lg text-center font-semibold mb-4">
-                      {category.name}
-                    </h2>
-                    <div className="flex flex-wrap gap-6 justify-center items-center">
+                    {/* Category label */}
+                    <div className="flex items-center gap-3 mb-5">
+                      <span
+                        className="text-xs tracking-widest uppercase"
+                        style={{ color: "var(--accent)", opacity: 0.6 }}
+                      >
+                        //
+                      </span>
+                      <span
+                        className="text-xs tracking-widest uppercase"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        {category.name}
+                      </span>
+                      <span
+                        className="flex-1 h-px"
+                        style={{ background: "var(--bg-border)" }}
+                      />
+                    </div>
+
+                    {/* Icons grid */}
+                    <div className="flex flex-wrap gap-4 justify-start items-start">
                       {category.icons.map((item, idx) => (
                         <div
                           key={idx}
-                          className="flex flex-col cursor-target items-center text-center cursor-pointer hover:scale-110 transition-transform duration-300"
+                          className="cursor-target stack-item flex flex-col items-center justify-center gap-2 px-4 py-3 rounded-lg transition-all duration-200"
+                          style={{
+                            border: "1px solid var(--bg-border)",
+                            background: "var(--bg-surface)",
+                            minWidth: "72px",
+                          }}
                         >
-                          {item.icon}
-                          <span className="mt-2 text-sm">{item.name}</span>
+                          <span
+                            className="stack-icon text-xl"
+                            style={{ color: "var(--text-muted)" }}
+                          >
+                            {item.icon}
+                          </span>
+                          <span
+                            className="text-xs"
+                            style={{ color: "var(--text-muted)" }}
+                          >
+                            {item.name}
+                          </span>
                         </div>
                       ))}
                     </div>
                   </div>
                 ))}
               </div>
+
+              <style>{`
+    .stack-item:hover {
+      border-color: var(--accent) !important;
+      background: var(--accent-glow) !important;
+    }
+    .stack-item:hover .stack-icon {
+      color: var(--accent) !important;
+    }
+    .stack-item:hover span {
+      color: var(--accent) !important;
+    }
+  `}</style>
             </section>
 
-            <section className="mt-10 flex flex-col items-center gap-2 text-center  mx-auto">
+            <section
+              className="mt-10 flex flex-col items-center gap-4 text-center mx-auto"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              {/* ── Heading ── */}
               <TargetBorder isDarkMode={isDarkMode}>
-                <p className="hover:px-2  py-2 transition-all duration-300 ease-in-out">
-                  | contact |
+                <p
+                  className="py-2 px-2 transition-all duration-300 ease-in-out text-sm"
+                  style={{ color: "var(--accent)" }}
+                >
+                  $ contact_
                 </p>
               </TargetBorder>
 
-              <p className=" text-sm py-2 transition-all duration-300 ease-in-out">
-                Feel free to reach out — I’m always excited about new
-                opportunities and cool projects. You can contact me here:
+              {/* ── Subtext ── */}
+              <p
+                className="text-sm leading-relaxed max-w-sm"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Feel free to reach out — I'm always excited about new
+                opportunities and cool projects.
               </p>
-              <div className="flex mb-5 mt-6 justify-center gap-8">
+
+              {/* ── Contact links ── */}
+              <div className="flex items-center gap-3 mt-2 mb-2">
+                {/* Email */}
                 <a
                   href="mailto:sarabiaearlmike14@gmail.com"
-                  className="hover:scale-110 transition-all duration-300 ease-in-out cursor-target"
-                  style={{ color: isDarkMode ? "white" : "black" }}
+                  aria-label="Email"
+                  className="cursor-target contact-icon flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200"
+                  style={{
+                    border: "1px solid var(--bg-border)",
+                    background: "var(--bg-surface)",
+                    color: "var(--text-muted)",
+                  }}
                 >
-                  <MdEmail size={25} />
+                  <MdEmail size={18} />
                 </a>
-                <p className="">•</p>
+
+                {/* LinkedIn */}
                 <a
                   href="https://www.linkedin.com/in/earl-mike-sarabia-4a6532346/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:scale-110 transition-all duration-300 ease-in-out cursor-target"
-                  style={{ color: isDarkMode ? "white" : "black" }}
+                  aria-label="LinkedIn"
+                  className="cursor-target contact-icon flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200"
+                  style={{
+                    border: "1px solid var(--bg-border)",
+                    background: "var(--bg-surface)",
+                    color: "var(--text-muted)",
+                  }}
                 >
-                  <FaLinkedin size={25} />
+                  <FaLinkedin size={18} />
                 </a>
-              </div>
-              <TargetBorder isDarkMode={isDarkMode}>
-                <p className="px-2 py-2">(+63) 992-531-8606</p>
-              </TargetBorder>
 
-              <hr className="border-t mt-8 w-full border-gray-700 " />
-              <p className="mt-4 text-gray-400 font-['Outfit']">
-                Earl Mike H. Sarabia • {today.getFullYear()}
-              </p>
+                {/* Divider */}
+                <span
+                  className="w-px h-5 mx-1"
+                  style={{ background: "var(--bg-border)" }}
+                />
+
+                {/* Phone */}
+                <TargetBorder isDarkMode={isDarkMode}>
+                  <p
+                    className="px-3 py-2 text-sm transition-all duration-200"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    (+63) 992-531-8606
+                  </p>
+                </TargetBorder>
+              </div>
+
+              {/* ── Divider ── */}
+              <div
+                className="w-full mt-8"
+                style={{ borderTop: "1px solid var(--bg-border)" }}
+              />
+
+              {/* ── Footer ── */}
+              <div className="flex items-center gap-2 mt-4 pb-8">
+                <span
+                  className="text-xs"
+                  style={{ color: "var(--accent)", opacity: 0.4 }}
+                >
+                  &lt;/&gt;
+                </span>
+
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                  Earl Mike H. Sarabia • {today.getFullYear()}
+                </p>
+
+                <span
+                  className="text-xs"
+                  style={{ color: "var(--accent)", opacity: 0.4 }}
+                >
+                  &lt;/&gt;
+                </span>
+              </div>
+
+              <style>{`
+    .contact-icon:hover {
+      border-color: var(--accent) !important;
+      color: var(--accent) !important;
+      background: var(--accent-glow) !important;
+    }
+  `}</style>
             </section>
           </div>
         </div>
