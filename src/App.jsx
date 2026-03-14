@@ -1100,6 +1100,7 @@ function App() {
                   </p>
 
                   <div className="flex flex-wrap gap-2">
+                    <span className="tech-tag">Commission Project</span>
                     <span className="tech-tag">
                       <SiLaravel /> Laravel
                     </span>
