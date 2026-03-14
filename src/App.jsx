@@ -455,7 +455,7 @@ function App() {
           </nav>
           <div className="mt-10">
             <section
-              className="relative flex flex-col gap-5 py-20 sm:py-28"
+              className="relative flex flex-col gap-5 py-20 sm:py-10"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               <div className="sm:text-left flex flex-col gap-4">
@@ -670,7 +670,6 @@ function App() {
                 className="relative text-sm px-2 mt-5 border-s"
                 style={{ borderColor: "var(--bg-border)" }}
               >
-                {/* Item 1 */}
                 <li className="mb-10 ms-6">
                   <span
                     className="absolute cursor-target flex items-center justify-center w-6 h-6 rounded-full -start-3"
@@ -683,6 +682,73 @@ function App() {
                     <svg
                       className="w-3 h-3"
                       style={{ color: "var(--accent)" }}
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
+                      />
+                    </svg>
+                  </span>
+                  <TargetBorder isDarkMode={isDarkMode}>
+                    <div className="px-3 py-3 transition-all duration-300 ease-in-out">
+                      <div className="flex items-center gap-2 flex-wrap mb-2">
+                        <time
+                          className="text-xs font-medium px-2 py-0.5 rounded-md"
+                          style={{
+                            background: "var(--bg-surface)",
+                            border: "1px solid var(--bg-border)",
+                            color: "var(--text-muted)",
+                          }}
+                        >
+                          March 2026 – Present
+                        </time>
+                        <span
+                          className="text-xs font-medium px-2 py-0.5 rounded-md"
+                          style={{
+                            background: "rgba(0,229,255,0.08)",
+                            border: "1px solid rgba(0,229,255,0.2)",
+                            color: "var(--accent)",
+                          }}
+                        >
+                          Latest
+                        </span>
+                      </div>
+                      <h3
+                        className="text-base font-semibold mb-2"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        Jr. Programmer
+                      </h3>
+                      <p
+                        className="text-sm leading-relaxed"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Newton Scanning System Inc.
+                      </p>
+                    </div>
+                  </TargetBorder>
+                </li>
+                {/* Item 1 */}
+                <li className="mb-10 ms-6">
+                  <span
+                    className="absolute cursor-target flex items-center justify-center w-6 h-6 rounded-full -start-3"
+                    style={{
+                      background: "var(--bg-surface)",
+                      border: "1px solid var(--bg-border)",
+                    }}
+                  >
+                    <svg
+                      className="w-3 h-3"
+                      style={{ color: "var(--text-muted)" }}
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -727,21 +793,18 @@ function App() {
                         className="text-base font-semibold mb-2"
                         style={{ color: "var(--text-primary)" }}
                       >
-                        IT System Operator
+                        IT System Operator/ Tech Support
                       </h3>
                       <p
                         className="text-sm leading-relaxed"
                         style={{ color: "var(--text-secondary)" }}
                       >
-                        This was my first job after graduation, where I gained
-                        hands-on experience in various IT tasks. I learned
-                        troubleshooting and repairing PCs, working with POS
-                        systems, and maintaining IBM servers and the JDA system
-                        to ensure smooth daily operations while providing
-                        technical support. I also gained experience assigning IP
-                        addresses to prevent conflicts, installing software and
-                        applications, and performing other essential IT
-                        operations.
+                        My first role post-graduation — gained hands-on
+                        experience across hardware troubleshooting and PC
+                        repair, POS systems, IBM server maintenance, and JDA
+                        system operations. Handled IP address management,
+                        software installations, and day-to-day technical
+                        support.
                       </p>
                     </div>
                   </TargetBorder>
@@ -797,19 +860,14 @@ function App() {
                         className="text-sm leading-relaxed"
                         style={{ color: "var(--text-secondary)" }}
                       >
-                        My first internship was in Cebu at Xentro Holdings Corp.
-                        During this internship, I developed fully functional
-                        website systems and implemented them across all four of
-                        the company's divisions: Westpoint, Xentra Medica,
-                        Popstar Drug Store, and Xentro Estates. I also
-                        redesigned parts of the websites and added new
-                        functionalities to improve usability and performance. In
-                        addition to web development, I was involved in designing
-                        company uniforms and creating visual designs for their
-                        pharmacy stores, contributing to both branding and
-                        in-store presentation. I used Laravel and MySQL to
-                        ensure fast, efficient, and scalable development across
-                        all platforms.
+                        Interned at Xentro Holdings Corp. in Cebu — built and
+                        deployed fully functional website systems across all
+                        four company divisions: Westpoint, Xentra Medica,
+                        Popstar Drug Store, and Xentro Estates. Redesigned
+                        existing interfaces and added new features to improve
+                        usability. Also contributed to branding by designing
+                        company uniforms and pharmacy store visuals. Stack:
+                        Laravel & MySQL.
                       </p>
                     </div>
                   </TargetBorder>
