@@ -778,16 +778,6 @@ function App() {
                         >
                           July 2025 – February 2026
                         </time>
-                        <span
-                          className="text-xs font-medium px-2 py-0.5 rounded-md"
-                          style={{
-                            background: "rgba(0,229,255,0.08)",
-                            border: "1px solid rgba(0,229,255,0.2)",
-                            color: "var(--accent)",
-                          }}
-                        >
-                          Latest
-                        </span>
                       </div>
                       <h3
                         className="text-base font-semibold mb-2"
