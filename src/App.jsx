@@ -789,12 +789,7 @@ function App() {
                         className="text-sm leading-relaxed"
                         style={{ color: "var(--text-secondary)" }}
                       >
-                        My first role post-graduation — gained hands-on
-                        experience across hardware troubleshooting and PC
-                        repair, POS systems, IBM server maintenance, and JDA
-                        system operations. Handled IP address management,
-                        software installations, and day-to-day technical
-                        support.
+                        Bohol Quality Corporation
                       </p>
                     </div>
                   </TargetBorder>
@@ -844,20 +839,13 @@ function App() {
                         className="text-base font-semibold my-2"
                         style={{ color: "var(--text-primary)" }}
                       >
-                        Web Development Intern
+                        Full Stack Web Developer - Intern
                       </h3>
                       <p
                         className="text-sm leading-relaxed"
                         style={{ color: "var(--text-secondary)" }}
                       >
-                        Interned at Xentro Holdings Corp. in Cebu — built and
-                        deployed fully functional website systems across all
-                        four company divisions: Westpoint, Xentra Medica,
-                        Popstar Drug Store, and Xentro Estates. Redesigned
-                        existing interfaces and added new features to improve
-                        usability. Also contributed to branding by designing
-                        company uniforms and pharmacy store visuals. Stack:
-                        Laravel & MySQL.
+                        Xentro Holdings Corporation
                       </p>
                     </div>
                   </TargetBorder>
@@ -965,7 +953,7 @@ function App() {
                         className="text-base font-semibold my-2"
                         style={{ color: "var(--text-primary)" }}
                       >
-                        Graphic Design Head – Campus Access Organization
+                        Multimedia Head – Campus Access Organization
                       </h3>
                       <p
                         className="text-sm leading-relaxed"
@@ -1029,16 +1017,61 @@ function App() {
                         className="text-sm leading-relaxed"
                         style={{ color: "var(--text-secondary)" }}
                       >
-                        Getting accepted into this school has been one of my
-                        dreams, and pursuing a degree in Information Technology
-                        is something I've always aspired to. During my studies,
-                        I also developed my thesis project, the{" "}
-                        <strong style={{ color: "var(--text-primary)" }}>
-                          BISU Registrar Appointment System
-                        </strong>
-                        , which allowed students to efficiently schedule
-                        appointments with the registrar, giving me hands-on
-                        experience in building real-world web applications.
+                        Bohol Island State University - Balilihan Campus
+                      </p>
+                    </div>
+                  </TargetBorder>
+                </li>
+                <li className="ms-6">
+                  <span
+                    className="absolute cursor-target flex items-center justify-center w-6 h-6 rounded-full -start-3"
+                    style={{
+                      background: "var(--bg-surface)",
+                      border: "1px solid var(--bg-border)",
+                    }}
+                  >
+                    <svg
+                      className="w-3 h-3"
+                      style={{ color: "var(--text-muted)" }}
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
+                      />
+                    </svg>
+                  </span>
+                  <TargetBorder isDarkMode={isDarkMode}>
+                    <div className="px-3 py-3 transition-all duration-300 ease-in-out">
+                      <time
+                        className="text-xs font-medium px-2 py-0.5 rounded-md"
+                        style={{
+                          background: "var(--bg-surface)",
+                          border: "1px solid var(--bg-border)",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        2017 – 2018
+                      </time>
+                      <h3
+                        className="text-base font-semibold my-2"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        DroidScript - Android
+                      </h3>
+                      <p
+                        className="text-sm leading-relaxed"
+                        style={{ color: "var(--accent)" }}
+                      >
+                        // Hello World_
                       </p>
                     </div>
                   </TargetBorder>
