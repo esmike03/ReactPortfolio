@@ -1,226 +1,252 @@
 @import "tailwindcss";
 
-/* --- Google Fonts: JetBrains Mono + Orbitron for headings --- */
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;600;800&display=swap");
+/* JetBrains Mono + Fira Code for the terminal aesthetic */
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;700&display=swap");
 
 /* ============================================================
-   DESIGN TOKENS
+   DESIGN TOKENS — Terminal CLI palette
    ============================================================ */
 :root {
-  /* Typography */
-  --font-mono: "JetBrains Mono", monospace;
-  --font-display: "Orbitron", sans-serif;
-  --line-height: 1.6;
-  --font-weight: 400;
+  --font-mono: "Fira Code", "JetBrains Mono", ui-monospace, Menlo, Consolas,
+    monospace;
 
-  /* Accent Colors (shared across modes) */
-  --accent: #00e5ff; /* electric cyan */
-  --accent-secondary: #a855f7; /* neon violet */
-  --accent-warm: #ff6b35; /* burnt orange for warnings/highlights */
-  --accent-glow: rgba(0, 229, 255, 0.15);
+  /* Terminal palette */
+  --term-bg: #0d1117;
+  --term-bg-deep: #010409;
+  --term-bg-header: #161b22;
+  --term-border: #21262d;
+  --term-fg: #c9d1d9;
+  --term-fg-dim: #8b949e;
+  --term-green: #00ff41;
+  --term-green-dim: #00cc34;
+  --term-blue: #58a6ff;
+  --term-blue-2: #79c0ff;
+  --term-purple: #d2a8ff;
+  --term-yellow: #f0ad4e;
+  --term-red: #ff5555;
 
-  /* Transitions */
-  --transition-theme: background-color 0.4s ease, color 0.4s ease;
-  --transition-fast: 0.15s ease;
-  --transition-med: 0.3s ease;
-
-  color-scheme: light dark;
+  color-scheme: dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ============================================================
-   DARK MODE TOKENS (default)
-   ============================================================ */
-body,
-body.dark {
-  --text-primary: rgba(220, 235, 255, 0.92);
-  --text-secondary: rgba(160, 185, 210, 0.7);
-  --text-muted: rgba(100, 130, 160, 0.5);
-
-  --bg-primary: #080c14;
-  --bg-surface: #0d1220;
-  --bg-elevated: #131928;
-  --bg-border: rgba(0, 229, 255, 0.08);
-
-  --shadow-glow: 0 0 20px rgba(0, 229, 255, 0.12);
-  --shadow-deep: 0 8px 32px rgba(0, 0, 0, 0.6);
-}
-
-/* ============================================================
-   LIGHT MODE TOKENS
-   ============================================================ */
-body.light {
-  --text-primary: #0d1a2e;
-  --text-secondary: #3a4f6a;
-  --text-muted: #7a94b0;
-
-  --bg-primary: #f0f4f8;
-  --bg-surface: #ffffff;
-  --bg-elevated: #e8eef5;
-  --bg-border: rgba(0, 100, 160, 0.12);
-
-  --shadow-glow: 0 0 20px rgba(0, 120, 200, 0.1);
-  --shadow-deep: 0 8px 32px rgba(0, 30, 80, 0.12);
-
-  /* Override accents slightly for light readability */
-  --accent: #0077cc;
-  --accent-secondary: #7c3aed;
-  --accent-glow: rgba(0, 119, 204, 0.1);
-}
-
-/* ============================================================
-   BASE BODY
-   ============================================================ */
 body {
   margin: 0;
   min-height: 100vh;
-
   font-family: var(--font-mono);
-  line-height: var(--line-height);
-  font-weight: var(--font-weight);
-
-  color: var(--text-primary);
-  background-color: var(--bg-primary);
-
-  transition: var(--transition-theme);
-
-  /* Subtle noise texture for depth */
-  background-image: var(--bg-noise);
-}
-
-/* Dark mode: grid + noise overlay */
-body.dark {
-  background-image:
-    /* Noise grain */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
-    /* Subtle dot grid */
-    radial-gradient(circle, rgba(0, 229, 255, 0.06) 1px, transparent 1px);
-  background-size:
-    256px 256px,
-    32px 32px;
-}
-
-/* Light mode: clean with very faint grid */
-body.light {
-  background-image:
-    linear-gradient(rgba(0, 100, 160, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 100, 160, 0.025) 1px, transparent 1px);
-  background-size: 40px 40px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--term-fg);
+  background: var(--term-bg-deep);
 }
 
 /* ============================================================
-   SELECTION STYLE
+   SELECTION + SCROLLBAR
    ============================================================ */
 ::selection {
-  background: var(--accent-glow);
-  color: var(--accent);
+  background: rgba(0, 255, 65, 0.25);
+  color: #ffffff;
 }
 
-/* ============================================================
-   SCROLLBAR (techy thin style)
-   ============================================================ */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--term-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 2px;
-  opacity: 0.5;
+  background: var(--term-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--term-green-dim);
 }
 
 /* ============================================================
-   GLITCH EFFECT (enhanced)
+   TERMINAL SHELL — CRT scanline overlay + subtle vignette
    ============================================================ */
-.glitch {
-  position: relative;
-  font-family: var(--font-display);
+.terminal-shell {
+  /* relative is set inline by component; ::after needs an ancestor with relative */
 }
 
-.glitch::before,
-.glitch::after {
-  content: attr(data-text);
+.terminal-shell::after {
+  content: "";
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  opacity: 0;
+  inset: 0;
   pointer-events: none;
-  transition: opacity var(--transition-fast);
-}
-
-/* Red channel */
-.group:hover .glitch::before {
-  opacity: 0.85;
-  color: #ff2d55;
-  animation: glitch-top 0.25s infinite linear alternate-reverse;
+  z-index: 5;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 255, 65, 0.04) 0px,
+    rgba(0, 255, 65, 0.04) 1px,
+    transparent 1px,
+    transparent 3px
+  );
   mix-blend-mode: screen;
 }
 
-/* Cyan channel */
-.group:hover .glitch::after {
-  opacity: 0.85;
-  color: #00e5ff;
-  animation: glitch-bottom 0.25s infinite linear alternate-reverse;
-  mix-blend-mode: screen;
+.terminal-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
 }
 
-@keyframes glitch-top {
-  0% {
-    transform: translate(0);
-    clip-path: inset(0 0 75% 0);
-  }
-  33% {
-    transform: translate(-3px, -1px);
-    clip-path: inset(5% 0 65% 0);
-  }
-  66% {
-    transform: translate(2px, 0);
-    clip-path: inset(10% 0 55% 0);
-  }
-  100% {
-    transform: translate(-1px, -2px);
-    clip-path: inset(0 0 70% 0);
-  }
+/* CRT flicker — extremely subtle */
+.terminal-body {
+  animation: crt-flicker 6s steps(60) infinite;
 }
 
-@keyframes glitch-bottom {
-  0% {
-    transform: translate(0);
-    clip-path: inset(75% 0 0 0);
-  }
-  33% {
-    transform: translate(3px, 1px);
-    clip-path: inset(65% 0 5% 0);
-  }
-  66% {
-    transform: translate(-2px, 0);
-    clip-path: inset(55% 0 10% 0);
-  }
-  100% {
-    transform: translate(1px, 2px);
-    clip-path: inset(70% 0 0 0);
-  }
+@keyframes crt-flicker {
+  0%, 96%, 100% { opacity: 1; }
+  97% { opacity: 0.985; }
+  98% { opacity: 1; }
+  99% { opacity: 0.99; }
 }
 
 /* ============================================================
-   SYSTEM PREFERENCE FALLBACK
+   BLINKING CURSOR
    ============================================================ */
-@media (prefers-color-scheme: light) {
-  body:not(.dark):not(.light) {
-    --text-primary: #0d1a2e;
-    --text-secondary: #3a4f6a;
-    --bg-primary: #f0f4f8;
-    --bg-surface: #ffffff;
-    --bg-elevated: #e8eef5;
-    --bg-border: rgba(0, 100, 160, 0.12);
-    --accent: #0077cc;
-    --accent-secondary: #7c3aed;
-    --accent-glow: rgba(0, 119, 204, 0.1);
+.terminal-cursor-blink {
+  display: inline-block;
+  margin-left: 2px;
+  animation: terminal-blink 1.05s steps(2, end) infinite;
+  text-shadow: 0 0 4px currentColor;
+}
+
+@keyframes terminal-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* ============================================================
+   COMMAND OUTPUT
+   ============================================================ */
+.terminal-cmd-output {
+  padding-left: 0;
+  color: var(--term-fg);
+}
+
+.terminal-cmd-text {
+  white-space: pre;
+}
+
+/* Subtle text glow for green primary text — emulates phosphor */
+.term-green {
+  color: var(--term-green);
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.35);
+}
+
+/* ============================================================
+   LINKS INSIDE TERMINAL
+   ============================================================ */
+.terminal-shell a {
+  color: var(--term-blue);
+  text-decoration: underline;
+  text-decoration-color: rgba(88, 166, 255, 0.4);
+  text-underline-offset: 2px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+.terminal-shell a:hover {
+  color: var(--term-green);
+  text-decoration-color: var(--term-green);
+}
+
+/* ============================================================
+   INTERACTIVE INPUT LINE
+   ============================================================ */
+.terminal-input-line {
+  /* keep prompt + input on one row visually */
+  align-items: baseline;
+}
+
+.terminal-input {
+  /* size up to 16px on small screens to prevent iOS Safari zoom-on-focus,
+     while inheriting on desktop. */
+  font-size: max(16px, 1em);
+  font-family: var(--font-mono);
+  caret-color: var(--term-green);
+  padding: 0;
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (min-width: 640px) {
+  .terminal-input {
+    font-size: inherit;
+  }
+}
+
+.terminal-input:focus {
+  outline: none;
+}
+
+.terminal-input-line::after {
+  /* small decorative blink at end-of-input when value is empty —
+     keeps the "live cursor" feel even though the native caret is what
+     the user actually types into. Hidden when input has content via
+     :has(); browsers without :has() simply show nothing here. */
+  content: "█";
+  margin-left: -2px;
+  color: var(--term-green);
+  text-shadow: 0 0 4px currentColor;
+  animation: terminal-blink 1.05s steps(2, end) infinite;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.terminal-input-line:has(.terminal-input:placeholder-shown)::after,
+.terminal-input-line:has(.terminal-input[value=""])::after {
+  opacity: 1;
+}
+
+/* ============================================================
+   ASCII GALLERY THUMBNAILS
+   ============================================================ */
+.ascii-thumb {
+  border: 1px solid var(--term-border);
+  background: #161b22;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.ascii-thumb:hover {
+  border-color: var(--term-green);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   PREFERS REDUCED MOTION — disable all decorative animations
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .terminal-body {
+    animation: none !important;
+  }
+  .terminal-cursor-blink {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Touch-friendly tap targets — min 40x40 on coarse pointers */
+@media (pointer: coarse) {
+  .terminal-shell a,
+  .terminal-shell button {
+    min-height: 40px;
   }
 }
