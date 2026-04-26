@@ -112,7 +112,7 @@ export const CONTACT = {
   location: "Philippines",
 };
 
-export function getAge(birthDate = new Date(2003, 4, 15)) {
+export function getAge(birthDate = new Date(2003, 3, 15)) {
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
   const had =

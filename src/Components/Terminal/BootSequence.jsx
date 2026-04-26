@@ -198,10 +198,7 @@ export default function BootSequence() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div
-      ref={rootRef}
-      className="boot-sequence font-mono leading-relaxed mb-4"
-    >
+    <div ref={rootRef} className="boot-sequence font-mono leading-relaxed mb-4">
       {/* ───── Phase 1: BIOS ───── */}
       <div className="text-[11px] sm:text-xs mb-2">
         {BIOS_LINES.map((text, i) => (
