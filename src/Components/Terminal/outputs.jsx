@@ -274,6 +274,391 @@ export function ContactOutput() {
   );
 }
 
+// ── github commits ─────────────────────────────────────────
+function getGithubUser() {
+  const m = (CONTACT.github || "").match(/github\.com\/([^/]+)/i);
+  return m ? m[1] : "esmike03";
+}
+
+function timeAgo(iso) {
+  const then = new Date(iso).getTime();
+  const diff = Math.max(0, Date.now() - then);
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  if (d < 30) return `${d}d ago`;
+  const mo = Math.floor(d / 30);
+  if (mo < 12) return `${mo}mo ago`;
+  return `${Math.floor(mo / 12)}y ago`;
+}
+
+export function GithubCommitsOutput({ limit = 10 }) {
+  const user = getGithubUser();
+  const [state, setState] = useState({ status: "loading", items: [], err: "" });
+
+  useEffect(() => {
+    let cancelled = false;
+    const ctrl = new AbortController();
+    (async () => {
+      try {
+        const res = await fetch(
+          `https://api.github.com/users/${user}/events/public?per_page=100`,
+          { headers: { Accept: "application/vnd.github+json" }, signal: ctrl.signal },
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const events = await res.json();
+        const items = [];
+        for (const ev of events) {
+          if (ev.type !== "PushEvent" || !ev.payload?.commits) continue;
+          const repo = ev.repo?.name || "";
+          for (const c of ev.payload.commits) {
+            items.push({
+              sha: c.sha,
+              repo,
+              message: (c.message || "").split("\n")[0],
+              date: ev.created_at,
+              url: `https://github.com/${repo}/commit/${c.sha}`,
+            });
+            if (items.length >= limit) break;
+          }
+          if (items.length >= limit) break;
+        }
+        if (!cancelled) setState({ status: "ok", items, err: "" });
+      } catch (e) {
+        if (!cancelled && e.name !== "AbortError") {
+          setState({ status: "err", items: [], err: e.message || "fetch failed" });
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+      ctrl.abort();
+    };
+  }, [user, limit]);
+
+  if (state.status === "loading") {
+    return (
+      <span style={{ color: C.dim }}>
+        # fetching commits from github.com/{user}
+        <BlinkingDots />
+      </span>
+    );
+  }
+  if (state.status === "err") {
+    return (
+      <div>
+        <span style={{ color: C.red }}>
+          git: failed to fetch commits ({state.err})
+        </span>
+        <div style={{ color: C.dim }} className="mt-1 text-[11px]">
+          # GitHub API may be rate-limited. Try again later, or visit{" "}
+          <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">
+            github.com/{user}
+          </a>
+        </div>
+      </div>
+    );
+  }
+  if (!state.items.length) {
+    return (
+      <span style={{ color: C.dim }}>
+        # no recent public commits found for {user}.
+      </span>
+    );
+  }
+
+  return (
+    <div>
+      <div style={{ color: C.dim }} className="mb-1 text-[11px]">
+        # git log --author={user} --max-count={state.items.length}{" "}
+        <span style={{ color: C.comment }}>
+          (source:{" "}
+          <a
+            href={`https://github.com/${user}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            github.com/{user}
+          </a>
+          )
+        </span>
+      </div>
+      <div className="space-y-1">
+        {state.items.map((c) => (
+          <div
+            key={c.sha}
+            className="grid grid-cols-[auto,1fr] gap-x-3 items-baseline"
+          >
+            <a
+              href={c.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px]"
+              style={{ color: C.yellow }}
+            >
+              {c.sha.slice(0, 7)}
+            </a>
+            <div className="min-w-0">
+              <span style={{ color: C.fg }}>{c.message}</span>
+              <div className="text-[11px]" style={{ color: C.dim }}>
+                <span style={{ color: C.purple }}>{c.repo}</span>
+                <span style={{ color: C.comment }}> · </span>
+                <span>{timeAgo(c.date)}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── github contributions (green-square heatmap) ───────────
+const CONTRIB_COLORS = [
+  "#161b22",
+  "#0e4429",
+  "#006d32",
+  "#26a641",
+  "#39d353",
+];
+const MONTH_NAMES = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+export function GithubContributionsOutput() {
+  const user = getGithubUser();
+  const [state, setState] = useState({
+    status: "loading",
+    weeks: [],
+    total: 0,
+    monthLabels: [],
+    err: "",
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    const ctrl = new AbortController();
+    (async () => {
+      try {
+        const res = await fetch(
+          `https://github-contributions-api.jogruber.de/v4/${user}?y=last`,
+          { signal: ctrl.signal },
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const days = data.contributions || [];
+        if (!days.length) throw new Error("no data");
+
+        // Pad to start on Sunday
+        const startDow = new Date(days[0].date).getUTCDay();
+        const cells = [...Array(startDow).fill(null), ...days];
+        const weeks = [];
+        for (let i = 0; i < cells.length; i += 7) {
+          weeks.push(cells.slice(i, i + 7));
+        }
+
+        // Month labels: one per column where the month changes
+        const monthLabels = weeks.map((w, i) => {
+          const firstDay = w.find(Boolean);
+          if (!firstDay) return "";
+          const m = new Date(firstDay.date).getUTCMonth();
+          if (i === 0) return MONTH_NAMES[m];
+          const prev = weeks[i - 1].find(Boolean);
+          const pm = prev ? new Date(prev.date).getUTCMonth() : -1;
+          return m !== pm ? MONTH_NAMES[m] : "";
+        });
+
+        const total =
+          data.total?.lastYear ??
+          days.reduce((s, d) => s + (d.count || 0), 0);
+
+        if (!cancelled) {
+          setState({ status: "ok", weeks, total, monthLabels, err: "" });
+        }
+      } catch (e) {
+        if (!cancelled && e.name !== "AbortError") {
+          setState({
+            status: "err",
+            weeks: [],
+            total: 0,
+            monthLabels: [],
+            err: e.message || "fetch failed",
+          });
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+      ctrl.abort();
+    };
+  }, [user]);
+
+  if (state.status === "loading") {
+    return (
+      <span style={{ color: C.dim }}>
+        # fetching contributions for {user}
+        <BlinkingDots />
+      </span>
+    );
+  }
+  if (state.status === "err") {
+    return (
+      <div>
+        <span style={{ color: C.red }}>
+          contributions: failed to load ({state.err})
+        </span>
+        <div style={{ color: C.dim }} className="mt-1 text-[11px]">
+          # try again later, or visit{" "}
+          <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">
+            github.com/{user}
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  const cell = 11; // px
+  const gap = 2;
+
+  return (
+    <div>
+      <div style={{ color: C.dim }} className="mb-1 text-[11px]">
+        <span style={{ color: C.green, fontWeight: 600 }}>{state.total}</span>
+        <span style={{ color: C.fg }}> contributions in the last year</span>
+        <span style={{ color: C.comment }}>
+          {" "}
+          (source:{" "}
+          <a
+            href={`https://github.com/${user}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            github.com/{user}
+          </a>
+          )
+        </span>
+      </div>
+
+      <div className="overflow-x-auto">
+        <div style={{ display: "inline-block", minWidth: "fit-content" }}>
+          {/* Month labels */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${state.weeks.length}, ${cell}px)`,
+              columnGap: gap,
+              marginLeft: 22,
+              marginBottom: 4,
+              fontSize: 10,
+              color: C.dim,
+              height: 12,
+            }}
+          >
+            {state.monthLabels.map((label, i) => (
+              <div
+                key={i}
+                style={{
+                  whiteSpace: "nowrap",
+                  position: "relative",
+                  width: cell,
+                }}
+              >
+                {label}
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", gap: 4 }}>
+            {/* Day-of-week labels */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateRows: `repeat(7, ${cell}px)`,
+                rowGap: gap,
+                fontSize: 10,
+                color: C.dim,
+                width: 18,
+              }}
+            >
+              <div></div>
+              <div>Mon</div>
+              <div></div>
+              <div>Wed</div>
+              <div></div>
+              <div>Fri</div>
+              <div></div>
+            </div>
+
+            {/* Heatmap grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateRows: `repeat(7, ${cell}px)`,
+                gridAutoFlow: "column",
+                gridAutoColumns: `${cell}px`,
+                rowGap: gap,
+                columnGap: gap,
+              }}
+            >
+              {state.weeks.flatMap((w, wi) =>
+                w.map((d, di) =>
+                  d ? (
+                    <div
+                      key={`${wi}-${di}`}
+                      title={`${d.count} contribution${d.count === 1 ? "" : "s"} on ${d.date}`}
+                      style={{
+                        width: cell,
+                        height: cell,
+                        background: CONTRIB_COLORS[d.level || 0],
+                        borderRadius: 2,
+                      }}
+                    />
+                  ) : (
+                    <div
+                      key={`${wi}-${di}-empty`}
+                      style={{ width: cell, height: cell }}
+                    />
+                  ),
+                ),
+              )}
+            </div>
+          </div>
+
+          {/* Legend */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              marginTop: 6,
+              fontSize: 10,
+              color: C.dim,
+            }}
+          >
+            <span>Less</span>
+            {CONTRIB_COLORS.map((c, i) => (
+              <div
+                key={i}
+                style={{
+                  width: cell,
+                  height: cell,
+                  background: c,
+                  borderRadius: 2,
+                }}
+              />
+            ))}
+            <span>More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── neofetch ───────────────────────────────────────────────
 // ANSI-Shadow "MIKE" — same logo used in the boot screen so the
 // terminal has a single visual language. Edit the rows below to

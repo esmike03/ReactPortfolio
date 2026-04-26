@@ -25,6 +25,8 @@ import {
   NukeOutput,
   SudoWhoamiOutput,
   SecretOutput,
+  GithubCommitsOutput,
+  GithubContributionsOutput,
 } from "./outputs";
 import { CONTACT, PROJECTS } from "./data";
 
@@ -266,6 +268,26 @@ export const COMMANDS = [
     summary: "Open resume PDF",
     usage: "resume",
     handler: () => `__OPEN__:${CONTACT.resume}`,
+  },
+  {
+    name: "github",
+    aliases: ["commits", "git-log", "gh"],
+    category: "portfolio",
+    summary: "Show recent commits from github.com/esmike03",
+    usage: "github [count]",
+    handler: (args) => {
+      const n = parseInt(args[0], 10);
+      const limit = Number.isFinite(n) && n > 0 && n <= 50 ? n : 10;
+      return <GithubCommitsOutput limit={limit} />;
+    },
+  },
+  {
+    name: "contributions",
+    aliases: ["graph", "heatmap", "contrib"],
+    category: "portfolio",
+    summary: "Show GitHub contributions heatmap (the green squares)",
+    usage: "contributions",
+    handler: () => <GithubContributionsOutput />,
   },
   {
     name: "clear",
