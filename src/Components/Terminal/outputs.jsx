@@ -29,9 +29,7 @@ export function WhoamiOutput() {
   return (
     <div className="space-y-0.5">
       <div>
-        <span style={{ color: C.green, fontWeight: 600 }}>
-          {CONTACT.name}
-        </span>
+        <span style={{ color: C.green, fontWeight: 600 }}>{CONTACT.name}</span>
         <span style={{ color: C.dim }}> — Full-Stack Developer</span>
       </div>
       <div style={{ color: C.fg }}>
@@ -50,16 +48,14 @@ export function AboutOutput() {
     <div style={{ color: C.fg }} className="leading-relaxed">
       <div style={{ color: C.comment }}># about.md</div>
       <p className="mt-1">
-        I discovered coding in Grade 9 via DroidScript and started laying out
-        designs in PixelLab on my phone. That curiosity turned into a craft:
-        I now build responsive, performant web apps and clean visual
-        designs.
+        I started exploring technology later on, which gradually grew into a
+        passion for building and designing digital solutions.
       </p>
       <p className="mt-2">
-        Today I focus on full-stack web development — primarily{" "}
-        <span style={{ color: C.green }}>Laravel</span> and{" "}
-        <span style={{ color: C.green }}>React</span> — and creative work in
-        Photoshop and Premiere Pro.
+        Today, I focus on developing responsive and efficient web applications,
+        along with creating clean and user-friendly designs. I work mainly in{" "}
+        <span style={{ color: C.green }}>full-stack web development</span>, with
+        additional experience in creative tools for visual and media projects.
       </p>
     </div>
   );
@@ -154,10 +150,7 @@ export function ProjectDetailOutput({ name }) {
 
 function ProjectCard({ project: p }) {
   return (
-    <div
-      className="border-l-2 pl-3 py-1"
-      style={{ borderColor: "#21262d" }}
-    >
+    <div className="border-l-2 pl-3 py-1" style={{ borderColor: "#21262d" }}>
       <div className="flex flex-wrap items-baseline gap-x-2">
         <span style={{ color: C.green, fontWeight: 600 }}>{p.title}</span>
         <a
@@ -244,26 +237,38 @@ export function ContactOutput() {
       style={{ color: C.fg, margin: 0 }}
     >
       {`{
-  `}<span style={{ color: C.blueLight }}>"name"</span>:{" "}
-      <span style={{ color: "#a5d6ff" }}>"{CONTACT.name}"</span>,{`
-  `}<span style={{ color: C.blueLight }}>"email"</span>:{" "}
-      <a href={`mailto:${CONTACT.email}`}>"{CONTACT.email}"</a>,{`
-  `}<span style={{ color: C.blueLight }}>"github"</span>:{" "}
+  `}
+      <span style={{ color: C.blueLight }}>"name"</span>:{" "}
+      <span style={{ color: "#a5d6ff" }}>"{CONTACT.name}"</span>,
+      {`
+  `}
+      <span style={{ color: C.blueLight }}>"email"</span>:{" "}
+      <a href={`mailto:${CONTACT.email}`}>"{CONTACT.email}"</a>,
+      {`
+  `}
+      <span style={{ color: C.blueLight }}>"github"</span>:{" "}
       <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">
         "esmike03"
       </a>
-      ,{`
-  `}<span style={{ color: C.blueLight }}>"linkedin"</span>:{" "}
+      ,
+      {`
+  `}
+      <span style={{ color: C.blueLight }}>"linkedin"</span>:{" "}
       <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">
         "earl-mike-sarabia"
       </a>
-      ,{`
-  `}<span style={{ color: C.blueLight }}>"phone"</span>:{" "}
-      <span style={{ color: "#a5d6ff" }}>"{CONTACT.phone}"</span>,{`
-  `}<span style={{ color: C.blueLight }}>"resume"</span>:{" "}
+      ,
+      {`
+  `}
+      <span style={{ color: C.blueLight }}>"phone"</span>:{" "}
+      <span style={{ color: "#a5d6ff" }}>"{CONTACT.phone}"</span>,
+      {`
+  `}
+      <span style={{ color: C.blueLight }}>"resume"</span>:{" "}
       <a href={CONTACT.resume} target="_blank" rel="noopener noreferrer">
         "{CONTACT.resume}"
-      </a>{`
+      </a>
+      {`
 }`}
     </pre>
   );
@@ -339,7 +344,10 @@ export function DateOutput() {
   const now = new Date();
   return (
     <span style={{ color: C.fg }}>
-      {now.toString().replace(/\(.*\)$/, "").trim()}
+      {now
+        .toString()
+        .replace(/\(.*\)$/, "")
+        .trim()}
     </span>
   );
 }
@@ -381,7 +389,10 @@ export function HistoryOutput({ entries }) {
 export function ManOutput({ cmd, command }) {
   if (!cmd) {
     return (
-      <ErrorOutput cmd="man" msg="What manual page do you want? (try: man help)" />
+      <ErrorOutput
+        cmd="man"
+        msg="What manual page do you want? (try: man help)"
+      />
     );
   }
   if (!command) {
@@ -430,9 +441,8 @@ export function WelcomeMessage() {
         Welcome to mike@portfolio:~
       </div>
       <div style={{ color: C.fg }}>
-        Type{" "}
-        <span style={{ color: C.green, fontWeight: 600 }}>help</span>{" "}
-        to see available commands. Try{" "}
+        Type <span style={{ color: C.green, fontWeight: 600 }}>help</span> to
+        see available commands. Try{" "}
         <span style={{ color: C.green }}>whoami</span>,{" "}
         <span style={{ color: C.green }}>ls projects</span>,{" "}
         <span style={{ color: C.green }}>./skills.sh</span>, or{" "}
@@ -462,9 +472,7 @@ export function SudoGrantedOutput() {
 // ── sudo: failed all password attempts ─────────────────────
 export function SudoFailedOutput() {
   return (
-    <span style={{ color: C.red }}>
-      sudo: 3 incorrect password attempts
-    </span>
+    <span style={{ color: C.red }}>sudo: 3 incorrect password attempts</span>
   );
 }
 
@@ -472,18 +480,14 @@ export function SudoFailedOutput() {
 export function ThreeStrikesOutput() {
   return (
     <div>
-      <div style={{ color: C.yellow }}>
-        # fine. I see you're not giving up.
-      </div>
+      <div style={{ color: C.yellow }}># fine. I see you're not giving up.</div>
       <div style={{ color: C.dim }}>
         # logging incident: from 127.0.0.1 to /dev/null
       </div>
       <div style={{ color: C.green, fontWeight: 600 }}>
         # you wore me down. you are now root.
       </div>
-      <div style={{ color: C.dim }}>
-        # don't make me regret this.
-      </div>
+      <div style={{ color: C.dim }}># don't make me regret this.</div>
     </div>
   );
 }
@@ -526,8 +530,8 @@ export function SudoHelpOutput() {
         </div>
       </div>
       <div className="mt-2" style={{ color: C.dim }}>
-        # password hint: try the magic words. or any password from a 90s
-        movie. or just keep typing `sudo` until it gives up.
+        # password hint: try the magic words. or any password from a 90s movie.
+        or just keep typing `sudo` until it gives up.
       </div>
     </div>
   );
@@ -688,9 +692,7 @@ const SECRET_FACTS = [
 export function SecretOutput() {
   return (
     <div className="space-y-1">
-      <div style={{ color: C.red, fontWeight: 600 }}>
-        == /root/.secrets ==
-      </div>
+      <div style={{ color: C.red, fontWeight: 600 }}>== /root/.secrets ==</div>
       <div style={{ color: C.dim }}># things only root sees:</div>
       <div className="pl-2 mt-1">
         {SECRET_FACTS.map((f, i) => (
@@ -719,9 +721,7 @@ export function SudoWhoamiOutput({ isRoot }) {
       </div>
     );
   }
-  return (
-    <span style={{ color: C.dim }}>you wish.</span>
-  );
+  return <span style={{ color: C.dim }}>you wish.</span>;
 }
 
 // ── 'exit' handler ─────────────────────────────────────────

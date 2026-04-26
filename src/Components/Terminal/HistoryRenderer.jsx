@@ -1,5 +1,5 @@
 import { Component } from "react";
-import Prompt from "./Prompt";
+import { PromptTop, PromptBottom } from "./Prompt";
 import { useTerminal } from "./TerminalContext";
 
 /**
@@ -40,16 +40,16 @@ export default function HistoryRenderer() {
       {history.map((entry) => {
         if (entry.type === "command") {
           return (
-            <div
-              key={entry.id}
-              className="terminal-cmd-echo flex flex-wrap items-baseline mt-1"
-            >
-              <Prompt
+            <div key={entry.id} className="terminal-cmd-echo mt-1">
+              <PromptTop
                 user="mike"
                 host="portfolio"
                 isRoot={!!entry.isRoot}
               />
-              <span style={{ color: "#e6edf3" }}>{entry.command}</span>
+              <div className="flex flex-wrap items-baseline">
+                <PromptBottom isRoot={!!entry.isRoot} />
+                <span style={{ color: "#e6edf3" }}>{entry.command}</span>
+              </div>
             </div>
           );
         }
@@ -61,11 +61,12 @@ export default function HistoryRenderer() {
             >
               <span className="select-none" style={{ color: "#c9d1d9" }}>
                 [sudo] password for{" "}
-                <span style={{ color: "#79c0ff" }}>visitor</span>:&nbsp;
+                <span style={{ color: "#5fd7d7", fontWeight: 700 }}>
+                  visitor
+                </span>
+                :&nbsp;
               </span>
-              <span
-                style={{ color: "#e6edf3", letterSpacing: "0.15em" }}
-              >
+              <span style={{ color: "#e6edf3", letterSpacing: "0.15em" }}>
                 {entry.masked}
               </span>
             </div>

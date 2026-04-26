@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Prompt from "./Prompt";
+import { PromptTop, PromptBottom } from "./Prompt";
 import { useTerminal } from "./TerminalContext";
 import { getCommandNames } from "./commands";
 
@@ -123,41 +123,51 @@ export default function InteractivePrompt() {
 
   if (!bootDone) return null;
 
-  return (
-    <div
-      ref={wrapperRef}
-      className="terminal-input-line flex flex-wrap items-baseline mt-1"
-    >
-      {pwMode ? (
-        <span
-          className="select-none"
-          style={{ color: "#c9d1d9" }}
-        >
+  const inputEl = (
+    <input
+      ref={inputRef}
+      type={pwMode ? "password" : "text"}
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      onKeyDown={handleKeyDown}
+      spellCheck={false}
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      inputMode="text"
+      aria-label={pwMode ? "Sudo password input" : "Terminal command input"}
+      className="terminal-input flex-1 min-w-[40px] bg-transparent outline-none border-0"
+      style={{
+        color: "#e6edf3",
+        caretColor: isRoot ? "#ff5555" : "#5bc0eb",
+        fontFamily: "inherit",
+      }}
+    />
+  );
+
+  if (pwMode) {
+    return (
+      <div
+        ref={wrapperRef}
+        className="terminal-input-line flex flex-wrap items-baseline mt-1"
+      >
+        <span className="select-none" style={{ color: "#c9d1d9" }}>
           [sudo] password for{" "}
-          <span style={{ color: "#79c0ff" }}>visitor</span>:&nbsp;
+          <span style={{ color: "#5fd7d7", fontWeight: 700 }}>visitor</span>
+          :&nbsp;
         </span>
-      ) : (
-        <Prompt user="mike" host="portfolio" isRoot={isRoot} />
-      )}
-      <input
-        ref={inputRef}
-        type={pwMode ? "password" : "text"}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        spellCheck={false}
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        inputMode="text"
-        aria-label={pwMode ? "Sudo password input" : "Terminal command input"}
-        className="terminal-input flex-1 min-w-[40px] bg-transparent outline-none border-0"
-        style={{
-          color: "#e6edf3",
-          caretColor: isRoot ? "#ff5555" : "#00ff41",
-          fontFamily: "inherit",
-        }}
-      />
+        {inputEl}
+      </div>
+    );
+  }
+
+  return (
+    <div ref={wrapperRef} className="mt-1">
+      <PromptTop user="mike" host="portfolio" isRoot={isRoot} />
+      <div className="terminal-input-line flex flex-wrap items-baseline">
+        <PromptBottom isRoot={isRoot} />
+        {inputEl}
+      </div>
     </div>
   );
 }

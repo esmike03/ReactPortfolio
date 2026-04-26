@@ -10,20 +10,23 @@
   --font-mono: "Fira Code", "JetBrains Mono", ui-monospace, Menlo, Consolas,
     monospace;
 
-  /* Terminal palette */
-  --term-bg: #0d1117;
-  --term-bg-deep: #010409;
-  --term-bg-header: #161b22;
-  --term-border: #21262d;
-  --term-fg: #c9d1d9;
-  --term-fg-dim: #8b949e;
+  /* Terminal palette — Kali-tinted */
+  --term-bg: #11131c;
+  --term-bg-deep: #0a0c14;
+  --term-bg-header: #1d1f2b;
+  --term-border: #2a2e44;
+  --term-fg: #c0caf5;
+  --term-fg-dim: #7882a4;
   --term-green: #00ff41;
   --term-green-dim: #00cc34;
-  --term-blue: #58a6ff;
-  --term-blue-2: #79c0ff;
+  --term-blue: #5bc0eb;
+  --term-blue-2: #5fd7d7;
   --term-purple: #d2a8ff;
   --term-yellow: #f0ad4e;
   --term-red: #ff5555;
+  --kali-line: #5bc0eb;
+  --kali-cyan: #5fd7d7;
+  --kali-dragon: #ff3860;
 
   color-scheme: dark;
   font-synthesis: none;
@@ -46,7 +49,7 @@ body {
    SELECTION + SCROLLBAR
    ============================================================ */
 ::selection {
-  background: rgba(0, 255, 65, 0.25);
+  background: rgba(91, 192, 235, 0.32);
   color: #ffffff;
 }
 
@@ -62,7 +65,7 @@ body {
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--term-green-dim);
+  background: var(--kali-line);
 }
 
 /* ============================================================
@@ -80,10 +83,10 @@ body {
   z-index: 5;
   background-image: repeating-linear-gradient(
     0deg,
-    rgba(0, 255, 65, 0.04) 0px,
-    rgba(0, 255, 65, 0.04) 1px,
+    rgba(91, 192, 235, 0.018) 0px,
+    rgba(91, 192, 235, 0.018) 1px,
     transparent 1px,
-    transparent 3px
+    transparent 4px
   );
   mix-blend-mode: screen;
 }
@@ -96,21 +99,9 @@ body {
   z-index: 4;
   background: radial-gradient(
     ellipse at center,
-    transparent 55%,
-    rgba(0, 0, 0, 0.35) 100%
+    transparent 60%,
+    rgba(0, 0, 0, 0.3) 100%
   );
-}
-
-/* CRT flicker — extremely subtle */
-.terminal-body {
-  animation: crt-flicker 6s steps(60) infinite;
-}
-
-@keyframes crt-flicker {
-  0%, 96%, 100% { opacity: 1; }
-  97% { opacity: 0.985; }
-  98% { opacity: 1; }
-  99% { opacity: 0.99; }
 }
 
 /* ============================================================
@@ -150,15 +141,15 @@ body {
    LINKS INSIDE TERMINAL
    ============================================================ */
 .terminal-shell a {
-  color: var(--term-blue);
+  color: var(--kali-line);
   text-decoration: underline;
-  text-decoration-color: rgba(88, 166, 255, 0.4);
+  text-decoration-color: rgba(91, 192, 235, 0.4);
   text-underline-offset: 2px;
   transition: color 0.15s ease, text-decoration-color 0.15s ease;
 }
 .terminal-shell a:hover {
-  color: var(--term-green);
-  text-decoration-color: var(--term-green);
+  color: var(--kali-cyan);
+  text-decoration-color: var(--kali-cyan);
 }
 
 /* ============================================================
@@ -174,7 +165,7 @@ body {
      while inheriting on desktop. */
   font-size: max(16px, 1em);
   font-family: var(--font-mono);
-  caret-color: var(--term-green);
+  caret-color: var(--kali-line);
   padding: 0;
   margin: 0;
   line-height: 1.4;
@@ -197,7 +188,7 @@ body {
      :has(); browsers without :has() simply show nothing here. */
   content: "█";
   margin-left: -2px;
-  color: var(--term-green);
+  color: var(--kali-line);
   text-shadow: 0 0 4px currentColor;
   animation: terminal-blink 1.05s steps(2, end) infinite;
   pointer-events: none;
@@ -214,11 +205,11 @@ body {
    ============================================================ */
 .ascii-thumb {
   border: 1px solid var(--term-border);
-  background: #161b22;
+  background: #1d1f2b;
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 .ascii-thumb:hover {
-  border-color: var(--term-green);
+  border-color: var(--kali-line);
   transform: translateY(-2px);
 }
 
@@ -249,4 +240,660 @@ body {
   .terminal-shell button {
     min-height: 40px;
   }
+}
+
+/* ============================================================
+   MODE TOGGLE — shared between CLI and GUI
+   ============================================================ */
+.gui-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(22, 27, 34, 0.85);
+  border: 1px solid var(--term-border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+}
+
+.gui-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--term-fg-dim);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.gui-mode-btn:hover {
+  color: var(--term-fg);
+}
+
+.gui-mode-btn.is-active {
+  background: var(--term-green);
+  color: #001a08;
+  box-shadow: 0 0 12px rgba(0, 255, 65, 0.35);
+}
+
+.gui-mode-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Floating toggle pinned over the terminal in CLI mode */
+.gui-floating-toggle {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 50;
+}
+
+@media (max-width: 480px) {
+  .gui-floating-toggle {
+    top: 10px;
+    right: 10px;
+  }
+  .gui-mode-btn span {
+    display: none;
+  }
+  .gui-mode-btn {
+    padding: 8px;
+  }
+}
+
+/* ============================================================
+   GUI MODE — friendly, non-techy interface
+   ============================================================ */
+.gui-root {
+  --gui-bg: #0d1117;
+  --gui-panel: #161b22;
+  --gui-panel-2: #1c222b;
+  --gui-border: #21262d;
+  --gui-border-strong: #30363d;
+  --gui-fg: #e6edf3;
+  --gui-fg-dim: #9aa4af;
+  --gui-accent: var(--term-green);
+  --gui-accent-soft: rgba(0, 255, 65, 0.12);
+
+  min-height: 100vh;
+  background:
+    radial-gradient(1100px 600px at 80% -10%, rgba(0, 255, 65, 0.08), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, rgba(88, 166, 255, 0.06), transparent 60%),
+    var(--gui-bg);
+  color: var(--gui-fg);
+  font-family:
+    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.gui-root a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.gui-accent {
+  color: var(--gui-accent);
+  text-shadow: 0 0 14px rgba(0, 255, 65, 0.4);
+}
+
+/* ── Navbar ───────────────────────────────────────────────── */
+.gui-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(13, 17, 23, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--gui-border);
+}
+
+.gui-nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.gui-nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.gui-nav-brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--gui-accent);
+  color: #001a08;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  box-shadow: 0 0 18px rgba(0, 255, 65, 0.35);
+}
+
+.gui-nav-brand-name {
+  font-size: 14px;
+}
+
+.gui-nav-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.gui-nav-links a {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--gui-fg-dim);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.gui-nav-links a:hover {
+  color: var(--gui-fg);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.gui-nav-right {
+  justify-self: end;
+}
+
+@media (max-width: 720px) {
+  .gui-nav-inner {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px;
+  }
+  .gui-nav-right {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .gui-nav-links {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .gui-nav-links::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ── Sections ─────────────────────────────────────────────── */
+.gui-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 20px 40px;
+}
+
+.gui-section-head {
+  margin-bottom: 28px;
+}
+
+.gui-section-head h2 {
+  margin: 0;
+  font-size: clamp(24px, 3.4vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.gui-section-head p {
+  margin: 6px 0 0;
+  color: var(--gui-fg-dim);
+  font-size: 14px;
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.gui-hero {
+  padding-top: 72px;
+  padding-bottom: 48px;
+}
+
+.gui-hero-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.gui-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--gui-accent-soft);
+  color: var(--gui-accent);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.gui-hero-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gui-accent);
+  box-shadow: 0 0 8px var(--gui-accent);
+  animation: gui-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes gui-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.gui-hero-title {
+  margin: 0;
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.gui-hero-sub {
+  max-width: 620px;
+  color: var(--gui-fg-dim);
+  font-size: clamp(15px, 1.6vw, 17px);
+  margin: 0;
+}
+
+.gui-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.gui-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease,
+    border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gui-btn:hover {
+  transform: translateY(-1px);
+}
+
+.gui-btn-primary {
+  background: var(--gui-accent);
+  color: #001a08;
+  box-shadow: 0 0 24px rgba(0, 255, 65, 0.25);
+}
+
+.gui-btn-primary:hover {
+  box-shadow: 0 0 32px rgba(0, 255, 65, 0.45);
+}
+
+.gui-btn-ghost {
+  background: transparent;
+  color: var(--gui-fg);
+  border-color: var(--gui-border-strong);
+}
+
+.gui-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--gui-accent);
+  color: var(--gui-accent);
+}
+
+.gui-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  margin-top: 8px;
+  color: var(--gui-fg-dim);
+  font-size: 13px;
+}
+
+.gui-hero-meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s ease;
+}
+
+.gui-hero-meta a:hover {
+  color: var(--gui-accent);
+}
+
+/* ── About ────────────────────────────────────────────────── */
+.gui-prose {
+  max-width: 720px;
+  color: var(--gui-fg);
+  font-size: 16px;
+}
+
+.gui-prose p {
+  margin: 0 0 14px;
+}
+
+.gui-prose strong {
+  color: var(--gui-accent);
+  font-weight: 600;
+}
+
+/* ── Skills ───────────────────────────────────────────────── */
+.gui-skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.gui-skill {
+  background: var(--gui-panel);
+  border: 1px solid var(--gui-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.gui-skill-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.gui-skill-label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.gui-skill-percent {
+  color: var(--gui-fg-dim);
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+.gui-skill-track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.gui-skill-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gui-accent), #79c0ff);
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ── Projects ─────────────────────────────────────────────── */
+.gui-projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.gui-project {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background: var(--gui-panel);
+  border: 1px solid var(--gui-border);
+  border-radius: 14px;
+  transition: transform 0.18s ease, border-color 0.18s ease,
+    background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.gui-project:hover {
+  transform: translateY(-3px);
+  border-color: var(--gui-accent);
+  background: var(--gui-panel-2);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--gui-accent-soft);
+}
+
+.gui-project-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.gui-project-top h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.gui-project-top svg {
+  flex-shrink: 0;
+  color: var(--gui-fg-dim);
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.gui-project:hover .gui-project-top svg {
+  color: var(--gui-accent);
+  transform: translate(2px, -2px);
+}
+
+.gui-project-desc {
+  margin: 0;
+  color: var(--gui-fg-dim);
+  font-size: 14px;
+  flex: 1;
+}
+
+.gui-project-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.gui-tag {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--gui-fg-dim);
+  border: 1px solid var(--gui-border);
+  font-family: var(--font-mono);
+}
+
+/* ── Timeline ─────────────────────────────────────────────── */
+.gui-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.gui-timeline::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--gui-border-strong),
+    var(--gui-border)
+  );
+  border-radius: 2px;
+}
+
+.gui-timeline-item {
+  position: relative;
+  padding: 0 0 18px 36px;
+}
+
+.gui-timeline-dot {
+  position: absolute;
+  left: 4px;
+  top: 18px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gui-panel);
+  border: 2px solid var(--gui-accent);
+  box-shadow: 0 0 0 4px rgba(0, 255, 65, 0.08);
+}
+
+.gui-timeline-card {
+  background: var(--gui-panel);
+  border: 1px solid var(--gui-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.gui-timeline-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.gui-timeline-date {
+  color: var(--gui-fg-dim);
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+.gui-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--gui-accent-soft);
+  color: var(--gui-accent);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.gui-timeline-title {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.gui-timeline-org {
+  color: var(--gui-fg-dim);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+/* ── Gallery ──────────────────────────────────────────────── */
+.gui-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.gui-gallery-item {
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--gui-border);
+  background: var(--gui-panel);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.gui-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.gui-gallery-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--gui-accent);
+}
+
+.gui-gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+/* ── Contact ──────────────────────────────────────────────── */
+.gui-contact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.gui-contact-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: var(--gui-panel);
+  border: 1px solid var(--gui-border);
+  border-radius: 12px;
+  transition: transform 0.15s ease, border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+a.gui-contact-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--gui-accent);
+  background: var(--gui-panel-2);
+}
+
+.gui-contact-card svg {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: var(--gui-accent);
+}
+
+.gui-contact-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gui-fg-dim);
+}
+
+.gui-contact-value {
+  font-size: 14px;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+.gui-footer {
+  max-width: 1100px;
+  margin: 60px auto 0;
+  padding: 24px 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-top: 1px solid var(--gui-border);
+  color: var(--gui-fg-dim);
+  font-size: 12px;
 }

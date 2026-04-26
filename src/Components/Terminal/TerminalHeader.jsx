@@ -1,10 +1,10 @@
-export default function TerminalHeader({ title = "mike@portfolio: ~" }) {
+export default function TerminalHeader({ title = "mike㉿portfolio: ~" }) {
   return (
     <div
       className="terminal-header flex items-center gap-3 px-3 sm:px-4 py-2 select-none"
       style={{
-        background: "#161b22",
-        borderBottom: "1px solid #21262d",
+        background: "#1d1f2b",
+        borderBottom: "1px solid #2a2e44",
       }}
     >
       <div className="flex items-center gap-2">
@@ -26,7 +26,7 @@ export default function TerminalHeader({ title = "mike@portfolio: ~" }) {
       </div>
       <div
         className="flex-1 text-center text-[11px] sm:text-xs tracking-wide"
-        style={{ color: "#8b949e", fontFamily: "var(--font-mono)" }}
+        style={{ color: "#a9b1d6", fontFamily: "var(--font-mono)" }}
       >
         {title}
       </div>
