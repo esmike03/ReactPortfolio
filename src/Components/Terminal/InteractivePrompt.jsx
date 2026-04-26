@@ -8,16 +8,31 @@ export default function InteractivePrompt() {
   const [historyIdx, setHistoryIdx] = useState(-1);
   const inputRef = useRef(null);
   const wrapperRef = useRef(null);
-  const { runCommand, cmdInputHistory, bootDone, history } = useTerminal();
+  const {
+    runCommand,
+    cmdInputHistory,
+    bootDone,
+    history,
+    pwMode,
+    isRoot,
+    cancelPasswordPrompt,
+  } = useTerminal();
 
-  // Focus the input when boot finishes.
+  // Focus input when boot finishes.
   useEffect(() => {
     if (!bootDone) return;
     const t = setTimeout(() => inputRef.current?.focus(), 60);
     return () => clearTimeout(t);
   }, [bootDone]);
 
-  // Click anywhere on the terminal area → focus input (terminal-feel).
+  // Re-focus when entering / leaving password mode.
+  useEffect(() => {
+    inputRef.current?.focus();
+    setInput("");
+    setHistoryIdx(-1);
+  }, [pwMode]);
+
+  // Click anywhere in the terminal area → focus input.
   useEffect(() => {
     const onClick = (e) => {
       if (e.target.closest("a, button, input, textarea")) return;
@@ -28,11 +43,11 @@ export default function InteractivePrompt() {
     return () => document.removeEventListener("click", onClick);
   }, []);
 
-  // Auto-scroll the page so the prompt sticks to the bottom.
+  // Auto-scroll the page so the prompt stays at the bottom.
   useEffect(() => {
     if (!bootDone) return;
     wrapperRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
-  }, [history.length, bootDone]);
+  }, [history.length, bootDone, pwMode]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -42,6 +57,20 @@ export default function InteractivePrompt() {
       setHistoryIdx(-1);
       return;
     }
+
+    // Allow cancelling the password prompt with Ctrl+C / Esc
+    if (
+      pwMode &&
+      (e.key === "Escape" || (e.key === "c" && e.ctrlKey))
+    ) {
+      e.preventDefault();
+      cancelPasswordPrompt();
+      setInput("");
+      return;
+    }
+
+    // History nav + Tab completion are disabled in password mode.
+    if (pwMode) return;
 
     if (e.key === "ArrowUp") {
       e.preventDefault();
@@ -76,12 +105,11 @@ export default function InteractivePrompt() {
       e.preventDefault();
       const partial = input.trim().toLowerCase();
       if (!partial) return;
-      const all = getCommandNames();
+      const all = getCommandNames({ isRoot });
       const matches = all.filter((n) => n.startsWith(partial));
       if (matches.length === 1) {
         setInput(matches[0]);
       } else if (matches.length > 1) {
-        // Find common prefix
         const common = matches.reduce((p, c) => {
           let i = 0;
           while (i < p.length && i < c.length && p[i] === c[i]) i++;
@@ -100,10 +128,20 @@ export default function InteractivePrompt() {
       ref={wrapperRef}
       className="terminal-input-line flex flex-wrap items-baseline mt-1"
     >
-      <Prompt user="mike" host="portfolio" />
+      {pwMode ? (
+        <span
+          className="select-none"
+          style={{ color: "#c9d1d9" }}
+        >
+          [sudo] password for{" "}
+          <span style={{ color: "#79c0ff" }}>visitor</span>:&nbsp;
+        </span>
+      ) : (
+        <Prompt user="mike" host="portfolio" isRoot={isRoot} />
+      )}
       <input
         ref={inputRef}
-        type="text"
+        type={pwMode ? "password" : "text"}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -112,11 +150,11 @@ export default function InteractivePrompt() {
         autoCorrect="off"
         autoCapitalize="off"
         inputMode="text"
-        aria-label="Terminal command input"
+        aria-label={pwMode ? "Sudo password input" : "Terminal command input"}
         className="terminal-input flex-1 min-w-[40px] bg-transparent outline-none border-0"
         style={{
           color: "#e6edf3",
-          caretColor: "#00ff41",
+          caretColor: isRoot ? "#ff5555" : "#00ff41",
           fontFamily: "inherit",
         }}
       />

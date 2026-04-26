@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import AsciiSkillBar from "./AsciiSkillBar";
 import {
   TIMELINE,
@@ -269,33 +270,51 @@ export function ContactOutput() {
 }
 
 // ── neofetch ───────────────────────────────────────────────
+// ANSI-Shadow "MIKE" — same logo used in the boot screen so the
+// terminal has a single visual language. Edit the rows below to
+// change the logo. Keep all rows the same width.
+const NEOFETCH_LOGO = [
+  "███╗   ███╗██╗██╗  ██╗███████╗",
+  "████╗ ████║██║██║ ██╔╝██╔════╝",
+  "██╔████╔██║██║█████╔╝ █████╗  ",
+  "██║╚██╔╝██║██║██╔═██╗ ██╔══╝  ",
+  "██║ ╚═╝ ██║██║██║  ██╗███████╗",
+  "╚═╝     ╚═╝╚═╝╚═╝  ╚═╝╚══════╝",
+];
+
 export function NeofetchOutput() {
   const age = getAge();
-  const ART = [
-    "       ╔═══════════╗",
-    "       ║   <em/>   ║",
-    "       ║  ┌─────┐  ║",
-    "       ║  │ /\\  │  ║",
-    "       ║  │/  \\ │  ║",
-    "       ║  └─────┘  ║",
-    "       ╚═══════════╝",
-  ];
   const stats = [
     ["user", `${CONTACT.name.split(" ")[0].toLowerCase()}@portfolio`],
     ["os", "Portfolio Linux 24.04 (React 19)"],
     ["host", "mike-laptop"],
     ["uptime", `${age} years`],
     ["shell", "esh 4.6 (anime.js v4 powered)"],
-    ["resolution", `${typeof window !== "undefined" ? window.innerWidth : 0}×${typeof window !== "undefined" ? window.innerHeight : 0}`],
+    [
+      "resolution",
+      `${typeof window !== "undefined" ? window.innerWidth : 0}×${typeof window !== "undefined" ? window.innerHeight : 0}`,
+    ],
     ["theme", "phosphor-green"],
-    ["packages", `${PROJECTS.length} projects, ${SKILL_BARS.length} core skills`],
+    [
+      "packages",
+      `${PROJECTS.length} projects, ${SKILL_BARS.length} core skills`,
+    ],
     ["cpu", "Curiosity @ 100%"],
     ["memory", "Coffee × ∞"],
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-[auto,1fr] gap-x-6 gap-y-1 text-xs sm:text-sm whitespace-pre">
-      <pre style={{ color: C.green, margin: 0 }}>{ART.join("\n")}</pre>
+    <div className="grid grid-cols-1 sm:grid-cols-[auto,1fr] gap-x-6 gap-y-2 text-xs sm:text-sm whitespace-pre items-center">
+      <pre
+        className="m-0 leading-none whitespace-pre"
+        style={{
+          color: C.green,
+          fontSize: "clamp(7px, 1.4vw, 11px)",
+          textShadow: "0 0 8px rgba(0,255,65,0.45)",
+        }}
+      >
+        {NEOFETCH_LOGO.join("\n")}
+      </pre>
       <div className="flex flex-col">
         <div style={{ color: C.green, fontWeight: 600 }}>
           {CONTACT.name.split(" ")[0].toLowerCase()}
@@ -420,6 +439,288 @@ export function WelcomeMessage() {
         <span style={{ color: C.green }}>neofetch</span>.
       </div>
     </div>
+  );
+}
+
+// ── sudo: granted (after correct password) ─────────────────
+export function SudoGrantedOutput() {
+  return (
+    <div>
+      <div style={{ color: C.green, fontWeight: 600 }}>
+        # password accepted.
+      </div>
+      <div style={{ color: C.fg }}>
+        you are now <span style={{ color: C.red, fontWeight: 600 }}>root</span>.
+        type <span style={{ color: C.green }}>sudo whoami</span> to verify, or{" "}
+        <span style={{ color: C.green }}>secret</span> for something only root
+        can see.
+      </div>
+    </div>
+  );
+}
+
+// ── sudo: failed all password attempts ─────────────────────
+export function SudoFailedOutput() {
+  return (
+    <span style={{ color: C.red }}>
+      sudo: 3 incorrect password attempts
+    </span>
+  );
+}
+
+// ── sudo: 3-strikes auto-promote ───────────────────────────
+export function ThreeStrikesOutput() {
+  return (
+    <div>
+      <div style={{ color: C.yellow }}>
+        # fine. I see you're not giving up.
+      </div>
+      <div style={{ color: C.dim }}>
+        # logging incident: from 127.0.0.1 to /dev/null
+      </div>
+      <div style={{ color: C.green, fontWeight: 600 }}>
+        # you wore me down. you are now root.
+      </div>
+      <div style={{ color: C.dim }}>
+        # don't make me regret this.
+      </div>
+    </div>
+  );
+}
+
+// ── sudo: --help ───────────────────────────────────────────
+export function SudoHelpOutput() {
+  return (
+    <div className="space-y-1">
+      <div style={{ color: C.fg }}>
+        sudo — execute a command as another user
+      </div>
+      <div style={{ color: C.dim }}>usage: sudo [-h] [command]</div>
+      <div className="mt-2" style={{ color: C.green, fontWeight: 600 }}>
+        # commands you might enjoy:
+      </div>
+      <div className="pl-2 space-y-0.5" style={{ color: C.fg }}>
+        <div>
+          <span style={{ color: C.green }}>sudo</span>
+          <span style={{ color: C.dim }}> — open a password challenge</span>
+        </div>
+        <div>
+          <span style={{ color: C.green }}>sudo rm -rf /</span>
+          <span style={{ color: C.dim }}> — destroy everything (fake)</span>
+        </div>
+        <div>
+          <span style={{ color: C.green }}>sudo make-coffee</span>
+          <span style={{ color: C.dim }}> — ascii coffee</span>
+        </div>
+        <div>
+          <span style={{ color: C.green }}>sudo shutdown</span>
+          <span style={{ color: C.dim }}> — countdown</span>
+        </div>
+        <div>
+          <span style={{ color: C.green }}>sudo nuke</span>
+          <span style={{ color: C.dim }}> — launch sequence</span>
+        </div>
+        <div>
+          <span style={{ color: C.green }}>sudo whoami</span>
+          <span style={{ color: C.dim }}> — identity check</span>
+        </div>
+      </div>
+      <div className="mt-2" style={{ color: C.dim }}>
+        # password hint: try the magic words. or any password from a 90s
+        movie. or just keep typing `sudo` until it gives up.
+      </div>
+    </div>
+  );
+}
+
+// ── sudo: rm -rf / (fake destruction) ──────────────────────
+const RM_LINES = [
+  "removing /home/mike/projects/registrar-bisu/...",
+  "removing /home/mike/projects/konstrukalakal/...",
+  "removing /home/mike/projects/...",
+  "removing /home/mike/skills.txt...",
+  "removing /home/mike/contact.json...",
+  "removing /home/mike/...",
+  "removing /etc/...",
+  "removing /var/log/...",
+  "removing /...",
+  "removing /universe/existential/dread/...",
+];
+
+export function FakeRmOutput() {
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    if (step >= RM_LINES.length) return;
+    const t = setTimeout(() => setStep(step + 1), 110);
+    return () => clearTimeout(t);
+  }, [step]);
+  return (
+    <div className="font-mono">
+      {RM_LINES.slice(0, step).map((l, i) => (
+        <div key={i} style={{ color: C.red }}>
+          {l}
+        </div>
+      ))}
+      {step >= RM_LINES.length && (
+        <div style={{ color: C.green, marginTop: 6 }}>
+          # ...just kidding. your filesystem is intact. type `clear` to tidy up.
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── sudo: make-coffee ──────────────────────────────────────
+const COFFEE_ART = [
+  "      ( (",
+  "       ) )",
+  "    ........",
+  "    |      |]",
+  "    \\      /",
+  "     `----'",
+];
+
+export function MakeCoffeeOutput() {
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setDone(true), 900);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div>
+      <div style={{ color: C.dim }}>
+        {done ? "# brewed." : "# brewing"}
+        {!done && <BlinkingDots />}
+      </div>
+      <pre
+        className="m-0 leading-tight"
+        style={{ color: done ? C.yellow : C.dim }}
+      >
+        {COFFEE_ART.join("\n")}
+      </pre>
+      {done && (
+        <div style={{ color: C.green, marginTop: 6 }}>
+          ☕ enjoy. side effects: 47 lines of code in 30 minutes.
+        </div>
+      )}
+    </div>
+  );
+}
+
+function BlinkingDots() {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setN((x) => (x + 1) % 4), 250);
+    return () => clearInterval(t);
+  }, []);
+  return <span>{".".repeat(n)}</span>;
+}
+
+// ── sudo: shutdown ─────────────────────────────────────────
+export function ShutdownOutput() {
+  const [n, setN] = useState(5);
+  useEffect(() => {
+    if (n <= 0) return;
+    const t = setTimeout(() => setN(n - 1), 700);
+    return () => clearTimeout(t);
+  }, [n]);
+  return (
+    <div>
+      <div style={{ color: C.yellow }}>
+        broadcast: system shutdown in {n}...
+      </div>
+      {n <= 0 && (
+        <div style={{ color: C.green, marginTop: 6 }}>
+          # psych. nothing was shut down. portfolio still alive.
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── sudo: nuke ─────────────────────────────────────────────
+const NUKE_STEPS = [
+  { label: "launching nuclear sequence", color: "#ff5555" },
+  { label: "authorization", value: "GRANTED", color: "#00ff41" },
+  { label: "target", value: "bugs in production", color: "#79c0ff" },
+  { label: "status", value: "ARMED", color: "#f0ad4e" },
+  { label: "T-3...", color: "#ff5555" },
+  { label: "T-2...", color: "#ff5555" },
+  { label: "T-1...", color: "#ff5555" },
+];
+
+export function NukeOutput() {
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    if (step >= NUKE_STEPS.length) return;
+    const t = setTimeout(() => setStep(step + 1), 250);
+    return () => clearTimeout(t);
+  }, [step]);
+  return (
+    <div>
+      {NUKE_STEPS.slice(0, step).map((s, i) => (
+        <div key={i} style={{ color: s.color }}>
+          {s.label}
+          {s.value && <span style={{ color: C.dim }}>: </span>}
+          {s.value && <span style={{ color: s.color }}>{s.value}</span>}
+        </div>
+      ))}
+      {step >= NUKE_STEPS.length && (
+        <div style={{ color: C.green, marginTop: 6 }}>
+          🚀 ...nope, that was a fake button. coffee instead?
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── secret (admin-only) ────────────────────────────────────
+const SECRET_FACTS = [
+  "tabs over spaces — but only because everyone else does",
+  "my IDE font is Fira Code with ligatures on",
+  "I write tests, but only after the bug bites me twice",
+  "my caffeine:code ratio is approximately 1:200",
+  "I have 47 unread emails. I will read 0 of them.",
+  "the mug on my desk says: git push --force",
+  "I refactor at 3am. it always seems like a good idea then.",
+];
+
+export function SecretOutput() {
+  return (
+    <div className="space-y-1">
+      <div style={{ color: C.red, fontWeight: 600 }}>
+        == /root/.secrets ==
+      </div>
+      <div style={{ color: C.dim }}># things only root sees:</div>
+      <div className="pl-2 mt-1">
+        {SECRET_FACTS.map((f, i) => (
+          <div key={i} style={{ color: C.fg }}>
+            <span style={{ color: C.green }}>•</span> {f}
+          </div>
+        ))}
+      </div>
+      <div style={{ color: C.dim }} className="mt-2">
+        # stay paranoid out there.
+      </div>
+    </div>
+  );
+}
+
+// ── sudo whoami helper (used as alias inside sudo) ─────────
+export function SudoWhoamiOutput({ isRoot }) {
+  if (isRoot) {
+    return (
+      <div>
+        <span style={{ color: C.red, fontWeight: 600 }}>root</span>
+        <span style={{ color: C.dim }}>
+          {" "}
+          # uid=0(root) gid=0(root) groups=0(root)
+        </span>
+      </div>
+    );
+  }
+  return (
+    <span style={{ color: C.dim }}>you wish.</span>
   );
 }
 

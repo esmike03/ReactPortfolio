@@ -1,16 +1,53 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TerminalCtx } from "./TerminalContext";
 import { runRegistryCommand } from "./commands";
-import { WelcomeMessage } from "./outputs";
+import {
+  WelcomeMessage,
+  SudoGrantedOutput,
+  SudoFailedOutput,
+  ErrorOutput,
+} from "./outputs";
 
 let entryId = 0;
 const nextId = () => ++entryId;
 
+const VALID_PASSWORDS = [
+  "letmein",
+  "please",
+  "mike",
+  "portfolio",
+  "root",
+  "open sesame",
+  "abracadabra",
+  "1234",
+  "password",
+  "swordfish",
+];
+
 export default function TerminalProvider({ children }) {
   const [bootDone, setBootDone] = useState(false);
-  const [history, setHistory] = useState([]); // [{id, type, command?, node?}]
-  const [cmdInputHistory, setCmdInputHistory] = useState([]); // raw input strings
+  const [history, setHistory] = useState([]);
+  const [cmdInputHistory, setCmdInputHistory] = useState([]);
+  const [isRoot, setIsRoot] = useState(false);
+  const [pwMode, setPwMode] = useState(false); // currently in [sudo] password prompt
   const welcomeShownRef = useRef(false);
+
+  // Refs mirror state so the runCommand callback can stay identity-stable.
+  const isRootRef = useRef(false);
+  const pwModeRef = useRef(false);
+  const pwAttemptsRef = useRef(0);
+  const sudoAttemptsRef = useRef(0);
+  const cmdInputHistoryRef = useRef([]);
+
+  useEffect(() => {
+    isRootRef.current = isRoot;
+  }, [isRoot]);
+  useEffect(() => {
+    pwModeRef.current = pwMode;
+  }, [pwMode]);
+  useEffect(() => {
+    cmdInputHistoryRef.current = cmdInputHistory;
+  }, [cmdInputHistory]);
 
   const finishBoot = useCallback(() => {
     setBootDone((prev) => (prev ? prev : true));
@@ -24,24 +61,105 @@ export default function TerminalProvider({ children }) {
     setHistory((prev) => [...prev, { id: nextId(), ...entry }]);
   }, []);
 
-  // Live ref so handlers (like `history`) can read current values without
-  // re-creating the runCommand callback identity each render.
-  const ctxRef = useRef({ cmdInputHistory, clearHistory });
-  ctxRef.current.cmdInputHistory = cmdInputHistory;
-  ctxRef.current.clearHistory = clearHistory;
+  const beginPasswordPrompt = useCallback(() => {
+    pwAttemptsRef.current = 0;
+    pwModeRef.current = true;
+    setPwMode(true);
+  }, []);
+
+  const cancelPasswordPrompt = useCallback(() => {
+    pwAttemptsRef.current = 0;
+    pwModeRef.current = false;
+    setPwMode(false);
+  }, []);
+
+  const bumpSudoAttempt = useCallback(() => {
+    sudoAttemptsRef.current += 1;
+    return sudoAttemptsRef.current;
+  }, []);
+
+  const resetSudoAttempts = useCallback(() => {
+    sudoAttemptsRef.current = 0;
+  }, []);
+
+  const setIsRootStable = useCallback((v) => {
+    isRootRef.current = !!v;
+    setIsRoot(!!v);
+  }, []);
+
+  // Live ctx for command handlers.
+  const ctxRef = useRef({});
+  ctxRef.current = {
+    isRoot,
+    cmdInputHistory,
+    clearHistory,
+    beginPasswordPrompt,
+    bumpSudoAttempt,
+    resetSudoAttempts,
+    setIsRoot: setIsRootStable,
+  };
 
   const runCommand = useCallback((input) => {
     const trimmed = String(input ?? "").trim();
 
-    // Always echo the command line to history (even if empty)
+    // ── Password mode: treat input as a password attempt ──
+    if (pwModeRef.current) {
+      const masked = "•".repeat(trimmed.length);
+      setHistory((prev) => [
+        ...prev,
+        { id: nextId(), type: "password-echo", masked },
+      ]);
+
+      const ok = VALID_PASSWORDS.includes(trimmed.toLowerCase());
+      if (ok) {
+        pwModeRef.current = false;
+        setPwMode(false);
+        pwAttemptsRef.current = 0;
+        sudoAttemptsRef.current = 0;
+        isRootRef.current = true;
+        setIsRoot(true);
+        setHistory((prev) => [
+          ...prev,
+          { id: nextId(), type: "output", node: <SudoGrantedOutput /> },
+        ]);
+        return;
+      }
+
+      pwAttemptsRef.current += 1;
+      if (pwAttemptsRef.current >= 3) {
+        pwModeRef.current = false;
+        setPwMode(false);
+        pwAttemptsRef.current = 0;
+        setHistory((prev) => [
+          ...prev,
+          { id: nextId(), type: "output", node: <SudoFailedOutput /> },
+        ]);
+        return;
+      }
+      setHistory((prev) => [
+        ...prev,
+        {
+          id: nextId(),
+          type: "output",
+          node: <ErrorOutput cmd="sudo" msg="Sorry, try again." />,
+        },
+      ]);
+      return;
+    }
+
+    // ── Normal mode: echo the prompt+command ──
     setHistory((prev) => [
       ...prev,
-      { id: nextId(), type: "command", command: trimmed },
+      {
+        id: nextId(),
+        type: "command",
+        command: trimmed,
+        isRoot: isRootRef.current,
+      },
     ]);
 
     if (!trimmed) return;
 
-    // Track for ↑/↓ navigation (skip consecutive duplicates)
     setCmdInputHistory((prev) => {
       if (prev.length && prev[prev.length - 1] === trimmed) return prev;
       return [...prev, trimmed];
@@ -61,8 +179,7 @@ export default function TerminalProvider({ children }) {
           type: "output",
           node: (
             <span style={{ color: "#ff5555" }}>
-              {base}: handler crashed —{" "}
-              {String(err?.message || err)}
+              {base}: handler crashed — {String(err?.message || err)}
             </span>
           ),
         },
@@ -86,9 +203,7 @@ export default function TerminalProvider({ children }) {
           id: nextId(),
           type: "output",
           node: (
-            <span style={{ color: "#8b949e" }}>
-              # opened {url} in a new tab
-            </span>
+            <span style={{ color: "#8b949e" }}># opened {url} in a new tab</span>
           ),
         },
       ]);
@@ -103,10 +218,7 @@ export default function TerminalProvider({ children }) {
     }
   }, []);
 
-  // Safety fallback: if boot hasn't completed within 4s for any reason
-  // (animation didn't fire, anime errored, etc.), force-finish so the
-  // CLI is always reachable. This is defense-in-depth — under normal
-  // conditions BootSequence calls finishBoot() on its own much sooner.
+  // Safety fallback so the CLI is always reachable.
   useEffect(() => {
     if (bootDone) return;
     const t = setTimeout(() => {
@@ -135,6 +247,9 @@ export default function TerminalProvider({ children }) {
       runCommand,
       cmdInputHistory,
       clearHistory,
+      isRoot,
+      pwMode,
+      cancelPasswordPrompt,
     }),
     [
       bootDone,
@@ -144,6 +259,9 @@ export default function TerminalProvider({ children }) {
       runCommand,
       cmdInputHistory,
       clearHistory,
+      isRoot,
+      pwMode,
+      cancelPasswordPrompt,
     ],
   );
 

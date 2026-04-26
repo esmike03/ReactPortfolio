@@ -44,8 +44,30 @@ export default function HistoryRenderer() {
               key={entry.id}
               className="terminal-cmd-echo flex flex-wrap items-baseline mt-1"
             >
-              <Prompt user="mike" host="portfolio" />
+              <Prompt
+                user="mike"
+                host="portfolio"
+                isRoot={!!entry.isRoot}
+              />
               <span style={{ color: "#e6edf3" }}>{entry.command}</span>
+            </div>
+          );
+        }
+        if (entry.type === "password-echo") {
+          return (
+            <div
+              key={entry.id}
+              className="terminal-cmd-echo flex flex-wrap items-baseline mt-1"
+            >
+              <span className="select-none" style={{ color: "#c9d1d9" }}>
+                [sudo] password for{" "}
+                <span style={{ color: "#79c0ff" }}>visitor</span>:&nbsp;
+              </span>
+              <span
+                style={{ color: "#e6edf3", letterSpacing: "0.15em" }}
+              >
+                {entry.masked}
+              </span>
             </div>
           );
         }
