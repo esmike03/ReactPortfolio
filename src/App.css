@@ -484,32 +484,6 @@ body {
   }
 }
 
-/* ── CRT scanlines ────────────────────────────────────────── */
-.glitch-scan {
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.34) 0 1px,
-    transparent 1px 3px
-  );
-  opacity: 0;
-  animation: glitch-scan 1.4s ease-in-out forwards;
-}
-
-@keyframes glitch-scan {
-  0% {
-    opacity: 0;
-  }
-  14% {
-    opacity: 0.6;
-  }
-  62% {
-    opacity: 0.42;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
 /* ── Signal blowout at the swap ───────────────────────────── */
 .warp-flash {
   background: radial-gradient(
@@ -538,40 +512,6 @@ body {
   }
   100% {
     opacity: 0;
-  }
-}
-
-/* ── Re-sync sweep ────────────────────────────────────────── */
-/* Scanline rolls down the new view as the signal locks in. */
-.warp-sweep {
-  top: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(95, 215, 215, 0.9),
-    rgba(190, 240, 255, 0.95),
-    rgba(95, 215, 215, 0.9),
-    transparent
-  );
-  box-shadow: 0 0 28px rgba(95, 215, 215, 0.7);
-  opacity: 0;
-  transform: translateY(-4px);
-  animation: warp-sweep 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.62s forwards;
-}
-
-@keyframes warp-sweep {
-  0% {
-    opacity: 0;
-    transform: translateY(-4px) scaleX(0.4);
-  }
-  22% {
-    opacity: 1;
-    transform: translateY(16vh) scaleX(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(104vh) scaleX(1);
   }
 }
 

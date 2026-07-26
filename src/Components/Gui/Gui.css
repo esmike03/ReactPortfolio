@@ -68,30 +68,40 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
 }
 
 /* ── Entrance + scroll reveal ─────────────────────────────── */
+/* Blurred and low, resolving into focus as it scrolls in.
+   `.is-in` lands on `filter: none`, not `blur(0)`: a lingering filter would
+   keep a stacking context around and flatten the carousel's 3D deck. */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translateY(26px) scale(0.995);
+  filter: blur(12px);
   transition:
-    opacity 0.85s var(--ui-ease) var(--d, 0ms),
-    transform 0.85s var(--ui-ease) var(--d, 0ms);
+    opacity 1s var(--ui-ease) var(--d, 0ms),
+    transform 1s var(--ui-ease) var(--d, 0ms),
+    filter 1s var(--ui-ease) var(--d, 0ms);
+  will-change: opacity, transform, filter;
 }
 [data-reveal].is-in {
   opacity: 1;
   transform: none;
+  filter: none;
+  will-change: auto;
 }
 
 .ui-rise {
   opacity: 0;
-  animation: ui-rise 0.9s var(--ui-ease) var(--d, 0ms) forwards;
+  animation: ui-rise 1s var(--ui-ease) var(--d, 0ms) forwards;
 }
 @keyframes ui-rise {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(26px);
+    filter: blur(12px);
   }
   to {
     opacity: 1;
     transform: none;
+    filter: none;
   }
 }
 

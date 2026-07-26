@@ -135,9 +135,7 @@ export default function App() {
           <span className="glitch-rgb glitch-rgb-a" />
           <span className="glitch-rgb glitch-rgb-b" />
           <span className="warp-veil" />
-          <span className="glitch-scan" />
           <span className="warp-flash" />
-          <span className="warp-sweep" />
         </div>
       )}
     </ErrorBoundary>
