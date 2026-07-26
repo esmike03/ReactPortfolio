@@ -39,49 +39,109 @@ export const TIMELINE = [
   },
 ];
 
+// NOTE: `desc` + `stack` feed the CLI. `name`, `plain`, `kind` and `year`
+// feed the friendly UI mode — plain words, no jargon.
 export const PROJECTS = [
   {
     id: "registrar-bisu",
     title: "BISU Registrar Appointment System",
+    name: "Registrar Appointments",
     desc: "Web-based appointment system for the BISU Registrar — streamlines student document requests, scheduling, and management.",
+    plain:
+      "Students book a school visit online instead of falling in line for hours.",
+    kind: "Website",
+    year: "2025",
     href: "https://registrar-bisu.nxprimordial.space/",
     stack: ["Laravel", "TailwindCSS", "MySQL", "JavaScript"],
   },
   {
     id: "konstrukalakal",
     title: "Konstrukalakal — Construction Marketplace",
+    name: "Konstrukalakal",
     desc: "Digital marketplace to buy, sell, trade, and donate construction materials. Connects suppliers, contractors, and individuals.",
+    plain:
+      "A marketplace where people buy, sell, or give away leftover building materials.",
+    kind: "Marketplace",
+    year: "2025",
     href: "https://konstrukalakal.nxprimordial.space/",
     stack: ["Laravel", "React", "TailwindCSS", "MySQL"],
   },
   {
     id: "travel-companion",
     title: "Travel Companion (Android)",
+    name: "Travel Companion",
     desc: "Tour-guide app for Bohol with Google Maps + OpenStreetView, Google account auth, and curated attraction routes.",
+    plain:
+      "A phone app that walks visitors around Bohol with maps and suggested stops.",
+    kind: "Phone app",
+    year: "2024",
     href: "https://github.com/esmike03/TravelCompanion",
     stack: ["Android Studio", "Firebase", "Google Maps"],
   },
   {
     id: "xentro-estates",
     title: "Xentro Estates — Website Redesign",
+    name: "Xentro Estates",
     desc: "Led the redesign and implemented new features for the Xentro Estates property platform.",
+    plain:
+      "A property listing site, rebuilt so homes are easier to browse and find.",
+    kind: "Redesign",
+    year: "2025",
     href: "https://xentroestates.xentroholdings.com/",
     stack: ["Laravel", "TailwindCSS", "Photoshop", "MySQL"],
   },
   {
     id: "westpoint-pharma",
     title: "Westpoint Pharma — Website",
+    name: "Westpoint Pharma",
     desc: "Modern, responsive corporate site built end-to-end with Laravel + TailwindCSS.",
+    plain:
+      "A calm, modern company site that reads just as well on a phone.",
+    kind: "Website",
+    year: "2025",
     href: "https://westpointpharma.xentroholdings.com/",
     stack: ["Laravel", "TailwindCSS", "Photoshop", "MySQL"],
   },
   {
     id: "helmet-shop",
     title: "Helmet Shop (WordPress)",
+    name: "Helmet Shop",
     desc: "Visually engaging helmet shop site — won Best Website Design at our showcase.",
+    plain:
+      "An online helmet store. It won Best Website Design at our school showcase.",
+    kind: "Online store",
+    year: "2024",
     href: "https://github.com/esmike03/Helmet-Shop-Wordpress",
     stack: ["WordPress", "Photoshop", "Elementor"],
   },
+];
+
+// Friendly-mode only: what I can help with, in everyday words.
+export const SERVICES = [
+  {
+    title: "Websites",
+    body: "Company pages, shops, and landing pages that look right on any screen.",
+  },
+  {
+    title: "Systems that do work",
+    body: "Booking, records, and reports — the everyday tasks, made faster.",
+  },
+  {
+    title: "Design",
+    body: "Layouts, posters, and visuals that match how you want to be seen.",
+  },
+];
+
+// Short, plain phrases for the scrolling strip in friendly mode.
+export const MARQUEE = [
+  "Websites",
+  "Online stores",
+  "Booking systems",
+  "Phone apps",
+  "Layout design",
+  "Photo editing",
+  "Company pages",
+  "Redesigns",
 ];
 
 export const SKILLS_TEXT =
@@ -95,11 +155,16 @@ export const SKILL_BARS = [
   { label: "Layout/ Design", percent: 60 },
 ];
 
+// `alt` stays as-is for the CLI; `caption` is the friendly-mode label.
 export const GALLERY = [
-  { src: "/images/des.png", alt: "Design 1" },
-  { src: "/images/legion.png", alt: "Legion layout" },
-  { src: "/images/mock1.png", alt: "Mockup 1" },
-  { src: "/images/ticket.png", alt: "Ticket design" },
+  { src: "/images/des.png", alt: "Design 1", caption: "Poster design" },
+  {
+    src: "/images/legion.png",
+    alt: "Legion layout",
+    caption: "Legion — page layout",
+  },
+  { src: "/images/mock1.png", alt: "Mockup 1", caption: "Website mockup" },
+  { src: "/images/ticket.png", alt: "Ticket design", caption: "Event ticket" },
 ];
 
 export const CONTACT = {

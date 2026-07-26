@@ -1,0 +1,856 @@
+/* ============================================================
+   FRIENDLY UI MODE — light, minimal, plain-language portfolio.
+   Fully scoped under .ui-root so the terminal styling is untouched.
+   ============================================================ */
+
+.ui-root {
+  --ui-bg: #f8f7f5;
+  --ui-surface: #ffffff;
+  --ui-ink: #34333b;
+  --ui-ink-2: #6b6a74;
+  --ui-ink-3: #87868f;
+  --ui-line: rgba(52, 51, 59, 0.1);
+  --ui-line-soft: rgba(52, 51, 59, 0.06);
+  --ui-live: #4f9c78;
+
+  --ui-sans: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ui-serif: "Instrument Serif", "Times New Roman", serif;
+  --ui-mono: var(--font-mono, ui-monospace, monospace);
+
+  --ui-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ui-max: 1080px;
+
+  min-height: 100vh;
+  background: var(--ui-bg);
+  color: var(--ui-ink);
+  font-family: var(--ui-sans);
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+  overflow-x: clip;
+}
+
+/* Paint the page shell light while this mode is on. */
+html[data-mode="ui"] {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+html[data-mode="ui"] body {
+  background: #f8f7f5;
+  color: #34333b;
+}
+html[data-mode="ui"] ::selection {
+  background: rgba(52, 51, 59, 0.12);
+  color: #34333b;
+}
+html[data-mode="ui"] ::-webkit-scrollbar-track {
+  background: #f8f7f5;
+}
+html[data-mode="ui"] ::-webkit-scrollbar-thumb {
+  background: rgba(52, 51, 59, 0.18);
+  border-radius: 999px;
+}
+
+/* :where() keeps this reset at zero specificity, so any .ui-* class below
+   can set its own link colour without needing to out-specify it. */
+.ui-root :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+.ui-root :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+}
+.ui-root :where(p) {
+  margin: 0;
+}
+
+/* ── Entrance + scroll reveal ─────────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.85s var(--ui-ease) var(--d, 0ms),
+    transform 0.85s var(--ui-ease) var(--d, 0ms);
+}
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.ui-rise {
+  opacity: 0;
+  animation: ui-rise 0.9s var(--ui-ease) var(--d, 0ms) forwards;
+}
+@keyframes ui-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Nav ──────────────────────────────────────────────────── */
+/* Fully transparent — content scrolls behind it, no bar, no blur. */
+.ui-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: transparent;
+}
+
+.ui-nav-inner {
+  max-width: var(--ui-max);
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ui-cli-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  color: var(--ui-ink-2);
+  font-family: var(--ui-sans);
+  font-size: 13px;
+  font-weight: 450;
+  cursor: pointer;
+  transition: color 0.35s var(--ui-ease);
+}
+.ui-cli-btn svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.35s var(--ui-ease);
+}
+.ui-cli-btn:hover {
+  color: var(--ui-ink);
+}
+.ui-cli-btn:hover svg {
+  transform: translateX(-2px);
+}
+
+/* ── Layout ───────────────────────────────────────────────── */
+.ui-section {
+  max-width: var(--ui-max);
+  margin: 0 auto;
+  padding: 84px 24px;
+}
+
+.ui-label {
+  display: inline-block;
+  font-family: var(--ui-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ui-ink-3);
+}
+
+/* Label sits directly beside the heading — no column, no gap. */
+.ui-head {
+  margin-bottom: 38px;
+  display: flex;
+  align-items: baseline;
+}
+.ui-title {
+  font-size: clamp(1.65rem, 3vw, 2.1rem);
+}
+.ui-note {
+  margin-top: 12px;
+  max-width: 46ch;
+  color: var(--ui-ink-2);
+  font-size: 15.5px;
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.ui-hero {
+  max-width: var(--ui-max);
+  margin: 0 auto;
+  padding: clamp(52px, 9vh, 88px) 24px 72px;
+}
+
+.ui-hero-name {
+  margin-bottom: 18px;
+  font-family: var(--ui-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ui-ink-3);
+}
+
+.ui-hero-title {
+  font-size: clamp(1.8rem, 4.2vw, 2.85rem);
+  line-height: 1.02;
+}
+.ui-line {
+  display: block;
+}
+.ui-hero-title em {
+  font-family: var(--ui-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.ui-hero-sub {
+  margin-top: 26px;
+  max-width: 52ch;
+  font-size: clamp(0.97rem, 1.15vw, 1.06rem);
+  color: var(--ui-ink-2);
+}
+
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 22px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 450;
+  border: 1px solid transparent;
+  transition:
+    transform 0.35s var(--ui-ease),
+    box-shadow 0.35s var(--ui-ease),
+    background 0.35s var(--ui-ease),
+    border-color 0.35s var(--ui-ease);
+}
+.ui-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.4s var(--ui-ease);
+}
+.ui-btn-solid {
+  background: var(--ui-ink);
+  color: #fdfdfc;
+}
+.ui-btn-solid:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(52, 51, 59, 0.14);
+}
+.ui-btn-solid:hover svg {
+  transform: translateY(3px);
+}
+.ui-btn-lg {
+  margin-top: 26px;
+  padding: 15px 26px;
+  font-size: clamp(14.5px, 1.5vw, 16px);
+}
+.ui-btn-lg:hover svg {
+  transform: translate(3px, -3px);
+}
+
+/* ── Marquee strip ────────────────────────────────────────── */
+.ui-marquee {
+  padding: 22px 0;
+  border-top: 1px solid var(--ui-line-soft);
+  border-bottom: 1px solid var(--ui-line-soft);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+.ui-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: ui-scroll 34s linear infinite;
+}
+.ui-marquee:hover .ui-marquee-track {
+  animation-play-state: paused;
+}
+@keyframes ui-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ui-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  color: var(--ui-ink-2);
+  white-space: nowrap;
+}
+.ui-marquee-sep {
+  margin: 0 26px;
+  color: var(--ui-ink-3);
+  font-size: 10px;
+}
+
+/* ── Work rail — horizontal scrolling carousel ────────────── */
+/* Bleeds to the section edges so cards can run off-screen on the right. */
+.ui-rail-wrap {
+  position: relative;
+  margin: 0 -24px;
+}
+
+/* Edge fades — each one only shows while there are cards that way. */
+.ui-rail-wrap::before,
+.ui-rail-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 10px;
+  width: 64px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s var(--ui-ease);
+}
+.ui-rail-wrap::before {
+  left: 0;
+  background: linear-gradient(270deg, transparent, var(--ui-bg));
+}
+.ui-rail-wrap::after {
+  right: 0;
+  background: linear-gradient(90deg, transparent, var(--ui-bg));
+}
+.ui-rail-wrap.has-left::before,
+.ui-rail-wrap.has-right::after {
+  opacity: 1;
+}
+
+.ui-rail {
+  display: flex;
+  gap: 18px;
+  padding: 6px 24px 10px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+  /* Scrollable, but the bar itself stays hidden. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.ui-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.ui-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(300px, 44vw, 500px);
+  scroll-snap-align: start;
+  overflow: hidden;
+  border: 1px solid var(--ui-line);
+  border-radius: 16px;
+  background: var(--ui-surface);
+  transition:
+    transform 0.5s var(--ui-ease),
+    box-shadow 0.5s var(--ui-ease),
+    border-color 0.5s var(--ui-ease);
+}
+.ui-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(52, 51, 59, 0.13);
+  box-shadow: 0 20px 44px rgba(52, 51, 59, 0.09);
+}
+
+/* Picture slot — placeholder until a project gets an `image`. */
+.ui-thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(255, 255, 255, 0.9), transparent 60%),
+    linear-gradient(135deg, #f1f0ed, #e7e6e2);
+}
+.ui-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s var(--ui-ease);
+}
+.ui-card:hover .ui-thumb img {
+  transform: scale(1.04);
+}
+/* Visible stand-in until a real screenshot is dropped in. */
+.ui-thumb-ph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--ui-ink-3);
+  transition: transform 0.6s var(--ui-ease), color 0.6s var(--ui-ease);
+}
+.ui-thumb-ph svg {
+  width: 24px;
+  height: 24px;
+  opacity: 0.75;
+}
+.ui-thumb-ph span {
+  font-family: var(--ui-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.ui-card:hover .ui-thumb-ph {
+  transform: translateY(-2px);
+  color: var(--ui-ink-2);
+}
+
+/* Title sits on the picture, over a scrim so it reads on any image. */
+.ui-card-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 44px 20px 18px;
+  background: linear-gradient(
+    to top,
+    rgba(16, 16, 20, 0.82),
+    rgba(16, 16, 20, 0.38) 52%,
+    transparent
+  );
+}
+
+.ui-card-title {
+  font-size: 19px;
+  color: #fdfdfc;
+  transition: transform 0.5s var(--ui-ease);
+}
+.ui-card:hover .ui-card-title {
+  transform: translateY(-2px);
+}
+
+/* Open-link cue, parked in the card's top-right corner. */
+.ui-card-go {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 14px rgba(52, 51, 59, 0.1);
+  color: var(--ui-ink-2);
+  transition:
+    transform 0.45s var(--ui-ease),
+    background 0.45s var(--ui-ease),
+    color 0.45s var(--ui-ease);
+}
+.ui-card-go svg {
+  width: 15px;
+  height: 15px;
+}
+.ui-card:hover .ui-card-go {
+  transform: translate(2px, -2px);
+  background: #fff;
+  color: var(--ui-ink);
+}
+
+/* ── About ────────────────────────────────────────────────── */
+.ui-about {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 44px;
+  align-items: start;
+}
+.ui-about-text {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-size: clamp(0.97rem, 1.2vw, 1.06rem);
+  color: var(--ui-ink-2);
+  max-width: 46ch;
+}
+.ui-about-text p:first-child {
+  color: var(--ui-ink);
+}
+
+.ui-services {
+  display: flex;
+  flex-direction: column;
+}
+.ui-service {
+  padding: 22px 0;
+  border-top: 1px solid var(--ui-line-soft);
+  transition: padding-left 0.45s var(--ui-ease);
+}
+.ui-service:last-child {
+  border-bottom: 1px solid var(--ui-line-soft);
+}
+.ui-service:hover {
+  padding-left: 10px;
+}
+.ui-service h3 {
+  font-size: 16px;
+}
+.ui-service p {
+  margin-top: 7px;
+  color: var(--ui-ink-2);
+  font-size: 14.5px;
+}
+
+/* ── Journey ──────────────────────────────────────────────── */
+.ui-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ui-tl-item {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  padding: 22px 12px;
+  margin: 0 -12px;
+  border-top: 1px solid var(--ui-line-soft);
+  border-radius: 12px;
+  transition: background 0.4s var(--ui-ease);
+}
+.ui-tl-item:last-child {
+  border-bottom: 1px solid var(--ui-line-soft);
+}
+.ui-tl-item:hover {
+  background: rgba(52, 51, 59, 0.028);
+}
+.ui-tl-date {
+  font-family: var(--ui-mono);
+  font-size: 12px;
+  color: var(--ui-ink-3);
+  padding-top: 3px;
+}
+.ui-tl-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.ui-tl-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+.ui-tl-org {
+  color: var(--ui-ink-2);
+  font-size: 14.5px;
+}
+.ui-now {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(79, 156, 120, 0.13);
+  color: var(--ui-live);
+  font-size: 11px;
+  font-family: var(--ui-mono);
+  letter-spacing: 0.06em;
+}
+
+/* ── Visual work — 3D coverflow carousel ──────────────────── */
+.ui-carousel {
+  user-select: none;
+}
+
+.ui-stage {
+  position: relative;
+  height: clamp(250px, 34vw, 400px);
+  perspective: 1400px;
+  perspective-origin: 50% 45%;
+  transform-style: preserve-3d;
+  translate: var(--drag, 0px) 0;
+  transition: translate 0.5s var(--ui-ease);
+  cursor: grab;
+  touch-action: pan-y;
+  outline: none;
+}
+.ui-stage.is-dragging {
+  cursor: grabbing;
+  transition: none;
+}
+.ui-stage:focus-visible {
+  outline: 2px solid var(--ui-ink);
+  outline-offset: 14px;
+  border-radius: 20px;
+}
+
+.ui-slide {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin: 0;
+  /* Square frame driven by the stage height — the art is 1:1, so this hugs
+     it instead of leaving empty margins either side. */
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  width: auto;
+  max-width: 88vw;
+  /* Glass frame: a slim translucent stroke around the art, no solid fill. */
+  padding: 7px;
+  border-radius: 11px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 8px 28px rgba(52, 51, 59, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transition:
+    transform 0.75s var(--ui-ease),
+    opacity 0.75s var(--ui-ease),
+    box-shadow 0.75s var(--ui-ease);
+  will-change: transform, opacity;
+}
+/* --lift feeds the translateY in the inline transform, so hovering a
+   neighbour raises it and clicking it lifts higher as it swings in. */
+.ui-slide:not(.is-active):hover {
+  --lift: -14px;
+}
+.ui-slide.is-rising {
+  --lift: -26px;
+}
+
+.ui-slide.is-active {
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow:
+    0 22px 48px rgba(52, 51, 59, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.ui-slide a,
+.ui-slide button {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+/* contain, not cover — the whole artwork stays visible whatever its shape. */
+.ui-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 6px;
+  transition: transform 0.9s var(--ui-ease);
+}
+.ui-slide.is-active:hover img {
+  transform: scale(1.035);
+}
+
+.ui-carousel-bar {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.ui-carousel-caption {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 14.5px;
+  color: var(--ui-ink-2);
+  animation: ui-caption 0.6s var(--ui-ease) both;
+}
+@keyframes ui-caption {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ui-carousel-count {
+  font-family: var(--ui-mono);
+  font-size: 12px;
+  color: var(--ui-ink-3);
+}
+
+/* ── Contact ──────────────────────────────────────────────── */
+.ui-contact-section {
+  padding-bottom: 72px;
+}
+.ui-cta-title {
+  margin-top: 16px;
+  font-size: clamp(1.8rem, 3.8vw, 2.5rem);
+}
+.ui-cta .ui-note {
+  margin-top: 16px;
+}
+
+.ui-details {
+  margin: 56px 0 0;
+  max-width: 620px;
+}
+.ui-detail {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 20px;
+  align-items: baseline;
+  padding: 17px 0;
+  border-top: 1px solid var(--ui-line-soft);
+}
+.ui-detail:last-child {
+  border-bottom: 1px solid var(--ui-line-soft);
+}
+.ui-detail dt {
+  font-family: var(--ui-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ui-ink-3);
+}
+.ui-detail dd {
+  margin: 0;
+  font-size: 15.5px;
+  color: var(--ui-ink);
+}
+/* A hairline that sweeps in on hover — no boxes, no lift. */
+.ui-detail dd a {
+  position: relative;
+}
+.ui-detail dd a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ui-ease);
+}
+.ui-detail dd a:hover::after {
+  transform: scaleX(1);
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+.ui-footer {
+  max-width: var(--ui-max);
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+  border-top: 1px solid var(--ui-line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+  color: var(--ui-ink-3);
+}
+.ui-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.ui-footer a,
+.ui-footer-cli {
+  color: var(--ui-ink-2);
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.3s var(--ui-ease);
+}
+.ui-footer a:hover,
+.ui-footer-cli:hover {
+  color: var(--ui-ink);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .ui-about {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .ui-tl-item {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 700px) {
+  .ui-section {
+    padding: 76px 20px;
+  }
+  .ui-hero {
+    padding: 56px 20px 64px;
+  }
+  .ui-nav-inner,
+  .ui-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .ui-rail-wrap {
+    margin: 0 -20px;
+  }
+  .ui-rail {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .ui-slide {
+    padding: 5px;
+    border-radius: 9px;
+  }
+  .ui-carousel-bar {
+    gap: 12px;
+  }
+  .ui-carousel-caption {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    font-size: 14px;
+  }
+  .ui-details {
+    margin-top: 48px;
+  }
+  .ui-detail {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 15px 0;
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html[data-mode="ui"] {
+    scroll-behavior: auto;
+  }
+  .ui-root *,
+  .ui-root *::before,
+  .ui-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  [data-reveal],
+  .ui-rise {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -4,7 +4,24 @@
       "Bash(npm install *)",
       "Bash(node -p \"require\\('./node_modules/animejs/package.json'\\).version\")",
       "Bash(npm run *)",
-      "Bash(curl -s http://localhost:5173/)"
+      "Bash(curl -s http://localhost:5173/)",
+      "WebFetch(domain:adrianabelarde.com)",
+      "Bash(grep -n \"^/\\\\*\\\\|^@\\\\|^:root\\\\|^body\\\\|^html\" src/App.css)",
+      "Bash(npx vite *)",
+      "Bash(npx eslint *)",
+      "Bash(sed -i -e 124,130d src/Components/Gui/Gui.css)",
+      "Bash(sed -i -e 's/^  margin-top: 72px;$/  margin-top: 54px;/' -e 's/^    margin-top: 52px;$/    margin-top: 40px;/' src/Components/Gui/Gui.css)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5177/)",
+      "Bash(netstat -ano)",
+      "PowerShell(Get-CimInstance *)",
+      "Bash(node -e ' *)",
+      "Bash(python -c ' *)",
+      "Bash(sed -n '/Glass frame/,+3p' src/Components/Gui/Gui.css)",
+      "Bash(sed -n '/^\\\\.ui-slide a,/,/^}/p' src/Components/Gui/Gui.css)",
+      "Bash(sed -n '/--lift feeds/,+8p' src/Components/Gui/Gui.css)",
+      "Bash(python -)",
+      "Bash(curl -s http://localhost:5177/src/Components/Gui/Gui.jsx)",
+      "WebSearch"
     ]
   }
 }

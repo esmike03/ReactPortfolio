@@ -460,7 +460,16 @@ export const COMMANDS = [
     category: "fun",
     summary: "Close the terminal",
     usage: "exit",
-    handler: () => <ExitOutput />,
+    handler: () => {
+      // Let the line render, then hand control back to the friendly UI.
+      if (typeof window !== "undefined") {
+        window.setTimeout(
+          () => window.dispatchEvent(new CustomEvent("portfolio:exit-cli")),
+          500,
+        );
+      }
+      return <ExitOutput />;
+    },
   },
 ];
 

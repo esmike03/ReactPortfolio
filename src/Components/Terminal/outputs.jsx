@@ -1113,7 +1113,7 @@ export function SudoWhoamiOutput({ isRoot }) {
 export function ExitOutput() {
   return (
     <span style={{ color: C.dim }}>
-      # this is your shell — refresh the page to start over.
+      # closing shell — returning to the site_
     </span>
   );
 }
