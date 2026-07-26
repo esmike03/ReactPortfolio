@@ -219,46 +219,6 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   color: var(--ui-ink-2);
 }
 
-.ui-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 13px 22px;
-  border-radius: 999px;
-  font-size: 14.5px;
-  font-weight: 450;
-  border: 1px solid transparent;
-  transition:
-    transform 0.35s var(--ui-ease),
-    box-shadow 0.35s var(--ui-ease),
-    background 0.35s var(--ui-ease),
-    border-color 0.35s var(--ui-ease);
-}
-.ui-btn svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.4s var(--ui-ease);
-}
-.ui-btn-solid {
-  background: var(--ui-ink);
-  color: #fdfdfc;
-}
-.ui-btn-solid:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(52, 51, 59, 0.14);
-}
-.ui-btn-solid:hover svg {
-  transform: translateY(3px);
-}
-.ui-btn-lg {
-  margin-top: 26px;
-  padding: 15px 26px;
-  font-size: clamp(14.5px, 1.5vw, 16px);
-}
-.ui-btn-lg:hover svg {
-  transform: translate(3px, -3px);
-}
-
 /* ── Marquee strip ────────────────────────────────────────── */
 .ui-marquee {
   padding: 22px 0;
@@ -518,58 +478,119 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   font-size: 14.5px;
 }
 
-/* ── Journey ──────────────────────────────────────────────── */
+/* ── Journey — heading and rail, side by side ─────────────── */
+.ui-journey {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.62fr) minmax(0, 1.5fr);
+  gap: 56px;
+  align-items: start;
+}
+/* The heading holds its own column, so it keeps no bottom gap. */
+.ui-journey .ui-head {
+  margin-bottom: 0;
+  position: sticky;
+  top: 92px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.ui-journey .ui-note {
+  margin-top: 10px;
+}
+
+
 .ui-timeline {
+  --rail-x: 112px;
+  position: relative;
   list-style: none;
+  --rail-y: 0;
   margin: 0;
   padding: 0;
 }
+
+/* Track, and the fill that follows the scroll (--fill is set in JS). */
+.ui-timeline::before,
+.ui-timeline::after {
+  content: "";
+  position: absolute;
+  left: var(--rail-x);
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+}
+.ui-timeline::before {
+  background: var(--ui-line-soft);
+}
+.ui-timeline::after {
+  background: rgba(52, 51, 59, 0.3);
+  transform-origin: top;
+  transform: scaleY(var(--fill, 0));
+}
+
 .ui-tl-item {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 24px;
-  padding: 22px 12px;
-  margin: 0 -12px;
-  border-top: 1px solid var(--ui-line-soft);
-  border-radius: 12px;
-  transition: background 0.4s var(--ui-ease);
+  grid-template-columns: var(--rail-x) minmax(0, 1fr);
+  padding: 24px 0;
 }
-.ui-tl-item:last-child {
-  border-bottom: 1px solid var(--ui-line-soft);
+
+.ui-tl-year {
+  padding-right: 26px;
+  text-align: right;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(52, 51, 59, 0.2);
+  transition: color 0.45s var(--ui-ease);
 }
-.ui-tl-item:hover {
-  background: rgba(52, 51, 59, 0.028);
+.ui-tl-item:hover .ui-tl-year {
+  color: rgba(52, 51, 59, 0.42);
 }
-.ui-tl-date {
-  font-family: var(--ui-mono);
-  font-size: 12px;
-  color: var(--ui-ink-3);
-  padding-top: 3px;
-}
+
 .ui-tl-main {
+  padding-left: 30px;
   display: flex;
   flex-direction: column;
   gap: 3px;
+  /* Nudge on hover instead of a fill — these rows are not links. */
+  transition: transform 0.45s var(--ui-ease);
 }
-.ui-tl-title {
+.ui-tl-item:hover .ui-tl-main {
+  transform: translateX(3px);
+}
+
+.ui-tl-role {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 16px;
+  font-size: 16.5px;
   letter-spacing: -0.02em;
+  color: var(--ui-ink);
 }
+
 .ui-tl-org {
-  color: var(--ui-ink-2);
   font-size: 14.5px;
+  color: var(--ui-ink-2);
 }
-.ui-now {
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: rgba(79, 156, 120, 0.13);
-  color: var(--ui-live);
-  font-size: 11px;
+
+.ui-tl-date {
+  margin-top: 4px;
   font-family: var(--ui-mono);
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ui-ink-3);
+}
+
+/* Same mono label treatment as the dates and section labels — the page has
+   no other pills, so a badge here read as a foreign element. */
+.ui-now {
+  font-family: var(--ui-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ui-ink-3);
 }
 
 /* ── Visual work — 3D coverflow carousel ──────────────────── */
@@ -701,94 +722,111 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
 
 /* ── Contact ──────────────────────────────────────────────── */
 .ui-contact-section {
-  padding-bottom: 72px;
-}
-.ui-cta-title {
-  margin-top: 16px;
-  font-size: clamp(1.8rem, 3.8vw, 2.5rem);
-}
-.ui-cta .ui-note {
-  margin-top: 16px;
+  padding-bottom: 56px;
 }
 
-.ui-details {
-  margin: 56px 0 0;
-  max-width: 620px;
+.ui-cta-title {
+  margin-top: 14px;
+  font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
-.ui-detail {
-  display: grid;
-  grid-template-columns: 132px 1fr;
-  gap: 20px;
+.ui-cta .ui-note {
+  margin-top: 10px;
+}
+
+/* Plain underlined links, as in the reference. */
+.ui-mail {
+  display: inline-block;
+  margin-top: 22px;
+  font-size: clamp(0.98rem, 1.4vw, 1.08rem);
+  color: var(--ui-ink-2);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(52, 51, 59, 0.3);
+  transition:
+    color 0.35s var(--ui-ease),
+    text-decoration-color 0.35s var(--ui-ease);
+}
+.ui-mail:hover {
+  color: var(--ui-ink);
+  text-decoration-color: currentColor;
+}
+.ui-mail-quiet {
+  display: block;
+  margin-top: 8px;
+  font-size: 14.5px;
+  color: var(--ui-ink-3);
+}
+
+/* Remaining contacts — labelled, plain, no boxes. */
+.ui-links {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  font-size: 14.5px;
+}
+.ui-links a,
+.ui-links p {
+  display: inline-flex;
   align-items: baseline;
-  padding: 17px 0;
-  border-top: 1px solid var(--ui-line-soft);
+  gap: 9px;
+  color: var(--ui-ink-2);
+  transition: color 0.35s var(--ui-ease);
 }
-.ui-detail:last-child {
-  border-bottom: 1px solid var(--ui-line-soft);
-}
-.ui-detail dt {
+.ui-links span {
   font-family: var(--ui-mono);
-  font-size: 11.5px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ui-ink-3);
 }
-.ui-detail dd {
-  margin: 0;
-  font-size: 15.5px;
+.ui-links a:hover {
   color: var(--ui-ink);
 }
-/* A hairline that sweeps in on hover — no boxes, no lift. */
-.ui-detail dd a {
-  position: relative;
-}
-.ui-detail dd a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -3px;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.45s var(--ui-ease);
-}
-.ui-detail dd a:hover::after {
-  transform: scaleX(1);
-}
 
-/* ── Footer ───────────────────────────────────────────────── */
-.ui-footer {
-  max-width: var(--ui-max);
-  margin: 0 auto;
-  padding: 28px 24px 40px;
-  border-top: 1px solid var(--ui-line-soft);
+/* ── Closing bar ──────────────────────────────────────────── */
+.ui-endbar {
+  margin-top: clamp(56px, 9vw, 104px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--ui-ink-3);
 }
-.ui-footer-right {
+
+.ui-endbar-meta {
+  color: var(--ui-ink-3);
+}
+
+.ui-endbar-links {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 22px;
 }
-.ui-footer a,
-.ui-footer-cli {
-  color: var(--ui-ink-2);
+.ui-endbar-links a,
+.ui-endbar-links button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
   border: none;
   background: none;
-  padding: 0;
   font: inherit;
+  color: var(--ui-ink-2);
   cursor: pointer;
   transition: color 0.3s var(--ui-ease);
 }
-.ui-footer a:hover,
-.ui-footer-cli:hover {
+.ui-endbar-links svg {
+  width: 15px;
+  height: 15px;
+}
+.ui-endbar-links a:hover,
+.ui-endbar-links button:hover {
   color: var(--ui-ink);
 }
 
@@ -798,9 +836,24 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-  .ui-tl-item {
+  .ui-journey {
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 34px;
+  }
+  .ui-journey .ui-head {
+    position: static;
+    flex-direction: row;
+    align-items: baseline;
+  }
+  .ui-timeline {
+    --rail-x: 62px;
+  }
+  .ui-tl-year {
+    padding-right: 16px;
+    font-size: 24px;
+  }
+  .ui-tl-main {
+    padding-left: 20px;
   }
 }
 
@@ -811,8 +864,7 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   .ui-hero {
     padding: 56px 20px 64px;
   }
-  .ui-nav-inner,
-  .ui-footer {
+  .ui-nav-inner {
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -836,13 +888,14 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
     gap: 2px;
     font-size: 14px;
   }
-  .ui-details {
-    margin-top: 48px;
+  .ui-endbar {
+    align-items: flex-start;
+    flex-direction: column-reverse;
+    gap: 24px;
   }
-  .ui-detail {
-    grid-template-columns: 1fr;
-    gap: 4px;
-    padding: 15px 0;
+  .ui-endbar-links {
+    gap: 18px;
+    flex-wrap: wrap;
   }
 }
 

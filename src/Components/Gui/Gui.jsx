@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { FiArrowUpRight, FiImage, FiTerminal } from "react-icons/fi";
+import {
+  FiArrowUpRight,
+  FiGithub,
+  FiImage,
+  FiLinkedin,
+  FiTerminal,
+} from "react-icons/fi";
 import "./Gui.css";
 import VisualCarousel from "./VisualCarousel";
 import {
@@ -9,6 +15,14 @@ import {
   MARQUEE,
   CONTACT,
 } from "../Terminal/data";
+
+function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
 
 const FIRST_NAME = CONTACT.name.split(" ")[0];
 // "Earl Mike H. Sarabia" → "Earl Mike Sarabia"
@@ -20,11 +34,7 @@ function useReveal() {
     const els = Array.from(document.querySelectorAll("[data-reveal]"));
     if (!els.length) return;
 
-    const reduced =
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduced || typeof IntersectionObserver === "undefined") {
+    if (prefersReducedMotion() || typeof IntersectionObserver === "undefined") {
       els.forEach((el) => el.classList.add("is-in"));
       return;
     }
@@ -222,24 +232,56 @@ function About() {
 }
 
 function Journey() {
+  const listRef = useRef(null);
+  // 0 → 1 as the list passes the read line, driving the rail's fill.
+  // Starts filled when motion is reduced, so the rail is simply drawn.
+  const [fill, setFill] = useState(() => prefersReducedMotion() ? 1 : 0);
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el || prefersReducedMotion()) return;
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const r = el.getBoundingClientRect();
+      const line = window.innerHeight * 0.72;
+      const p = (line - r.top) / (r.height || 1);
+      setFill(Math.min(1, Math.max(0, p)));
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
   return (
-    <section id="journey" className="ui-section">
+    <section id="journey" className="ui-section ui-journey">
       <SectionHead
         label="Journey"
         title="Where I've been"
         note="Work and study, most recent first."
       />
 
-      <ol className="ui-timeline">
+      <ol className="ui-timeline" ref={listRef} style={{ "--fill": fill }}>
         {TIMELINE.map((item, i) => (
           <li key={i} className="ui-tl-item" data-reveal style={{ "--d": `${i * 50}ms` }}>
-            <span className="ui-tl-date">{item.date}</span>
+            <span className="ui-tl-year">{item.date.match(/\d{4}/)?.[0]}</span>
             <span className="ui-tl-main">
-              <span className="ui-tl-title">
+              <span className="ui-tl-role">
                 {item.title}
                 {item.tag === "current" && <span className="ui-now">Now</span>}
               </span>
               <span className="ui-tl-org">{item.org}</span>
+              <span className="ui-tl-date">{item.date}</span>
             </span>
           </li>
         ))}
@@ -264,76 +306,67 @@ function Gallery() {
   );
 }
 
-function Contact() {
-  const items = [
-    { label: "Email", value: CONTACT.email, href: `mailto:${CONTACT.email}` },
-    {
-      label: "Phone",
-      value: CONTACT.phone,
-      href: `tel:${CONTACT.phone.replace(/\s+/g, "")}`,
-    },
-    { label: "GitHub", value: "@esmike03", href: CONTACT.github },
-    { label: "LinkedIn", value: "Earl Mike Sarabia", href: CONTACT.linkedin },
-    { label: "Based in", value: CONTACT.location },
-  ];
-
+function Contact({ onOpenCli }) {
   return (
     <section id="contact" className="ui-section ui-contact-section">
       <div className="ui-cta" data-reveal>
         <span className="ui-label">Contact</span>
         <h2 className="ui-cta-title">
-          Have something in mind?
-          <br />
-          Let&apos;s build it.
+          Have something in mind? Let&apos;s build it.
         </h2>
         <p className="ui-note">
           Tell me the idea in a sentence or two. I&apos;ll take it from there.
         </p>
-        <a href={`mailto:${CONTACT.email}`} className="ui-btn ui-btn-solid ui-btn-lg">
+        <a href={`mailto:${CONTACT.email}`} className="ui-mail">
           {CONTACT.email}
-          <FiArrowUpRight aria-hidden="true" />
         </a>
+        <a
+          href={`tel:${CONTACT.phone.replace(/\s+/g, "")}`}
+          className="ui-mail ui-mail-quiet"
+        >
+          {CONTACT.phone}
+        </a>
+
+        <div className="ui-links">
+          <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">
+            <span>GitHub</span>@esmike03
+          </a>
+          <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">
+            <span>LinkedIn</span>Earl Mike Sarabia
+          </a>
+          <a href={CONTACT.resume} target="_blank" rel="noopener noreferrer">
+            <span>Résumé</span>Download PDF
+          </a>
+          <p>
+            <span>Based in</span>
+            {CONTACT.location}
+          </p>
+        </div>
       </div>
 
-      <dl className="ui-details" data-reveal style={{ "--d": "120ms" }}>
-        {items.map(({ label, value, href }) => (
-          <div key={label} className="ui-detail">
-            <dt>{label}</dt>
-            <dd>
-              {href ? (
-                <a
-                  href={href}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                >
-                  {value}
-                </a>
-              ) : (
-                value
-              )}
-            </dd>
-          </div>
-        ))}
-      </dl>
+      <div className="ui-endbar" data-reveal style={{ "--d": "120ms" }}>
+        <span className="ui-endbar-meta">
+          © {new Date().getFullYear()} {CONTACT.name} · {CONTACT.location}
+        </span>
+
+        <div className="ui-endbar-links">
+          <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">
+            <FiLinkedin aria-hidden="true" />
+            LinkedIn
+          </a>
+          <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">
+            <FiGithub aria-hidden="true" />
+            GitHub
+          </a>
+          <a href={CONTACT.resume} target="_blank" rel="noopener noreferrer">
+            Résumé
+          </a>
+          <button type="button" onClick={onOpenCli}>
+            Terminal version
+          </button>
+        </div>
+      </div>
     </section>
-  );
-}
-
-function Footer({ onOpenCli }) {
-  return (
-    <footer className="ui-footer">
-      <span>
-        © {new Date().getFullYear()} {CONTACT.name}
-      </span>
-      <div className="ui-footer-right">
-        <a href={CONTACT.resume} target="_blank" rel="noopener noreferrer">
-          Résumé
-        </a>
-        <button type="button" onClick={onOpenCli} className="ui-footer-cli">
-          Terminal version
-        </button>
-      </div>
-    </footer>
   );
 }
 
@@ -350,9 +383,8 @@ export default function Gui({ onOpenCli }) {
         <About />
         <Journey />
         <Gallery />
-        <Contact />
+        <Contact onOpenCli={onOpenCli} />
       </main>
-      <Footer onOpenCli={onOpenCli} />
     </div>
   );
 }
