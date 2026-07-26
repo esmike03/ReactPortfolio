@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Earl Mike Sarabia">
+  <style>
+    /* Light theme: ink frame, cool shaded cube. */
+    .frame { stroke: #34333b; }
+    .node  { fill: #34333b; }
+    .top   { fill: #4aa3c9; }
+    .left  { fill: #2f88ae; }
+    .right { fill: #226f90; }
+
+    /* Dark theme: pale frame, terminal-cyan cube. */
+    @media (prefers-color-scheme: dark) {
+      .frame { stroke: #eceef5; }
+      .node  { fill: #eceef5; }
+      .top   { fill: #7fe3e3; }
+      .left  { fill: #5bc0eb; }
+      .right { fill: #3f9fd0; }
+    }
+  </style>
+
+  <!-- Hexagon frame -->
+  <polygon
+    class="frame"
+    points="256,16 457,132 457,364 256,480 55,364 55,132"
+    fill="none"
+    stroke-width="34"
+    stroke-linejoin="miter"
+  />
+
+  <!-- Connection nodes -->
+  <circle class="node" cx="55" cy="132" r="46" />
+  <circle class="node" cx="457" cy="132" r="46" />
+  <circle class="node" cx="256" cy="480" r="46" />
+
+  <!-- Isometric cube, shaded per face for depth -->
+  <polygon class="top" points="256,112 352,167 256,222 160,167" />
+  <polygon class="left" points="150,190 246,245 246,358 150,303" />
+  <polygon class="right" points="266,245 362,190 362,303 266,358" />
+</svg>
