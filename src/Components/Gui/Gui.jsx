@@ -8,9 +8,12 @@ import {
 } from "react-icons/fi";
 import "./Gui.css";
 import VisualCarousel from "./VisualCarousel";
+import GithubHalftone from "./GithubHalftone";
+import useMagnet from "./useMagnet";
 import {
   TIMELINE,
   PROJECTS,
+  AWARDS,
   SERVICES,
   MARQUEE,
   CONTACT,
@@ -88,6 +91,7 @@ function Hero() {
         Hi, I&apos;m {FIRST_NAME} — a web developer from {CONTACT.location}. I turn
         ideas into websites and apps people can figure out without a manual.
       </p>
+
     </section>
   );
 }
@@ -122,6 +126,8 @@ function SectionHead({ label, title, note }) {
 
 function Work() {
   const railRef = useRef(null);
+  // One hovered card at a time, so a single set of handlers serves the rail.
+  const magnet = useMagnet();
   // Fades appear only on the side that still has cards to scroll to.
   const [edges, setEdges] = useState({ left: false, right: true });
 
@@ -166,6 +172,7 @@ function Work() {
               target="_blank"
               rel="noopener noreferrer"
               className="ui-card"
+              {...magnet}
             >
               <span className="ui-card-go">
                 <FiArrowUpRight aria-hidden="true" />
@@ -186,6 +193,7 @@ function Work() {
 
               <div className="ui-card-overlay">
                 <h3 className="ui-card-title">{p.name}</h3>
+                <p className="ui-card-plain">{p.plain}</p>
               </div>
             </a>
           ))}
@@ -290,6 +298,64 @@ function Journey() {
   );
 }
 
+function Commits() {
+  return (
+    <section id="commits" className="ui-section">
+      <SectionHead
+        label="Activity"
+        title="What I've been building"
+        note="A year of contributions on GitHub."
+      />
+
+      <div data-reveal>
+        <GithubHalftone />
+      </div>
+    </section>
+  );
+}
+
+function Awards() {
+  // Nothing to show is better than an empty heading.
+  if (!AWARDS.length) return null;
+
+  return (
+    <section id="awards" className="ui-section">
+      <SectionHead
+        label="Awards"
+        title="Recognition"
+        note="Wins picked up along the way."
+      />
+
+      <ul className="ui-awards">
+        {AWARDS.map((a, i) => (
+          <li
+            key={a.id}
+            className="ui-award"
+            data-reveal
+            style={{ "--d": `${i * 60}ms` }}
+          >
+            <span className="ui-award-mark" aria-hidden="true" />
+
+            {/* Only the title is on every award — the résumé dates and
+                attributes them inconsistently, so the rest are optional. */}
+            <div className="ui-award-body">
+              <h3 className="ui-award-title">{a.title}</h3>
+              {a.org && <p className="ui-award-org">{a.org}</p>}
+              {a.note && <p className="ui-award-note">{a.note}</p>}
+              {a.year && <p className="ui-award-year">{a.year}</p>}
+            </div>
+
+            <span
+              className="ui-award-mark ui-award-mark-right"
+              aria-hidden="true"
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 function Gallery() {
   return (
     <section id="gallery" className="ui-section">
@@ -380,8 +446,10 @@ export default function Gui({ onOpenCli }) {
         <Hero />
         <Marquee />
         <Work />
+        <Commits />
         <About />
         <Journey />
+        <Awards />
         <Gallery />
         <Contact onOpenCli={onOpenCli} />
       </main>

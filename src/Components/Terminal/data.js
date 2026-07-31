@@ -41,6 +41,8 @@ export const TIMELINE = [
 
 // NOTE: `desc` + `stack` feed the CLI. `name`, `plain`, `kind` and `year`
 // feed the friendly UI mode — plain words, no jargon.
+// `image` is a stand-in gradient for now — swap in a real screenshot per
+// project as they're captured (1000×563 webp keeps the rail light).
 export const PROJECTS = [
   {
     id: "registrar-bisu",
@@ -52,6 +54,7 @@ export const PROJECTS = [
     kind: "Website",
     year: "2025",
     href: "https://registrar-bisu.nxprimordial.space/",
+    image: "/images/ph-violet.webp",
     stack: ["Laravel", "TailwindCSS", "MySQL", "JavaScript"],
   },
   {
@@ -64,6 +67,7 @@ export const PROJECTS = [
     kind: "Marketplace",
     year: "2025",
     href: "https://konstrukalakal.nxprimordial.space/",
+    image: "/images/ph-crimson.webp",
     stack: ["Laravel", "React", "TailwindCSS", "MySQL"],
   },
   {
@@ -76,6 +80,7 @@ export const PROJECTS = [
     kind: "Phone app",
     year: "2024",
     href: "https://github.com/esmike03/TravelCompanion",
+    image: "/images/ph-spectrum.webp",
     stack: ["Android Studio", "Firebase", "Google Maps"],
   },
   {
@@ -88,6 +93,7 @@ export const PROJECTS = [
     kind: "Redesign",
     year: "2025",
     href: "https://xentroestates.xentroholdings.com/",
+    image: "/images/ph-neon.webp",
     stack: ["Laravel", "TailwindCSS", "Photoshop", "MySQL"],
   },
   {
@@ -100,6 +106,7 @@ export const PROJECTS = [
     kind: "Website",
     year: "2025",
     href: "https://westpointpharma.xentroholdings.com/",
+    image: "/images/ph-violet.webp",
     stack: ["Laravel", "TailwindCSS", "Photoshop", "MySQL"],
   },
   {
@@ -112,7 +119,28 @@ export const PROJECTS = [
     kind: "Online store",
     year: "2024",
     href: "https://github.com/esmike03/Helmet-Shop-Wordpress",
+    image: "/images/ph-spectrum.webp",
     stack: ["WordPress", "Photoshop", "Elementor"],
+  },
+];
+
+// Awards & recognition, in résumé order. `org`, `year` and `note` are all
+// optional — the résumé dates none of these, so only fill a year in when
+// there's a real one to give.
+export const AWARDS = [
+  {
+    id: "tech-proficient-design",
+    title: "Technology Proficient in Lay-out and Graphic Design",
+  },
+  {
+    id: "service-awardee",
+    title: "Service Awardee — Layout and Design Head",
+    org: "Campus Access Organization",
+  },
+  {
+    id: "best-video-pitch",
+    title: "Exemplary Performance Awardee — Best Video Pitch",
+    org: "Provincial Pitching — Sakayan",
   },
 ];
 

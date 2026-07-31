@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { GALLERY } from "../Terminal/data";
+import useMagnet from "./useMagnet";
 
 const AUTOPLAY_MS = 5200;
 const SWIPE_PX = 55;
@@ -24,10 +26,13 @@ export default function VisualCarousel() {
   const [paused, setPaused] = useState(false);
   const [rising, setRising] = useState(null);
   const startX = useRef(null);
-  const moved = useRef(false);
-  const pressed = useRef(null);
-  const pointerHandled = useRef(false);
+  // Set when a drag crosses the swipe threshold, so the click that follows it
+  // is ignored rather than activating whichever slide it landed on.
+  const swiped = useRef(false);
   const riseTimer = useRef(null);
+  const magnet = useMagnet();
+
+  const current = GALLERY[active];
 
   useEffect(() => () => window.clearTimeout(riseTimer.current), []);
 
@@ -52,7 +57,8 @@ export default function VisualCarousel() {
         go(1);
         return;
       }
-      // Promote the pressed neighbour, letting it lift as it swings in.
+      // Rotate the deck so the pressed picture comes to the front — the same
+      // move the next button makes, just aimed at a specific slide.
       setActive(i);
       setRising(i);
       window.clearTimeout(riseTimer.current);
@@ -61,48 +67,53 @@ export default function VisualCarousel() {
     [go],
   );
 
-  // Which slide the press started on. Resolving it at pointerdown avoids
-  // relying on the click landing on the same element — the deck shifts and
-  // re-renders between press and release. No setPointerCapture either:
-  // capturing retargets the click away from the slides entirely.
+  // The pointer handlers own dragging only. Taps are left to the browser's
+  // own click event on each slide's <button> — it already knows that a click
+  // means press and release on the same element, and it resolves that against
+  // the deck's 3D layout for us. Reimplementing it here on pointerup is what
+  // kept swallowing clicks on the angled, half-occluded peeking slides.
   const onPointerDown = (e) => {
     startX.current = e.clientX;
-    moved.current = false;
-    pointerHandled.current = false;
+    swiped.current = false;
+    // Dragging takes over the pointer, so drop any magnet offset first.
     const slide = e.target.closest?.("[data-idx]");
-    pressed.current = slide ? Number(slide.dataset.idx) : null;
+    if (slide) magnet.clear(slide);
     setPaused(true);
   };
 
   const onPointerMove = (e) => {
     if (startX.current === null) return;
-    const dx = e.clientX - startX.current;
-    if (Math.abs(dx) > 6) moved.current = true;
-    setDrag(dx);
+    setDrag(e.clientX - startX.current);
   };
 
-  const onPointerUp = () => {
+  const onPointerUp = (e) => {
     if (startX.current === null) return;
-    if (Math.abs(drag) > SWIPE_PX) {
-      go(drag < 0 ? 1 : -1);
-    } else if (!moved.current && pressed.current !== null) {
-      activate(pressed.current, pressed.current === active);
-      pointerHandled.current = true;
+    // Measured off the event, not the `drag` state, which trails a render
+    // behind — a quick gesture could otherwise be judged on a stale distance.
+    const dx = (e?.clientX ?? startX.current) - startX.current;
+
+    if (Math.abs(dx) > SWIPE_PX) {
+      go(dx < 0 ? 1 : -1);
+      // A drag still ends in a click if it finishes over a slide; mark it so
+      // that click doesn't also activate whatever it happened to land on.
+      swiped.current = true;
     }
+
     startX.current = null;
-    pressed.current = null;
     setDrag(0);
     setPaused(false);
   };
 
-  // Keyboard activation only — pointer presses are handled above.
+  // The single activation path — mouse, touch, pen and keyboard alike.
   const onSlideClick = (i, isActive) => {
-    if (pointerHandled.current || moved.current) return;
+    if (swiped.current) {
+      swiped.current = false;
+      return;
+    }
     activate(i, isActive);
   };
 
   const onKeyDown = (e) => {
-    pointerHandled.current = false; // keyboard path must not be swallowed
     if (e.key === "ArrowLeft") {
       e.preventDefault();
       go(-1);
@@ -146,18 +157,26 @@ export default function VisualCarousel() {
                 rising === i ? "is-rising" : ""
               }`}
               aria-hidden={hidden || undefined}
+              onMouseMove={(e) => {
+                // A drag in progress owns the pointer — don't fight it.
+                if (startX.current !== null) return;
+                magnet.onMouseMove(e);
+              }}
+              onMouseLeave={magnet.onMouseLeave}
               style={{
                 // Neighbours fan away from the centre — the left one tips left,
                 // the right one tips right — like photos laid out askew.
                 // --lift is set in CSS (hover / .is-rising) so it can animate
                 // through the same transform transition.
+                // --zoom is the hover cue, applied to the whole frame so the
+                // artwork can't be clipped by the frame's own overflow.
                 transform: `translateX(-50%) translateX(${
                   d * 64
                 }%) translateY(var(--lift, 0px)) translateZ(${
                   isActive ? 0 : -190
-                }px) rotateY(${d * -18}deg) rotate(${d * 12}deg) scale(${
-                  isActive ? 1 : 0.88
-                })`,
+                }px) rotateY(${d * -18}deg) rotate(${
+                  d * 12
+                }deg) scale(calc(${isActive ? 1 : 0.88} * var(--zoom, 1)))`,
                 opacity: hidden ? 0 : isActive ? 1 : 0.45,
                 zIndex: 10 - away,
                 pointerEvents: hidden ? "none" : "auto",
@@ -186,13 +205,28 @@ export default function VisualCarousel() {
       </div>
 
       <div className="ui-carousel-bar">
-        <p className="ui-carousel-caption" key={active}>
-          <span>{GALLERY[active].caption ?? GALLERY[active].alt}</span>
+        {/* Re-keyed on the picture so the caption replays its fade on change. */}
+        <p className="ui-carousel-caption" key={current.src}>
+          <span>{current.caption ?? current.alt}</span>
           <span className="ui-carousel-count">
             {String(active + 1).padStart(2, "0")} /{" "}
             {String(count).padStart(2, "0")}
           </span>
         </p>
+
+        {/* Outside .ui-stage, so these never trip its drag handlers. */}
+        <div className="ui-carousel-nav">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            aria-label="Previous image"
+          >
+            <FiArrowLeft aria-hidden="true" />
+          </button>
+          <button type="button" onClick={() => go(1)} aria-label="Next image">
+            <FiArrowRight aria-hidden="true" />
+          </button>
+        </div>
       </div>
     </div>
   );

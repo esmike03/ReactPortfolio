@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local archives — far past GitHub's 100MB file limit
+*.zip

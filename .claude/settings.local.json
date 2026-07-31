@@ -21,7 +21,16 @@
       "Bash(sed -n '/--lift feeds/,+8p' src/Components/Gui/Gui.css)",
       "Bash(python -)",
       "Bash(curl -s http://localhost:5177/src/Components/Gui/Gui.jsx)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(node -e \"try{require\\('sharp'\\);console.log\\('sharp OK'\\)}catch\\(e\\){console.log\\('no sharp'\\)}\")",
+      "Bash(npm init *)",
+      "Bash(npm i *)",
+      "Bash(node conv.js)",
+      "Bash(node pdf.js)",
+      "Bash(node -e \"const m=require\\('pdf-parse'\\); console.log\\(typeof m, Object.keys\\(m\\)\\);\")",
+      "Bash(echo \"exit=$?\")",
+      "Bash(sed -i 's/data-idx={slot}/data-idx={i}/; s/rising === gi ? \"is-rising\"/rising === i ? \"is-rising\"/; s/onClick={\\(\\) => onSlideClick\\(slot, isActive\\)}/onClick={\\(\\) => onSlideClick\\(i, isActive\\)}/; s/const onSlideClick = \\(slot, isActive\\) => {/const onSlideClick = \\(i, isActive\\) => {/; s/    activate\\(slot, isActive\\);/    activate\\(i, isActive\\);/' src/Components/Gui/VisualCarousel.jsx)",
+      "Bash(sed -i '1s/useCallback, useEffect, useMemo, useRef, useState/useCallback, useEffect, useMemo, useRef, useState/' src/Components/Gui/VisualCarousel.jsx)"
     ]
   }
 }

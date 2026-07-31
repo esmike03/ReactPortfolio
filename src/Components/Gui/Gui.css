@@ -222,8 +222,6 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
 /* ── Marquee strip ────────────────────────────────────────── */
 .ui-marquee {
   padding: 22px 0;
-  border-top: 1px solid var(--ui-line-soft);
-  border-bottom: 1px solid var(--ui-line-soft);
   overflow: hidden;
   -webkit-mask-image: linear-gradient(
     90deg,
@@ -269,8 +267,17 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
 /* ── Work rail — horizontal scrolling carousel ────────────── */
 /* Bleeds to the section edges so cards can run off-screen on the right. */
 .ui-rail-wrap {
+  /* `overflow-x: auto` on the rail forces the vertical axis to clip too, which
+     would shear off the hover lift, tilt and drop shadow. So the rail gets real
+     vertical padding to grow into, and equal negative margins here take the
+     extra height back out of the layout. */
+  /* Bottom clears the hover shadow's full reach (30px offset + half its 64px
+     blur); top only has to clear the lift and tilt. */
+  --rail-bleed-top: 22px;
+  --rail-bleed-bottom: 64px;
   position: relative;
-  margin: 0 -24px;
+  margin: calc(var(--rail-bleed-top) * -1) -24px
+    calc(var(--rail-bleed-bottom) * -1);
 }
 
 /* Edge fades — each one only shows while there are cards that way. */
@@ -278,12 +285,17 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
 .ui-rail-wrap::after {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 10px;
+  /* Inset past the bleed so the fades still hug the cards, not the padding. */
+  top: var(--rail-bleed-top);
+  bottom: calc(var(--rail-bleed-bottom) + 10px);
   width: 64px;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.45s var(--ui-ease);
+  /* Cards are position:relative, so without this the ::before fade paints
+     under them (it's the wrapper's first child) while ::after paints over.
+     Sits above .ui-card-go's z-index:2 so the arrow fades out with its card. */
+  z-index: 3;
 }
 .ui-rail-wrap::before {
   left: 0;
@@ -301,9 +313,13 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
 .ui-rail {
   display: flex;
   gap: 18px;
-  padding: 6px 24px 10px;
+  padding: calc(6px + var(--rail-bleed-top)) 24px
+    calc(10px + var(--rail-bleed-bottom));
   overflow-x: auto;
   scroll-snap-type: x proximity;
+  /* Match the side padding, or `snap-align: start` parks the first card at
+     scrollLeft 24 instead of 0 and the left fade never switches back off. */
+  scroll-padding-left: 24px;
   overscroll-behavior-x: contain;
   /* Scrollable, but the bar itself stays hidden. */
   scrollbar-width: none;
@@ -322,15 +338,26 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   border: 1px solid var(--ui-line);
   border-radius: 16px;
   background: var(--ui-surface);
+  /* --mx/--my/--mr are set by useMagnet while hovered, and removed on exit so
+     the card eases home on the longer duration below. */
+  --mx: 0px;
+  --my: 0px;
+  --mr: 0deg;
+  transform: translate3d(var(--mx), var(--my), 0) rotate(var(--mr));
   transition:
     transform 0.5s var(--ui-ease),
     box-shadow 0.5s var(--ui-ease),
     border-color 0.5s var(--ui-ease);
 }
 .ui-card:hover {
-  transform: translateY(-5px);
+  /* Lift, plus wherever the cursor is dragging it. */
+  transform: translate3d(var(--mx), calc(var(--my) - 5px), 0) rotate(var(--mr));
   border-color: rgba(52, 51, 59, 0.13);
-  box-shadow: 0 20px 44px rgba(52, 51, 59, 0.09);
+  /* Wide and faint, matching the carousel: blur grows faster than the offset
+     so it reads as the card rising off the page, not as a darker edge. */
+  box-shadow: 0 30px 64px rgba(52, 51, 59, 0.12);
+  /* Short enough to track the pointer, long enough to smooth it out. */
+  transition-duration: 0.28s, 0.5s, 0.5s;
 }
 
 /* Picture slot — placeholder until a project gets an `image`. */
@@ -385,11 +412,12 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 44px 20px 18px;
+  padding: 58px 20px 18px;
   background: linear-gradient(
     to top,
-    rgba(16, 16, 20, 0.82),
-    rgba(16, 16, 20, 0.38) 52%,
+    rgba(16, 16, 20, 0.88),
+    rgba(16, 16, 20, 0.62) 34%,
+    rgba(16, 16, 20, 0.3) 62%,
     transparent
   );
 }
@@ -400,6 +428,24 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   transition: transform 0.5s var(--ui-ease);
 }
 .ui-card:hover .ui-card-title {
+  transform: translateY(-2px);
+}
+
+/* One plain-words line under the title. Clamped to two lines so a long
+   sentence can't push the scrim taller than the picture behind it. */
+.ui-card-plain {
+  margin-top: 5px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: rgba(253, 253, 252, 0.76);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: transform 0.5s var(--ui-ease);
+}
+.ui-card:hover .ui-card-plain {
   transform: translateY(-2px);
 }
 
@@ -593,6 +639,156 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   color: var(--ui-ink-3);
 }
 
+/* ── Commits — halftone activity field ────────────────────── */
+/* One column per calendar week across the year, Sunday at the top, like a
+   contribution graph — except the value is carried by dot size rather than
+   colour, which is what makes it read as halftone and keeps it in the page's
+   one ink. 53 columns, so the gap stays at 2px and the cells do the scaling. */
+.ui-commit-field {
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  max-width: 720px;
+  margin: 0 auto;
+  color: var(--ui-ink);
+}
+.ui-commit-dot {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 1;
+}
+/* --s (0.16 … 1) is set per day in GithubHalftone.jsx. Opacity rides along
+   with it so the busiest days read darker as well as larger. */
+.ui-commit-dot::before {
+  content: "";
+  width: calc(var(--s) * 100%);
+  height: calc(var(--s) * 100%);
+  border-radius: 50%;
+  background: currentColor;
+  opacity: calc(0.22 + var(--s) * 0.5);
+  transition:
+    width 0.6s var(--ui-ease),
+    height 0.6s var(--ui-ease),
+    opacity 0.6s var(--ui-ease);
+}
+/* Before the fetch lands every dot is at its floor value, so the field fades
+   up into place rather than popping. */
+.ui-commits.is-loading .ui-commit-field {
+  opacity: 0.5;
+}
+.ui-commit-field {
+  transition: opacity 0.6s var(--ui-ease);
+}
+
+.ui-commit-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px 20px;
+  max-width: 720px;
+  /* Same width and centring as the field, so the two line up at both edges. */
+  margin: 18px auto 0;
+  font-family: var(--ui-mono);
+  font-size: 12px;
+  color: var(--ui-ink-3);
+}
+.ui-commit-meta strong {
+  font-weight: 600;
+  color: var(--ui-ink);
+}
+.ui-commit-meta a {
+  color: var(--ui-ink-3);
+  border-bottom: 1px solid var(--ui-line);
+  transition: color 0.4s var(--ui-ease);
+}
+.ui-commit-meta a:hover {
+  color: var(--ui-ink);
+}
+
+/* ── Awards ───────────────────────────────────────────────── */
+.ui-awards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hairline between rows only — no rule above the first or below the last. */
+/* Branch, award, branch — centred so the pair frames the text however long
+   it runs, rather than stranding the right branch at the far edge. */
+.ui-award {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 18px 0;
+  text-align: center;
+}
+.ui-award + .ui-award {
+  border-top: 1px solid var(--ui-line-soft);
+}
+
+/* Alternating entrance — odd rows arrive from the left, even from the right,
+   replacing the shared [data-reveal] lift. The settled state has to be
+   restated: `[data-reveal].is-in`'s `transform: none` carries the same
+   specificity as these, so on source order alone it would lose and the rows
+   would never come to rest. */
+.ui-award:nth-child(odd) {
+  transform: translateX(-42px);
+}
+.ui-award:nth-child(even) {
+  transform: translateX(42px);
+}
+.ui-award.is-in {
+  transform: none;
+}
+
+/* A laurel branch either side. Drawn as a mask rather than an <img> so the
+   leaves take the page's ink colour — the asset is hard black, which would
+   sit far too heavy against this palette. */
+.ui-award-mark {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 30px;
+  color: var(--ui-ink-3);
+  background: currentColor;
+  -webkit-mask: url("/images/laurel.webp") center / contain no-repeat;
+  mask: url("/images/laurel.webp") center / contain no-repeat;
+  /* The asset sweeps up to the right, so the left branch is the flipped one. */
+  transform: scaleX(-1);
+}
+.ui-award-mark-right {
+  transform: none;
+}
+
+/* min-width:0 lets long titles wrap instead of overflowing the flex row. */
+.ui-award-body {
+  min-width: 0;
+}
+.ui-award-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+.ui-award-org {
+  margin-top: 3px;
+  font-size: 13.5px;
+  color: var(--ui-ink-2);
+}
+.ui-award-note {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ui-ink-3);
+}
+
+.ui-award-year {
+  margin-top: 6px;
+  font-family: var(--ui-mono);
+  font-size: 12px;
+  color: var(--ui-ink-3);
+}
+
 /* ── Visual work — 3D coverflow carousel ──────────────────── */
 .ui-carousel {
   user-select: none;
@@ -642,16 +838,26 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   box-shadow:
     0 8px 28px rgba(52, 51, 59, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  /* The magnet drift rides on `translate` rather than being folded into the
+     transform above: it's a separate property, so it can track the cursor at
+     its own quick tempo while the deck keeps its slow 0.75s swing. */
+  translate: var(--mx, 0px) var(--my, 0px);
   transition:
     transform 0.75s var(--ui-ease),
     opacity 0.75s var(--ui-ease),
-    box-shadow 0.75s var(--ui-ease);
+    box-shadow 0.75s var(--ui-ease),
+    translate 0.3s var(--ui-ease);
   will-change: transform, opacity;
 }
 /* --lift feeds the translateY in the inline transform, so hovering a
    neighbour raises it and clicking it lifts higher as it swings in. */
 .ui-slide:not(.is-active):hover {
   --lift: -14px;
+  /* Wide and faint — the shadow reads as the slide rising off the page, so it
+     spreads and softens rather than darkening. */
+  box-shadow:
+    0 20px 44px rgba(52, 51, 59, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 .ui-slide.is-rising {
   --lift: -26px;
@@ -681,10 +887,17 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   object-fit: contain;
   display: block;
   border-radius: 6px;
-  transition: transform 0.9s var(--ui-ease);
 }
-.ui-slide.is-active:hover img {
-  transform: scale(1.035);
+/* Zoom via the slide's own transform rather than the <img>: scaling the image
+   inside the frame pushed its edges past `overflow: hidden` and cropped the
+   artwork — the thing `object-fit: contain` above exists to prevent. */
+.ui-slide.is-active:hover {
+  --zoom: 1.035;
+  /* Deeper than the resting active shadow, on the same blur-grows-faster
+     curve, so the zoom and the shadow read as one movement. */
+  box-shadow:
+    0 34px 72px rgba(52, 51, 59, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
 .ui-carousel-bar {
@@ -718,6 +931,42 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   font-family: var(--ui-mono);
   font-size: 12px;
   color: var(--ui-ink-3);
+}
+
+/* Clickable prev/next — the drag gesture isn't discoverable on its own. */
+.ui-carousel-nav {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 8px;
+}
+.ui-carousel-nav button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--ui-line);
+  background: var(--ui-surface);
+  color: var(--ui-ink-2);
+  cursor: pointer;
+  transition:
+    transform 0.4s var(--ui-ease),
+    color 0.4s var(--ui-ease),
+    border-color 0.4s var(--ui-ease),
+    box-shadow 0.4s var(--ui-ease);
+}
+.ui-carousel-nav button:hover {
+  transform: translateY(-2px);
+  color: var(--ui-ink);
+  border-color: rgba(52, 51, 59, 0.16);
+  box-shadow: 0 14px 28px rgba(52, 51, 59, 0.09);
+}
+.ui-carousel-nav button:active {
+  transform: translateY(0);
+}
+.ui-carousel-nav svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* ── Contact ──────────────────────────────────────────────── */
@@ -869,11 +1118,14 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
     padding-right: 20px;
   }
   .ui-rail-wrap {
-    margin: 0 -20px;
+    /* Longhands only — the shorthand would drop the vertical bleed. */
+    margin-left: -20px;
+    margin-right: -20px;
   }
   .ui-rail {
     padding-left: 20px;
     padding-right: 20px;
+    scroll-padding-left: 20px;
   }
   .ui-slide {
     padding: 5px;
