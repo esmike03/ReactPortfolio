@@ -639,6 +639,56 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   color: var(--ui-ink-3);
 }
 
+/* ── Halftone cursor trail ────────────────────────────────── */
+/* `difference` against the white dots the canvas paints is what makes each dot
+   a photographic negative of whatever it lands on: paper goes near-black, dark
+   text goes pale. Nothing is ever hidden — the ink is inverted, not covered.
+   Above the nav too (z-50), so the effect doesn't stop at the header. */
+.ui-halftone-trail {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 60;
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+
+/* ── Hidden system cursor ─────────────────────────────────── */
+/* Set by whichever pointer effect is live (the halftone field today), and only
+   after it has confirmed it is really running — on touch or reduced-motion
+   those components bail out, the flag is never set, and the real cursor stays.
+   The `*` is needed because plenty of rules below set their own `cursor`, and
+   an inherited value would lose to them. */
+html[data-cursor-hidden="1"] .ui-root,
+html[data-cursor-hidden="1"] .ui-root * {
+  cursor: none;
+}
+
+/* Same white-on-difference trick as the trail, so the dot inverts whatever it
+   sits on and can never disappear against a card, a photo, or the paper.
+   Sized here and deformed from JS — the 14px must match SIZE-free math there:
+   the script only ever multiplies this box, it never sets width. */
+.ui-jelly-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 70;
+  opacity: 0;
+  transition: opacity 0.25s var(--ui-ease);
+  will-change: transform;
+}
+.ui-jelly-cursor.is-on {
+  opacity: 1;
+}
+
 /* ── Commits — halftone activity field ────────────────────── */
 /* One column per calendar week across the year, Sunday at the top, like a
    contribution graph — except the value is carried by dot size rather than

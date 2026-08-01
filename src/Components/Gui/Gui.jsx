@@ -9,6 +9,7 @@ import {
 import "./Gui.css";
 import VisualCarousel from "./VisualCarousel";
 import GithubHalftone from "./GithubHalftone";
+import HalftoneTrail from "./HalftoneTrail";
 import useMagnet from "./useMagnet";
 import {
   TIMELINE,
@@ -441,6 +442,7 @@ export default function Gui({ onOpenCli }) {
 
   return (
     <div className="ui-root">
+      <HalftoneTrail />
       <Nav onOpenCli={onOpenCli} />
       <main>
         <Hero />
