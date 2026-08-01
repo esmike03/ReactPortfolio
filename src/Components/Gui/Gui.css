@@ -771,9 +771,11 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
 }
 
 /* ── Halftone cursor trail ────────────────────────────────── */
-/* `difference` against the white dots the canvas paints is what makes each dot
-   a photographic negative of whatever it lands on: paper goes near-black, dark
-   text goes pale. Nothing is ever hidden — the ink is inverted, not covered.
+/* Plain green dots, no blend trickery: the field reads the same over paper,
+   over a white card and over a photo, which the old `difference` negative did
+   not. `color` is the resting ink and --trail-hot is what it shifts to over
+   something hoverable; HalftoneTrail.jsx reads both back, so both live here in
+   the palette rather than hard-coded in the script.
    Above the nav too (z-50), so the effect doesn't stop at the header. */
 .ui-halftone-trail {
   position: fixed;
@@ -782,7 +784,11 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   height: 100%;
   z-index: 60;
   pointer-events: none;
-  mix-blend-mode: difference;
+  color: var(--ui-ink);
+  /* The terminal's own phosphor green, so the two modes share one green rather
+     than each having its own. Fully saturated — the muted palette greens all
+     read as grey at dot size. */
+  --trail-hot: #00ff41;
 }
 
 /* ── Hidden system cursor ─────────────────────────────────── */

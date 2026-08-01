@@ -15,9 +15,8 @@ const LIFE = 620; // ms a sample keeps any weight
 const MAX_SAMPLES = 22;
 // Absolute, not a fraction of SPACING: the pitch sets how tight the gaps are
 // and the radius sets how fine the dots are — tuning one shouldn't drag the
-// other along. This is also the "how heavy does it look" knob, since the dots
-// invert at full strength and can't be toned down with opacity.
-const MAX_R = 2.5;
+// other along.
+const MAX_R = 2.8;
 
 const SPLASH_LIFE = 1300; // ms for a click ring to travel and die
 const SPLASH_R = 190; // px the ring reaches by the end
@@ -29,6 +28,12 @@ const MAX_SPLASH = 4; // impatient clicking shouldn't stack up work
 const RINGS = [{ lag: 0, amp: 0.85 }];
 
 const TAU = Math.PI * 2;
+
+// What counts as "something", as opposed to bare page. Anything here turns the
+// trail green; everywhere else it stays the page's ink.
+const HOT = "a, button, [role='button'], .ui-card, h1, h2, h3, p, li, strong";
+
+const rgb = (s) => (s.match(/[\d.]+/g) || [0, 0, 0]).slice(0, 3).map(Number);
 
 export default function HalftoneTrail() {
   const canvasRef = useRef(null);
@@ -56,6 +61,29 @@ export default function HalftoneTrail() {
     let width = 0;
     let height = 0;
     let frame = 0;
+    let cold = [52, 51, 59]; // resting ink
+    let hot = [79, 156, 120]; // over something hoverable
+    let mix = 0; // eased 0 → 1 between the two
+    let mixTo = 0;
+    let hotEl = null; // element under the pointer, if it is a hoverable one
+    let hotRect = null; // its box, kept while the colour eases back out
+
+    /* Resolve a CSS value to concrete rgb by parking it on the canvas and
+       reading back what the browser computed — that handles var(), named
+       colours and hex without a parser of our own. */
+    const resolve = (value, fallback) => {
+      const prev = canvas.style.color;
+      canvas.style.color = value;
+      const out = getComputedStyle(canvas).color;
+      canvas.style.color = prev;
+      return out ? rgb(out) : fallback;
+    };
+
+    const readColors = () => {
+      const cs = getComputedStyle(canvas);
+      cold = cs.color ? rgb(cs.color) : cold;
+      hot = resolve(cs.getPropertyValue("--trail-hot").trim(), hot);
+    };
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -133,9 +161,24 @@ export default function HalftoneTrail() {
       const y1 = Math.min(maxY, height);
       const reach2 = REACH * REACH;
 
-      // Pure white under `difference` (see Gui.css) inverts the backdrop
-      // exactly; anything dimmer only inverts part of the way.
-      ctx.fillStyle = "#fff";
+      // Eased, not switched: snapping from ink to green the instant an edge is
+      // crossed reads as a bug rather than a response.
+      mix += (mixTo - mix) * 0.16;
+
+      // Re-measured every frame rather than cached on hover, so the patch of
+      // green tracks the element through scrolling and layout shifts instead
+      // of being left behind where it was first hovered.
+      if (hotEl && hotEl.isConnected) hotRect = hotEl.getBoundingClientRect();
+      const rect = mix > 0.01 ? hotRect : null;
+
+      const coldFill = `rgb(${cold[0]}, ${cold[1]}, ${cold[2]})`;
+      const hotFill = `rgb(${Math.round(cold[0] + (hot[0] - cold[0]) * mix)}, ${
+        Math.round(cold[1] + (hot[1] - cold[1]) * mix)
+      }, ${Math.round(cold[2] + (hot[2] - cold[2]) * mix)})`;
+      // Tracked so fillStyle is only written when it actually changes — the
+      // hovered box is contiguous, so this collapses to a couple of writes per
+      // row rather than one per dot.
+      let fill = "";
 
       for (let y = y0; y <= y1; y += SPACING) {
         const inTrailY = y >= tMinY && y <= tMaxY;
@@ -178,12 +221,27 @@ export default function HalftoneTrail() {
           const f = ft > fs ? ft : fs;
           if (f <= 0.02) continue;
 
-          // Alpha under `difference` IS the inversion strength — at 1 a dot is
-          // a true negative, at 0.5 it only reaches grey and text stops
-          // flipping. So weight is controlled by dot *area* instead (MAX_R
-          // below), never by dimming: small dots at full strength read light
-          // over paper while still flipping any text they land on.
-          ctx.globalAlpha = 0.06 + f * 0.9;
+          // Only dots sitting on the hovered element go green; everything over
+          // bare paper stays ink, so the element is picked out rather than the
+          // whole field changing colour.
+          const inHot =
+            rect &&
+            x >= rect.left &&
+            x <= rect.right &&
+            y >= rect.top &&
+            y <= rect.bottom;
+
+          const want = inHot ? hotFill : coldFill;
+          if (want !== fill) {
+            fill = want;
+            ctx.fillStyle = want;
+          }
+
+          // The green dots get an alpha lift: neon green on near-white paper
+          // is far lower contrast than dark ink, so at equal alpha they would
+          // read as the trail fading out rather than changing colour.
+          const a = (0.05 + f * 0.62) * (inHot ? 1 + mix * 0.5 : 1);
+          ctx.globalAlpha = a > 1 ? 1 : a;
           ctx.beginPath();
           // Radius is taken per source, not from the blended value: the wave
           // carries fatter dots than the trail so a click is unmistakable.
@@ -219,10 +277,23 @@ export default function HalftoneTrail() {
       start();
     };
 
+    const onOver = (e) => {
+      const t = e.target instanceof Element ? e.target : null;
+      const next = t?.closest(HOT) || null;
+      // hotEl is cleared on leave but hotRect is not: the green has to fade
+      // out somewhere, and that somewhere is the box it was just filling.
+      hotEl = next;
+      if (next) hotRect = next.getBoundingClientRect();
+      mixTo = next ? 1 : 0;
+      start(); // the colour still has to ease even if the pointer went still
+    };
+
     resize();
+    readColors();
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerdown", onDown, { passive: true });
+    window.addEventListener("pointerover", onOver, { passive: true });
 
     return () => {
       cancelAnimationFrame(frame);
@@ -230,6 +301,7 @@ export default function HalftoneTrail() {
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerover", onOver);
     };
   }, []);
 
