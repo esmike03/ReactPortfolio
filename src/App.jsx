@@ -8,6 +8,8 @@ import {
   BootSequence,
   HistoryRenderer,
   InteractivePrompt,
+  GlitchPointer,
+  ScreenGlitch,
 } from "./Components/Terminal";
 import { Gui, ExitCli } from "./Components/Gui";
 
@@ -114,8 +116,12 @@ export default function App() {
             </Terminal>
           </div>
           {/* Kept outside .mode-fade: an animated ancestor would become the
-              containing block for position:fixed and the pill would scroll away. */}
+              containing block for position:fixed and the pill would scroll away.
+              The pointer is fixed too, so it belongs out here for the same
+              reason — inside, it would drift off during the warp. */}
           <ExitCli onExit={exitCli} />
+          <GlitchPointer />
+          <ScreenGlitch />
         </>
       ) : (
         <div key="ui" className={`mode-fade${warpClass}`}>

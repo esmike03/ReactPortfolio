@@ -148,6 +148,137 @@ html[data-mode="ui"] ::-webkit-scrollbar-thumb {
   transform: translateX(-2px);
 }
 
+/* Hover glitch — the one place this quiet page admits it has a terminal in it.
+   Two offset copies of the label in the same pink/cyan the mode-switch warp
+   uses, so the button tears like the same signal rather than inventing a new
+   effect. steps(1, end) throughout: a glitch snaps between states, and any
+   easing at all turns it into a smooth wobble. */
+.ui-cli-btn-text {
+  position: relative;
+  display: inline-block;
+}
+.ui-cli-btn-text::before,
+.ui-cli-btn-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  /* Screen keeps the copies additive over the light page, so they read as
+     light leaking through the tear instead of as two flat stickers. */
+  mix-blend-mode: screen;
+}
+.ui-cli-btn-text::before {
+  color: rgb(255, 42, 122);
+}
+.ui-cli-btn-text::after {
+  color: rgb(48, 224, 255);
+}
+
+.ui-cli-btn:hover .ui-cli-btn-text,
+.ui-cli-btn:focus-visible .ui-cli-btn-text {
+  animation: cli-glitch-shift 1.4s steps(1, end) infinite;
+}
+.ui-cli-btn:hover .ui-cli-btn-text::before,
+.ui-cli-btn:focus-visible .ui-cli-btn-text::before {
+  animation: cli-glitch-a 1.4s steps(1, end) infinite;
+}
+.ui-cli-btn:hover .ui-cli-btn-text::after,
+.ui-cli-btn:focus-visible .ui-cli-btn-text::after {
+  animation: cli-glitch-b 1.4s steps(1, end) infinite;
+}
+
+/* Long calm stretches between short bursts. A glitch that never stops is just
+   a vibration — the pauses are what make each tear register. */
+@keyframes cli-glitch-shift {
+  0%,
+  6%,
+  12%,
+  46%,
+  56%,
+  100% {
+    transform: translate(0, 0);
+  }
+  3% {
+    transform: translate(1px, -1px);
+  }
+  9% {
+    transform: translate(-1px, 1px);
+  }
+  50% {
+    transform: translate(1px, 0);
+  }
+}
+
+@keyframes cli-glitch-a {
+  0%,
+  14%,
+  48%,
+  100% {
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+    transform: translate(-3px, -1px);
+    clip-path: inset(0 0 58% 0);
+  }
+  6% {
+    opacity: 1;
+    transform: translate(2px, 1px);
+    clip-path: inset(64% 0 0 0);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-2px, 0);
+    clip-path: inset(30% 0 34% 0);
+  }
+  44% {
+    opacity: 1;
+    transform: translate(2px, -1px);
+    clip-path: inset(0 0 70% 0);
+  }
+}
+
+@keyframes cli-glitch-b {
+  0%,
+  16%,
+  52%,
+  100% {
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+    transform: translate(3px, 1px);
+    clip-path: inset(0 0 52% 0);
+  }
+  8% {
+    opacity: 1;
+    transform: translate(-2px, -1px);
+    clip-path: inset(56% 0 0 0);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(2px, 1px);
+    clip-path: inset(38% 0 26% 0);
+  }
+  48% {
+    opacity: 1;
+    transform: translate(-3px, 1px);
+    clip-path: inset(60% 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-cli-btn:hover .ui-cli-btn-text,
+  .ui-cli-btn:focus-visible .ui-cli-btn-text,
+  .ui-cli-btn:hover .ui-cli-btn-text::before,
+  .ui-cli-btn:focus-visible .ui-cli-btn-text::before,
+  .ui-cli-btn:hover .ui-cli-btn-text::after,
+  .ui-cli-btn:focus-visible .ui-cli-btn-text::after {
+    animation: none;
+  }
+}
+
 /* ── Layout ───────────────────────────────────────────────── */
 .ui-section {
   max-width: var(--ui-max);

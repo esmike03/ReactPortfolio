@@ -121,6 +121,391 @@ body {
 }
 
 /* ============================================================
+   GLITCHING MOUSE POINTER (CLI MODE)
+   ============================================================ */
+/* Set by GlitchPointer.jsx only once it is really drawing — on touch or
+   reduced-motion it bails and the real cursor stays. */
+/* Unscoped on purpose: the flag only exists while CLI mode is mounted, so
+   this covers the shell, the exit pill and the bare page margins in one go.
+   The `*` is needed because buttons and links set their own `cursor`, which
+   an inherited value would lose to. */
+html[data-cli-cursor="1"],
+html[data-cli-cursor="1"] * {
+  cursor: none;
+}
+
+.cli-pointer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  will-change: transform;
+  /* The glow lives on the parent, not on the shapes. clip-path is applied
+     *after* filter, so a drop-shadow on the clipped element gets cut away with
+     everything else outside the triangle — the glow simply vanished. Up here
+     the filter runs over the already-clipped children and traces the real
+     triangle outline. */
+  filter: drop-shadow(0 0 4px rgba(0, 255, 65, 0.5));
+}
+.cli-pointer.is-on {
+  opacity: 1;
+}
+
+/* The three copies share one box so they tear apart from the same origin.
+   left/top are 0, not centred: on an arrow the hotspot is the tip, and the
+   clip-path below puts the tip at the box's own origin. */
+.cli-pointer-core,
+.cli-pointer-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 25px;
+  display: block;
+  /* The classic pointer, four corners. Tip at 0,0 (the hotspot), straight down
+     the left edge to the bottom-left, then the slant back up to the notch, flat
+     across to the right point, and the long diagonal home to the tip. The notch
+     is what stops it being a plain wedge — without it the tail reads as a
+     shard. Box ratio matches the shape so nothing is stretched. */
+  clip-path: polygon(0 0, 0 100%, 42% 71%, 100% 71%);
+}
+
+.cli-pointer-core {
+  background: var(--term-green, #00ff41);
+}
+
+/* screen, so the split copies read as light separating out of the block
+   rather than as two solid rectangles parked next to it. */
+.cli-pointer-ghost {
+  mix-blend-mode: screen;
+  /* At rest there is no split at all — the ghosts only exist mid-tear. */
+  opacity: 0;
+}
+.cli-pointer-r {
+  background: rgba(255, 42, 122, 0.85);
+}
+.cli-pointer-c {
+  background: rgba(48, 224, 255, 0.85);
+}
+
+/* The animations are attached only while `is-moving` is on the root, so the
+   pointer is perfectly still and clean when the hand is. Dropping the
+   animation rather than pausing it matters: a paused animation freezes
+   wherever it happened to be, which would leave the arrow stuck mid-tear. */
+.cli-pointer.is-moving .cli-pointer-core {
+  animation: cli-pointer-core 1.2s steps(1, end) infinite;
+}
+.cli-pointer.is-moving .cli-pointer-r {
+  animation: cli-pointer-r 1.2s steps(1, end) infinite;
+}
+.cli-pointer.is-moving .cli-pointer-c {
+  animation: cli-pointer-c 1.2s steps(1, end) infinite;
+}
+
+/* All three run one 1.2s clock so the split and the recombine land on the same
+   frame. steps(1, end) throughout — a glitch snaps between states, and any
+   easing at all turns the tear into a smooth slide.
+
+   The bursts sit at 0% and at the halfway mark, not somewhere in the middle:
+   because the animation restarts from zero every time the hand starts moving
+   again, a burst at 0% means even the smallest nudge tears immediately. Put it
+   at 30% and short movements would end before the glitch ever arrived. */
+@keyframes cli-pointer-core {
+  0% {
+    transform: translate(2px, -1px) scaleY(1.3);
+  }
+  3% {
+    transform: translate(-3px, 2px) scaleY(0.5);
+    opacity: 0.4;
+  }
+  6% {
+    transform: translate(1px, 0);
+  }
+  9%,
+  46%,
+  55%,
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+  48% {
+    transform: translate(-2px, 1px) skewX(-20deg);
+  }
+  51% {
+    transform: translate(3px, -2px) scaleY(0.7);
+    opacity: 0.55;
+  }
+}
+
+@keyframes cli-pointer-r {
+  0% {
+    transform: translate(-6px, 1px);
+    opacity: 1;
+  }
+  3% {
+    transform: translate(5px, -2px) scaleY(0.6);
+    opacity: 1;
+  }
+  6% {
+    transform: translate(-3px, 0);
+    opacity: 0.7;
+  }
+  9%,
+  46%,
+  55%,
+  100% {
+    transform: none;
+    opacity: 0;
+  }
+  48% {
+    transform: translate(6px, 2px) skewX(16deg);
+    opacity: 1;
+  }
+  51% {
+    transform: translate(-4px, -1px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes cli-pointer-c {
+  0% {
+    transform: translate(6px, -2px);
+    opacity: 1;
+  }
+  3% {
+    transform: translate(-5px, 2px) scaleY(0.6);
+    opacity: 1;
+  }
+  6% {
+    transform: translate(3px, 1px);
+    opacity: 0.7;
+  }
+  9%,
+  46%,
+  55%,
+  100% {
+    transform: none;
+    opacity: 0;
+  }
+  48% {
+    transform: translate(-6px, -2px) skewX(-16deg);
+    opacity: 1;
+  }
+  51% {
+    transform: translate(4px, 2px);
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cli-pointer {
+    display: none;
+  }
+}
+
+/* ============================================================
+   CLICK GLITCH (CLI MODE)
+   ============================================================ */
+/* Under the pointer (z 9999) so the cursor never tears with the page, and it
+   never takes a click: the overlay appears on pointerdown and the click still
+   has to land on whatever is beneath it. */
+.cli-crash {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  overflow: hidden;
+}
+.cli-crash > * {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  will-change: transform, opacity;
+}
+
+/* backdrop-filter, so each band displaces the live terminal underneath rather
+   than painting over it — the actual text is what tears. */
+.cli-crash-band {
+  top: var(--t);
+  height: var(--h);
+  backdrop-filter: invert(0.9) hue-rotate(180deg) saturate(1.6) contrast(1.25);
+  -webkit-backdrop-filter: invert(0.9) hue-rotate(180deg) saturate(1.6)
+    contrast(1.25);
+  opacity: 0;
+  animation: cli-crash-band 0.26s steps(1, end) var(--d) 1;
+}
+
+@keyframes cli-crash-band {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  12% {
+    opacity: 1;
+    transform: translateX(var(--x));
+  }
+  30% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  52% {
+    opacity: 1;
+    transform: translateX(calc(var(--x) * -0.6));
+  }
+  70% {
+    opacity: 0;
+  }
+}
+
+/* ── The terminal itself tears ────────────────────────────── */
+/* Driven by the data flag ScreenGlitch.jsx sets, because the bands above can
+   only invert what they sample — the text has to be moved by moving the
+   element it lives in. */
+html[data-cli-crash="1"] .terminal-shell {
+  animation: cli-crash-shell 0.26s steps(1, end) 1;
+}
+
+@keyframes cli-crash-shell {
+  0%,
+  18%,
+  32%,
+  48%,
+  62%,
+  78%,
+  100% {
+    transform: none;
+  }
+  10% {
+    transform: translateX(-7px) skewX(1.4deg);
+  }
+  24% {
+    transform: translateX(6px);
+  }
+  38% {
+    transform: translateX(-4px) skewX(-1deg);
+  }
+  54% {
+    transform: translateX(5px) skewX(0.6deg);
+  }
+  70% {
+    transform: translateX(-2px);
+  }
+}
+
+/* text-shadow inherits, so setting it on the body reaches nearly every glyph
+   with one animated element rather than hundreds. .term-green is called out
+   because it sets its own shadow and would otherwise win. */
+html[data-cli-crash="1"] .terminal-body,
+html[data-cli-crash="1"] .terminal-body .term-green {
+  animation: cli-crash-text 0.26s steps(1, end) 1;
+}
+
+@keyframes cli-crash-text {
+  0%,
+  16%,
+  30%,
+  46%,
+  60%,
+  76%,
+  100% {
+    text-shadow: none;
+  }
+  10% {
+    text-shadow:
+      3px 0 rgba(255, 42, 122, 0.9),
+      -3px 0 rgba(48, 224, 255, 0.9);
+  }
+  24% {
+    text-shadow:
+      -2px 0 rgba(255, 42, 122, 0.8),
+      2px 0 rgba(48, 224, 255, 0.8);
+  }
+  38% {
+    text-shadow:
+      4px 0 rgba(255, 42, 122, 0.75),
+      -4px 0 rgba(48, 224, 255, 0.75);
+  }
+  54% {
+    text-shadow:
+      -3px 0 rgba(48, 224, 255, 0.85),
+      3px 0 rgba(255, 42, 122, 0.85);
+  }
+  70% {
+    text-shadow:
+      2px 0 rgba(255, 42, 122, 0.6),
+      -2px 0 rgba(48, 224, 255, 0.6);
+  }
+}
+
+/* Chromatic split of the whole frame — the same pink/cyan as every other
+   glitch on this site, so they all read as one artifact. */
+.cli-crash-rgb {
+  mix-blend-mode: screen;
+  opacity: 0;
+}
+.cli-crash-rgb-a {
+  background: rgba(255, 42, 122, 0.16);
+  animation: cli-crash-rgb-a 0.24s steps(1, end) 1;
+}
+.cli-crash-rgb-b {
+  background: rgba(48, 224, 255, 0.14);
+  animation: cli-crash-rgb-b 0.24s steps(1, end) 40ms 1;
+}
+
+@keyframes cli-crash-rgb-a {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-7px);
+  }
+  35% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 0.7;
+    transform: translateX(4px);
+  }
+  80% {
+    opacity: 0;
+  }
+}
+
+@keyframes cli-crash-rgb-b {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  18% {
+    opacity: 1;
+    transform: translateX(8px);
+  }
+  38% {
+    opacity: 0;
+  }
+  62% {
+    opacity: 0.7;
+    transform: translateX(-5px);
+  }
+  82% {
+    opacity: 0;
+  }
+}
+
+/* ============================================================
    COMMAND OUTPUT
    ============================================================ */
 .terminal-cmd-output {

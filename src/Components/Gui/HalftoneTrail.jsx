@@ -15,13 +15,14 @@ const LIFE = 620; // ms a sample keeps any weight
 const MAX_SAMPLES = 22;
 // Absolute, not a fraction of SPACING: the pitch sets how tight the gaps are
 // and the radius sets how fine the dots are — tuning one shouldn't drag the
-// other along.
-const MAX_R = 3.6;
+// other along. This is also the "how heavy does it look" knob, since the dots
+// invert at full strength and can't be toned down with opacity.
+const MAX_R = 2.5;
 
 const SPLASH_LIFE = 1300; // ms for a click ring to travel and die
 const SPLASH_R = 190; // px the ring reaches by the end
 const BAND = 36; // thickness of the ring's leading edge
-const SPLASH_DOT = 4; // wave dots run a shade heavier than trail dots
+const SPLASH_DOT = 2.9; // wave dots run a shade heavier than trail dots
 const MAX_SPLASH = 4; // impatient clicking shouldn't stack up work
 // A single ring. The echo that used to chase it read as a bigger event than a
 // click deserves. `lag` is how far into the splash's life a ring sets off.
@@ -177,10 +178,12 @@ export default function HalftoneTrail() {
           const f = ft > fs ? ft : fs;
           if (f <= 0.02) continue;
 
-          // Alpha is "how far toward the negative this dot goes": 1 is a full
-          // inversion, and weaker values trail off into a partial one rather
-          // than simply fading to nothing.
-          ctx.globalAlpha = 0.2 + f * 0.8;
+          // Alpha under `difference` IS the inversion strength — at 1 a dot is
+          // a true negative, at 0.5 it only reaches grey and text stops
+          // flipping. So weight is controlled by dot *area* instead (MAX_R
+          // below), never by dimming: small dots at full strength read light
+          // over paper while still flipping any text they land on.
+          ctx.globalAlpha = 0.06 + f * 0.9;
           ctx.beginPath();
           // Radius is taken per source, not from the blended value: the wave
           // carries fatter dots than the trail so a click is unmistakable.

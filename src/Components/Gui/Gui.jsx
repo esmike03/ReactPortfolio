@@ -65,7 +65,11 @@ function Nav({ onOpenCli }) {
       <div className="ui-nav-inner">
         <button type="button" className="ui-cli-btn" onClick={onOpenCli}>
           <FiTerminal aria-hidden="true" />
-          <span>Terminal</span>
+          {/* data-text feeds the two offset copies the hover glitch draws
+              through ::before/::after — see .ui-cli-btn-text in Gui.css. */}
+          <span className="ui-cli-btn-text" data-text="Terminal">
+            Terminal
+          </span>
         </button>
       </div>
     </header>
